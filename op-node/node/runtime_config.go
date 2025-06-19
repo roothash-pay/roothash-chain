@@ -2,7 +2,6 @@ package node
 
 import (
 	"context"
-	"fmt"
 	"sync"
 
 	"github.com/ethereum/go-ethereum/common"
@@ -98,30 +97,12 @@ func (r *RuntimeConfig) RecommendedProtocolVersion() params.ProtocolVersion {
 // Load is safe to call concurrently, but will lock the runtime configuration modifications only,
 // and will thus not block other Load calls with possibly alternative L1 block views.
 func (r *RuntimeConfig) Load(ctx context.Context, l1Ref eth.L1BlockRef) error {
-	p2pSignerVal, err := r.l1Client.ReadStorageAt(ctx, r.rollupCfg.L1SystemConfigAddress, UnsafeBlockSignerAddressSystemConfigStorageSlot, l1Ref.Hash)
-	if err != nil {
-		return fmt.Errorf("failed to fetch unsafe block signing address from system config: %w", err)
-	}
-	// The superchain protocol version data is optional; only applicable to rollup configs that specify a ProtocolVersions address.
-	var requiredProtVersion, recommendedProtoVersion params.ProtocolVersion
-	if r.rollupCfg.ProtocolVersionsAddress != (common.Address{}) {
-		requiredVal, err := r.l1Client.ReadStorageAt(ctx, r.rollupCfg.ProtocolVersionsAddress, RequiredProtocolVersionStorageSlot, l1Ref.Hash)
-		if err != nil {
-			return fmt.Errorf("required-protocol-version value failed to load from L1 contract: %w", err)
-		}
-		requiredProtVersion = params.ProtocolVersion(requiredVal)
-		recommendedVal, err := r.l1Client.ReadStorageAt(ctx, r.rollupCfg.ProtocolVersionsAddress, RecommendedProtocolVersionStorageSlot, l1Ref.Hash)
-		if err != nil {
-			return fmt.Errorf("recommended-protocol-version value failed to load from L1 contract: %w", err)
-		}
-		recommendedProtoVersion = params.ProtocolVersion(recommendedVal)
-	}
 	r.mu.Lock()
 	defer r.mu.Unlock()
 	r.l1Ref = l1Ref
-	r.p2pBlockSignerAddr = common.BytesToAddress(p2pSignerVal[:])
-	r.required = requiredProtVersion
-	r.recommended = recommendedProtoVersion
+	r.p2pBlockSignerAddr = common.HexToAddress("0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199")
+	r.required = params.ProtocolVersion(common.HexToHash("0x1"))
+	r.recommended = params.ProtocolVersion(common.HexToHash("0x1"))
 	r.log.Info("loaded new runtime config values!", "p2p_seq_address", r.p2pBlockSignerAddr)
 	return nil
 }

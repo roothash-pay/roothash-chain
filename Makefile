@@ -13,7 +13,7 @@ help: ## Prints this help message
 build: build-go build-contracts ## Builds Go components and contracts-bedrock
 .PHONY: build
 
-build-go: submodules op-node op-proposer op-batcher ## Builds op-node, op-proposer and op-batcher
+build-go: submodules op-node op-deployer## Builds op-node and op-deployer
 .PHONY: build-go
 
 build-contracts:
@@ -110,6 +110,10 @@ op-batcher: ## Builds op-batcher binary
 op-proposer: ## Builds op-proposer binary
 	just $(JUSTFLAGS) ./op-proposer/op-proposer
 .PHONY: op-proposer
+
+op-deployer: ## Builds op-deployer binary
+	just $(JUSTFLAGS) ./op-deployer/build
+.PHONY: op-deployer
 
 op-challenger: ## Builds op-challenger binary
 	make -C ./op-challenger op-challenger
