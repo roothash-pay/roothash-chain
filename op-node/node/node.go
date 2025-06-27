@@ -13,7 +13,6 @@ import (
 	"github.com/libp2p/go-libp2p/core/peer"
 
 	"github.com/ethereum/go-ethereum"
-	gethevent "github.com/ethereum/go-ethereum/event"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rpc"
 
@@ -29,11 +28,9 @@ import (
 	"github.com/ethereum-optimism/optimism/op-node/rollup/interop/managed"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/sequencing"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/sync"
-	"github.com/ethereum-optimism/optimism/op-service/client"
 	"github.com/ethereum-optimism/optimism/op-service/eth"
 	"github.com/ethereum-optimism/optimism/op-service/httputil"
 	"github.com/ethereum-optimism/optimism/op-service/oppprof"
-	"github.com/ethereum-optimism/optimism/op-service/retry"
 	oprpc "github.com/ethereum-optimism/optimism/op-service/rpc"
 	"github.com/ethereum-optimism/optimism/op-service/sources"
 )
@@ -60,7 +57,6 @@ type OpNode struct {
 	eventSys   event.System
 	eventDrain event.Drainer
 
-	l1Source  *sources.L1Client     // L1 Client to fetch data from
 	l2Driver  *driver.Driver        // L2 Engine to Sync
 	l2Source  *sources.EngineClient // L2 Execution Engine RPC bindings
 	server    *oprpc.Server         // RPC server hosting the rollup-node API
@@ -136,12 +132,6 @@ func (n *OpNode) init(ctx context.Context, cfg *Config) error {
 		return fmt.Errorf("failed to init the trace: %w", err)
 	}
 	n.initEventSystem()
-	if err := n.initL1(ctx, cfg); err != nil {
-		return fmt.Errorf("failed to init L1: %w", err)
-	}
-	if err := n.initL1BeaconAPI(ctx, cfg); err != nil {
-		return err
-	}
 	if err := n.initL2(ctx, cfg); err != nil {
 		return fmt.Errorf("failed to init L2: %w", err)
 	}
@@ -188,199 +178,10 @@ func (n *OpNode) initTracer(ctx context.Context, cfg *Config) error {
 	return nil
 }
 
-func (n *OpNode) initL1(ctx context.Context, cfg *Config) error {
-	l1RPC, l1Cfg, err := cfg.L1.Setup(ctx, n.log, &cfg.Rollup, n.metrics)
-	if err != nil {
-		return fmt.Errorf("failed to get L1 RPC client: %w", err)
-	}
-
-	n.l1Source, err = sources.NewL1Client(l1RPC, n.log, n.metrics.L1SourceCache, l1Cfg)
-	if err != nil {
-		return fmt.Errorf("failed to create L1 source: %w", err)
-	}
-
-	if err := cfg.Rollup.ValidateL1Config(ctx, n.l1Source); err != nil {
-		return fmt.Errorf("failed to validate the L1 config: %w", err)
-	}
-
-	// Keep subscribed to the L1 heads, which keeps the L1 maintainer pointing to the best headers to sync
-	n.l1HeadsSub = gethevent.ResubscribeErr(time.Second*10, func(ctx context.Context, err error) (gethevent.Subscription, error) {
-		if err != nil {
-			n.log.Warn("resubscribing after failed L1 subscription", "err", err)
-		}
-		return eth.WatchHeadChanges(ctx, n.l1Source, n.OnNewL1Head)
-	})
-	go func() {
-		err, ok := <-n.l1HeadsSub.Err()
-		if !ok {
-			return
-		}
-		n.log.Error("l1 heads subscription error", "err", err)
-	}()
-
-	// Poll for the safe L1 block and finalized block,
-	// which only change once per epoch at most and may be delayed.
-	n.l1SafeSub = eth.PollBlockChanges(n.log, n.l1Source, n.OnNewL1Safe, eth.Safe,
-		cfg.L1EpochPollInterval, time.Second*10)
-	n.l1FinalizedSub = eth.PollBlockChanges(n.log, n.l1Source, n.OnNewL1Finalized, eth.Finalized,
-		cfg.L1EpochPollInterval, time.Second*10)
-	return nil
-}
-
 func (n *OpNode) initRuntimeConfig(ctx context.Context, cfg *Config) error {
 	// attempt to load runtime config, repeat N times
-	n.runCfg = NewRuntimeConfig(n.log, n.l1Source, &cfg.Rollup)
-
-	confDepth := cfg.Driver.VerifierConfDepth
-	reload := func(ctx context.Context) (eth.L1BlockRef, error) {
-		fetchCtx, fetchCancel := context.WithTimeout(ctx, time.Second*10)
-		l1Head, err := n.l1Source.L1BlockRefByLabel(fetchCtx, eth.Unsafe)
-		fetchCancel()
-		if err != nil {
-			n.log.Error("failed to fetch L1 head for runtime config initialization", "err", err)
-			return eth.L1BlockRef{}, err
-		}
-
-		// Apply confirmation-distance
-		blNum := l1Head.Number
-		if blNum >= confDepth {
-			blNum -= confDepth
-		}
-		fetchCtx, fetchCancel = context.WithTimeout(ctx, time.Second*10)
-		confirmed, err := n.l1Source.L1BlockRefByNumber(fetchCtx, blNum)
-		fetchCancel()
-		if err != nil {
-			n.log.Error("failed to fetch confirmed L1 block for runtime config loading", "err", err, "number", blNum)
-			return eth.L1BlockRef{}, err
-		}
-
-		fetchCtx, fetchCancel = context.WithTimeout(ctx, time.Second*10)
-		err = n.runCfg.Load(fetchCtx, confirmed)
-		fetchCancel()
-		if err != nil {
-			n.log.Error("failed to fetch runtime config data", "err", err)
-			return l1Head, err
-		}
-
-		err = n.handleProtocolVersionsUpdate(ctx)
-		return l1Head, err
-	}
-
-	// initialize the runtime config before unblocking
-	if err := retry.Do0(ctx, 5, retry.Fixed(time.Second*10), func() error {
-		_, err := reload(ctx)
-		if errors.Is(err, errNodeHalt) { // don't retry on halt error
-			err = nil
-		}
-		return err
-	}); err != nil {
-		return fmt.Errorf("failed to load runtime configuration repeatedly, last error: %w", err)
-	}
-
-	// start a background loop, to keep reloading it at the configured reload interval
-	reloader := func(ctx context.Context, reloadInterval time.Duration) {
-		if reloadInterval <= 0 {
-			n.log.Debug("not running runtime-config reloading background loop")
-			return
-		}
-		ticker := time.NewTicker(reloadInterval)
-		defer ticker.Stop()
-		for {
-			select {
-			case <-ticker.C:
-				// If the reload fails, we will try again the next interval.
-				// Missing a runtime-config update is not critical, and we do not want to overwhelm the L1 RPC.
-				l1Head, err := reload(ctx)
-				if err != nil {
-					if errors.Is(err, errNodeHalt) {
-						n.halted.Store(true)
-						if n.cancel != nil { // node cancellation is always available when started as CLI app
-							n.cancel(errNodeHalt)
-							return
-						} else {
-							n.log.Debug("opted to halt, but cannot halt node", "l1_head", l1Head)
-						}
-					} else {
-						n.log.Warn("failed to reload runtime config", "err", err)
-					}
-				} else {
-					n.log.Debug("reloaded runtime config", "l1_head", l1Head)
-				}
-			case <-ctx.Done():
-				return
-			}
-		}
-	}
-
-	n.runtimeConfigReloaderDone = make(chan struct{})
-	// Manages the lifetime of reloader. In order to safely Close the OpNode
-	go func(ctx context.Context, reloadInterval time.Duration) {
-		reloader(ctx, reloadInterval)
-		close(n.runtimeConfigReloaderDone)
-	}(n.resourcesCtx, cfg.RuntimeConfigReloadInterval) // this keeps running after initialization
+	n.runCfg = NewRuntimeConfig(n.log, &cfg.Rollup)
 	return nil
-}
-
-func (n *OpNode) initL1BeaconAPI(ctx context.Context, cfg *Config) error {
-	// If Ecotone upgrade is not scheduled yet, then there is no need for a Beacon API.
-	if cfg.Rollup.EcotoneTime == nil {
-		return nil
-	}
-	// Once the Ecotone upgrade is scheduled, we must have initialized the Beacon API settings.
-	if cfg.Beacon == nil {
-		return fmt.Errorf("missing L1 Beacon Endpoint configuration: this API is mandatory for Ecotone upgrade at t=%d", *cfg.Rollup.EcotoneTime)
-	}
-
-	// We always initialize a client. We will get an error on requests if the client does not work.
-	// This way the op-node can continue non-L1 functionality when the user chooses to ignore the Beacon API requirement.
-	beaconClient, fallbacks, err := cfg.Beacon.Setup(ctx, n.log)
-	if err != nil {
-		return fmt.Errorf("failed to setup L1 Beacon API client: %w", err)
-	}
-	beaconCfg := sources.L1BeaconClientConfig{
-		FetchAllSidecars: cfg.Beacon.ShouldFetchAllSidecars(),
-	}
-	n.beacon = sources.NewL1BeaconClient(beaconClient, beaconCfg, fallbacks...)
-
-	// Retry retrieval of the Beacon API version, to be more robust on startup against Beacon API connection issues.
-	beaconVersion, missingEndpoint, err := retry.Do2[string, bool](ctx, 5, retry.Exponential(), func() (string, bool, error) {
-		ctx, cancel := context.WithTimeout(ctx, time.Second*10)
-		defer cancel()
-		beaconVersion, err := n.beacon.GetVersion(ctx)
-		if err != nil {
-			if errors.Is(err, client.ErrNoEndpoint) {
-				return "", true, nil // don't return an error, we do not have to retry when there is a config issue.
-			}
-			return "", false, err
-		}
-		return beaconVersion, false, nil
-	})
-	if missingEndpoint {
-		// Allow the user to continue if they explicitly ignore the requirement of the endpoint.
-		if cfg.Beacon.ShouldIgnoreBeaconCheck() {
-			n.log.Warn("This endpoint is required for the Ecotone upgrade, but is missing, and configured to be ignored. " +
-				"The node may be unable to retrieve EIP-4844 blobs data.")
-			return nil
-		} else {
-			// If the client tells us the endpoint was not configured,
-			// then explain why we need it, and what the user can do to ignore this.
-			n.log.Error("The Ecotone upgrade requires a L1 Beacon API endpoint, to retrieve EIP-4844 blobs data. " +
-				"This can be ignored with the --l1.beacon.ignore option, " +
-				"but the node may be unable to sync from L1 without this endpoint.")
-			return errors.New("missing L1 Beacon API endpoint")
-		}
-	} else if err != nil {
-		if cfg.Beacon.ShouldIgnoreBeaconCheck() {
-			n.log.Warn("Failed to check L1 Beacon API version, but configuration ignores results. "+
-				"The node may be unable to retrieve EIP-4844 blobs data.", "err", err)
-			return nil
-		} else {
-			return fmt.Errorf("failed to check L1 Beacon API version: %w", err)
-		}
-	} else {
-		n.log.Info("Connected to L1 Beacon API, ready for EIP-4844 blobs retrieval.", "version", beaconVersion)
-		return nil
-	}
 }
 
 func (n *OpNode) initL2(ctx context.Context, cfg *Config) error {
@@ -402,7 +203,7 @@ func (n *OpNode) initL2(ctx context.Context, cfg *Config) error {
 
 	managedMode := false
 	if cfg.Rollup.InteropTime != nil {
-		sys, err := cfg.InteropConfig.Setup(ctx, n.log, &n.cfg.Rollup, n.l1Source, n.l2Source, n.metrics)
+		sys, err := cfg.InteropConfig.Setup(ctx, n.log, &n.cfg.Rollup, n.l2Source, n.metrics)
 		if err != nil {
 			return fmt.Errorf("failed to setup interop: %w", err)
 		}
@@ -439,8 +240,7 @@ func (n *OpNode) initL2(ctx context.Context, cfg *Config) error {
 		return fmt.Errorf("cfg.Rollup.ChainOpConfig is nil. Please see https://github.com/ethereum-optimism/optimism/releases/tag/op-node/v1.11.0: %w", err)
 	}
 
-	n.l2Driver = driver.NewDriver(n.eventSys, n.eventDrain, &cfg.Driver, &cfg.Rollup, n.l2Source, n.l1Source,
-		n.beacon, n, n, n.log, n.metrics, cfg.ConfigPersistence, n.safeDB, &cfg.Sync, sequencerConductor, altDA, managedMode)
+	n.l2Driver = driver.NewDriver(n.eventSys, n.eventDrain, &cfg.Driver, &cfg.Rollup, n.l2Source, n, n, n.log, n.metrics, cfg.ConfigPersistence, n.safeDB, &cfg.Sync, sequencerConductor, altDA, managedMode)
 	return nil
 }
 
@@ -765,11 +565,6 @@ func (n *OpNode) Stop(ctx context.Context) error {
 	// close L2 engine RPC client
 	if n.l2Source != nil {
 		n.l2Source.Close()
-	}
-
-	// close L1 data source
-	if n.l1Source != nil {
-		n.l1Source.Close()
 	}
 
 	if result == nil { // mark as closed if we successfully fully closed

@@ -111,8 +111,7 @@ func (bq *BatchQueue) NextBatch(ctx context.Context, parent eth.L2BlockRef) (*Si
 	return nextBatch, len(bq.nextSpan) == 0, nil
 }
 
-func (bq *BatchQueue) Reset(_ context.Context, base eth.L1BlockRef, _ eth.SystemConfig) error {
-	bq.baseBatchStage.reset(base)
+func (bq *BatchQueue) Reset(_ context.Context, _ eth.SystemConfig) error {
 	bq.batches = bq.batches[:0]
 	return io.EOF
 }

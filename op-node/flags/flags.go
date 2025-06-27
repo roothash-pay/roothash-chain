@@ -46,13 +46,6 @@ func prefixEnvVars(names ...string) []string {
 
 var (
 	/* Required Flags */
-	L1NodeAddr = &cli.StringFlag{
-		Name:     "l1",
-		Usage:    "Address of L1 User JSON-RPC endpoint to use (eth namespace required)",
-		Value:    "http://127.0.0.1:8545",
-		EnvVars:  prefixEnvVars("L1_ETH_RPC"),
-		Category: RollupCategory,
-	}
 	L2EngineAddr = &cli.StringFlag{
 		Name:     "l2",
 		Usage:    "Address of L2 Engine JSON-RPC endpoints to use (engine and eth namespace required)",
@@ -67,42 +60,12 @@ var (
 		Destination: new(string),
 		Category:    RollupCategory,
 	}
-	BeaconAddr = &cli.StringFlag{
-		Name:     "l1.beacon",
-		Usage:    "Address of L1 Beacon-node HTTP endpoint to use.",
-		Required: false,
-		EnvVars:  prefixEnvVars("L1_BEACON"),
-		Category: RollupCategory,
-	}
 	/* Optional Flags */
-	BeaconHeader = &cli.StringFlag{
-		Name:     "l1.beacon-header",
-		Usage:    "Optional HTTP header to add to all requests to the L1 Beacon endpoint. Format: 'X-Key: Value'",
-		Required: false,
-		EnvVars:  prefixEnvVars("L1_BEACON_HEADER"),
-		Category: L1RPCCategory,
-	}
 	BeaconFallbackAddrs = &cli.StringSliceFlag{
 		Name:     "l1.beacon-fallbacks",
 		Aliases:  []string{"l1.beacon-archiver"},
 		Usage:    "Addresses of L1 Beacon-API compatible HTTP fallback endpoints. Used to fetch blob sidecars not available at the l1.beacon (e.g. expired blobs).",
 		EnvVars:  prefixEnvVars("L1_BEACON_FALLBACKS", "L1_BEACON_ARCHIVER"),
-		Category: L1RPCCategory,
-	}
-	BeaconCheckIgnore = &cli.BoolFlag{
-		Name:     "l1.beacon.ignore",
-		Usage:    "When false, halts op-node startup if the healthcheck to the Beacon-node endpoint fails.",
-		Required: false,
-		Value:    false,
-		EnvVars:  prefixEnvVars("L1_BEACON_IGNORE"),
-		Category: L1RPCCategory,
-	}
-	BeaconFetchAllSidecars = &cli.BoolFlag{
-		Name:     "l1.beacon.fetch-all-sidecars",
-		Usage:    "If true, all sidecars are fetched and filtered locally. Workaround for buggy Beacon nodes.",
-		Required: false,
-		Value:    false,
-		EnvVars:  prefixEnvVars("L1_BEACON_FETCH_ALL_SIDECARS"),
 		Category: L1RPCCategory,
 	}
 	SyncModeFlag = &cli.GenericFlag{
@@ -163,46 +126,6 @@ var (
 			out := sources.RPCKindStandard
 			return &out
 		}(),
-		Category: L1RPCCategory,
-	}
-	L1RPCMaxConcurrency = &cli.IntFlag{
-		Name:     "l1.max-concurrency",
-		Usage:    "Maximum number of concurrent RPC requests to make to the L1 RPC provider.",
-		EnvVars:  prefixEnvVars("L1_MAX_CONCURRENCY"),
-		Value:    10,
-		Category: L1RPCCategory,
-	}
-	L1RPCRateLimit = &cli.Float64Flag{
-		Name:     "l1.rpc-rate-limit",
-		Usage:    "Optional self-imposed global rate-limit on L1 RPC requests, specified in requests / second. Disabled if set to 0.",
-		EnvVars:  prefixEnvVars("L1_RPC_RATE_LIMIT"),
-		Value:    0,
-		Category: L1RPCCategory,
-	}
-	L1RPCMaxBatchSize = &cli.IntFlag{
-		Name:     "l1.rpc-max-batch-size",
-		Usage:    "Maximum number of RPC requests to bundle, e.g. during L1 blocks receipt fetching. The L1 RPC rate limit counts this as N items, but allows it to burst at once.",
-		EnvVars:  prefixEnvVars("L1_RPC_MAX_BATCH_SIZE"),
-		Value:    20,
-		Category: L1RPCCategory,
-	}
-	L1CacheSize = &cli.UintFlag{
-		Name: "l1.cache-size",
-		Usage: "Cache size for blocks, receipts and transactions. " +
-			"If this flag is set to 0, 2/3 of the sequencing window size is used (usually 2400). " +
-			"The default value of 900 (~3h of L1 blocks) is good for (high-throughput) networks that see frequent safe head increments. " +
-			"On (low-throughput) networks with infrequent safe head increments, it is recommended to set this value to 0, " +
-			"or a value that well covers the typical span between safe head increments. " +
-			"Note that higher values will cause significantly increased memory usage.",
-		EnvVars:  prefixEnvVars("L1_CACHE_SIZE"),
-		Value:    900, // ~3h of L1 blocks
-		Category: L1RPCCategory,
-	}
-	L1HTTPPollInterval = &cli.DurationFlag{
-		Name:     "l1.http-poll-interval",
-		Usage:    "Polling interval for latest-block subscription when using an HTTP RPC provider. Ignored for other types of RPC endpoints.",
-		EnvVars:  prefixEnvVars("L1_HTTP_POLL_INTERVAL"),
-		Value:    time.Second * 12,
 		Category: L1RPCCategory,
 	}
 	L2EngineKind = &cli.GenericFlag{
@@ -446,28 +369,15 @@ var (
 )
 
 var requiredFlags = []cli.Flag{
-	L1NodeAddr,
 	L2EngineAddr,
 	L2EngineJWTSecret,
 }
 
 var optionalFlags = []cli.Flag{
-	BeaconAddr,
-	BeaconHeader,
-	BeaconFallbackAddrs,
-	BeaconCheckIgnore,
-	BeaconFetchAllSidecars,
 	SyncModeFlag,
 	FetchWithdrawalRootFromState,
 	RPCListenAddr,
 	RPCListenPort,
-	L1TrustRPC,
-	L1RPCProviderKind,
-	L1RPCRateLimit,
-	L1RPCMaxBatchSize,
-	L1RPCMaxConcurrency,
-	L1HTTPPollInterval,
-	L1CacheSize,
 	VerifierL1Confs,
 	SequencerEnabledFlag,
 	SequencerStoppedFlag,

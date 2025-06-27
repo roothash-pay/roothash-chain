@@ -174,21 +174,7 @@ func (d *PipelineDeriver) OnEvent(ev event.Event) bool {
 		}
 		d.emitDerivedAttributesEvent(attrib)
 	case ProvideL1Traversal:
-		if l1t, ok := d.pipeline.traversal.(ManagedL1Traversal); ok {
-			if err := l1t.ProvideNextL1(d.ctx, x.NextL1); err != nil {
-				if err != nil && errors.Is(err, ErrReset) {
-					d.emitter.Emit(rollup.ResetEvent{Err: err})
-				} else if err != nil && errors.Is(err, ErrTemporary) {
-					d.emitter.Emit(rollup.L1TemporaryErrorEvent{Err: err})
-				} else if err != nil && errors.Is(err, ErrCritical) {
-					d.emitter.Emit(rollup.CriticalErrorEvent{Err: err})
-				} else {
-					d.emitter.Emit(rollup.L1TemporaryErrorEvent{Err: err})
-				}
-			}
-		} else {
-			d.pipeline.log.Warn("Ignoring ProvideL1Traversal event, L1 traversal derivation stage does not support it")
-		}
+		d.pipeline.log.Warn("Ignoring ProvideL1Traversal event, L1 traversal derivation stage does not support it")
 	default:
 		return false
 	}

@@ -35,21 +35,16 @@ func NewChannelMux(log log.Logger, spec *rollup.ChainSpec, prev NextFrameProvide
 	}
 }
 
-func (c *ChannelMux) Reset(ctx context.Context, base eth.L1BlockRef, sysCfg eth.SystemConfig) error {
+func (c *ChannelMux) Reset(ctx context.Context, sysCfg eth.SystemConfig) error {
 	// TODO(12490): change to a switch over c.cfg.ActiveFork(base.Time)
 	switch {
 	default:
 		if _, ok := c.RawChannelProvider.(*ChannelBank); !ok {
-			c.log.Info("ChannelMux: activating pre-Holocene stage during reset", "origin", base)
+			c.log.Info("ChannelMux: activating pre-Holocene stage during reset")
 			c.RawChannelProvider = NewChannelBank(c.log, c.spec, c.prev, c.m)
 		}
-	case c.spec.IsHolocene(base.Time):
-		if _, ok := c.RawChannelProvider.(*ChannelAssembler); !ok {
-			c.log.Info("ChannelMux: activating Holocene stage during reset", "origin", base)
-			c.RawChannelProvider = NewChannelAssembler(c.log, c.spec, c.prev, c.m)
-		}
 	}
-	return c.RawChannelProvider.Reset(ctx, base, sysCfg)
+	return c.RawChannelProvider.Reset(ctx, sysCfg)
 }
 
 func (c *ChannelMux) Transform(f rollup.ForkName) {

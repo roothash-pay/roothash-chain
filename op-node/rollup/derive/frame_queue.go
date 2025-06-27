@@ -28,11 +28,10 @@ type FrameQueue struct {
 	cfg    *rollup.Config
 }
 
-func NewFrameQueue(log log.Logger, cfg *rollup.Config, prev NextDataProvider) *FrameQueue {
+func NewFrameQueue(log log.Logger, cfg *rollup.Config) *FrameQueue {
 	return &FrameQueue{
-		log:  log,
-		prev: prev,
-		cfg:  cfg,
+		log: log,
+		cfg: cfg,
 	}
 }
 

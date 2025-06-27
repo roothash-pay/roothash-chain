@@ -86,11 +86,10 @@ func (l1t *L1Traversal) AdvanceL1Block(ctx context.Context) error {
 }
 
 // Reset sets the internal L1 block to the supplied base.
-func (l1t *L1Traversal) Reset(ctx context.Context, base eth.L1BlockRef, cfg eth.SystemConfig) error {
-	l1t.block = base
+func (l1t *L1Traversal) Reset(ctx context.Context, cfg eth.SystemConfig) error {
 	l1t.done = false
 	l1t.sysCfg = cfg
-	l1t.log.Info("completed reset of derivation pipeline", "origin", base)
+	l1t.log.Info("completed reset of derivation pipeline")
 	return io.EOF
 }
 

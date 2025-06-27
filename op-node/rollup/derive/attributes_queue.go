@@ -60,12 +60,11 @@ type SingularBatchProvider interface {
 	NextBatch(context.Context, eth.L2BlockRef) (*SingularBatch, bool, error)
 }
 
-func NewAttributesQueue(log log.Logger, cfg *rollup.Config, builder AttributesBuilder, prev SingularBatchProvider) *AttributesQueue {
+func NewAttributesQueue(log log.Logger, cfg *rollup.Config, builder AttributesBuilder) *AttributesQueue {
 	return &AttributesQueue{
 		log:     log,
 		config:  cfg,
 		builder: builder,
-		prev:    prev,
 	}
 }
 
@@ -117,7 +116,7 @@ func (aq *AttributesQueue) reset() {
 	aq.lastAttribs = nil
 }
 
-func (aq *AttributesQueue) Reset(ctx context.Context, _ eth.L1BlockRef, _ eth.SystemConfig) error {
+func (aq *AttributesQueue) Reset(ctx context.Context, _ eth.SystemConfig) error {
 	aq.reset()
 	return io.EOF
 }

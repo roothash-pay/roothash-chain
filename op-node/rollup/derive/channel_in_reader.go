@@ -128,7 +128,7 @@ func (cr *ChannelInReader) NextBatch(ctx context.Context) (Batch, error) {
 	}
 }
 
-func (cr *ChannelInReader) Reset(ctx context.Context, _ eth.L1BlockRef, _ eth.SystemConfig) error {
+func (cr *ChannelInReader) Reset(ctx context.Context, _ eth.SystemConfig) error {
 	cr.nextBatchFn = nil
 	return io.EOF
 }

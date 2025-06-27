@@ -30,8 +30,7 @@ func NewBatchStage(log log.Logger, cfg *rollup.Config, prev NextBatchProvider, l
 	return &BatchStage{baseBatchStage: newBaseBatchStage(log, cfg, prev, l2)}
 }
 
-func (bs *BatchStage) Reset(_ context.Context, base eth.L1BlockRef, _ eth.SystemConfig) error {
-	bs.reset(base)
+func (bs *BatchStage) Reset(_ context.Context, _ eth.SystemConfig) error {
 	return io.EOF
 }
 

@@ -32,7 +32,7 @@ type AltDAInputFetcher interface {
 	// AdvanceL1Origin advances the L1 origin to the given block number, syncing the DA challenge events.
 	AdvanceL1Origin(ctx context.Context, l1 altda.L1Fetcher, blockId eth.BlockID) error
 	// Reset the challenge origin in case of L1 reorg
-	Reset(ctx context.Context, base eth.L1BlockRef, baseCfg eth.SystemConfig) error
+	Reset(ctx context.Context, baseCfg eth.SystemConfig) error
 }
 
 // DataSourceFactory reads raw transactions from a given block & then filters for
@@ -47,7 +47,7 @@ type DataSourceFactory struct {
 	ecotoneTime  *uint64
 }
 
-func NewDataSourceFactory(log log.Logger, cfg *rollup.Config, fetcher L1Fetcher, blobsFetcher L1BlobsFetcher, altDAFetcher AltDAInputFetcher) *DataSourceFactory {
+func NewDataSourceFactory(log log.Logger, cfg *rollup.Config, altDAFetcher AltDAInputFetcher) *DataSourceFactory {
 	config := DataSourceConfig{
 		l1Signer:          cfg.L1Signer(),
 		batchInboxAddress: cfg.BatchInboxAddress,
@@ -56,8 +56,6 @@ func NewDataSourceFactory(log log.Logger, cfg *rollup.Config, fetcher L1Fetcher,
 	return &DataSourceFactory{
 		log:          log,
 		dsCfg:        config,
-		fetcher:      fetcher,
-		blobsFetcher: blobsFetcher,
 		altDAFetcher: altDAFetcher,
 		ecotoneTime:  cfg.EcotoneTime,
 	}

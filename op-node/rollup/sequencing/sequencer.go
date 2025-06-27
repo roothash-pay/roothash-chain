@@ -128,25 +128,23 @@ var _ SequencerIface = (*Sequencer)(nil)
 
 func NewSequencer(driverCtx context.Context, log log.Logger, rollupCfg *rollup.Config,
 	attributesBuilder derive.AttributesBuilder,
-	l1OriginSelector L1OriginSelectorIface,
 	listener SequencerStateListener,
 	conductor conductor.SequencerConductor,
 	asyncGossip AsyncGossiper,
 	metrics Metrics,
 ) *Sequencer {
 	return &Sequencer{
-		ctx:              driverCtx,
-		log:              log,
-		rollupCfg:        rollupCfg,
-		spec:             rollup.NewChainSpec(rollupCfg),
-		listener:         listener,
-		conductor:        conductor,
-		asyncGossip:      asyncGossip,
-		attrBuilder:      attributesBuilder,
-		l1OriginSelector: l1OriginSelector,
-		metrics:          metrics,
-		timeNow:          time.Now,
-		toBlockRef:       derive.PayloadToBlockRef,
+		ctx:         driverCtx,
+		log:         log,
+		rollupCfg:   rollupCfg,
+		spec:        rollup.NewChainSpec(rollupCfg),
+		listener:    listener,
+		conductor:   conductor,
+		asyncGossip: asyncGossip,
+		attrBuilder: attributesBuilder,
+		metrics:     metrics,
+		timeNow:     time.Now,
+		toBlockRef:  derive.PayloadToBlockRef,
 	}
 }
 
@@ -717,7 +715,6 @@ func (d *Sequencer) ConductorEnabled(ctx context.Context) bool {
 }
 
 func (d *Sequencer) SetRecoverMode(mode bool) {
-	d.l1OriginSelector.SetRecoverMode(mode)
 	d.recoverMode.Store(mode)
 }
 

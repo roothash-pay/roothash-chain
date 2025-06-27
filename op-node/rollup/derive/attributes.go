@@ -26,16 +26,14 @@ type SystemConfigL2Fetcher interface {
 // FetchingAttributesBuilder fetches inputs for the building of L2 payload attributes on the fly.
 type FetchingAttributesBuilder struct {
 	rollupCfg *rollup.Config
-	l1        L1ReceiptsFetcher
 	l2        SystemConfigL2Fetcher
 	// whether to skip the L1 origin timestamp check - only for testing purposes
 	testSkipL1OriginCheck bool
 }
 
-func NewFetchingAttributesBuilder(rollupCfg *rollup.Config, l1 L1ReceiptsFetcher, l2 SystemConfigL2Fetcher) *FetchingAttributesBuilder {
+func NewFetchingAttributesBuilder(rollupCfg *rollup.Config, l2 SystemConfigL2Fetcher) *FetchingAttributesBuilder {
 	return &FetchingAttributesBuilder{
 		rollupCfg: rollupCfg,
-		l1:        l1,
 		l2:        l2,
 	}
 }

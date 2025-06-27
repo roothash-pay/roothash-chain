@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/log"
@@ -25,7 +24,6 @@ import (
 	opflags "github.com/ethereum-optimism/optimism/op-service/flags"
 	"github.com/ethereum-optimism/optimism/op-service/oppprof"
 	"github.com/ethereum-optimism/optimism/op-service/rpc"
-	"github.com/ethereum-optimism/optimism/op-service/sources"
 )
 
 // NewConfig creates a Config from the provided flags or environment variables.
@@ -58,8 +56,6 @@ func NewConfig(ctx *cli.Context, log log.Logger) (*node.Config, error) {
 		return nil, fmt.Errorf("failed to load p2p config: %w", err)
 	}
 
-	l1Endpoint := NewL1EndpointConfig(ctx)
-
 	l2Endpoint, err := NewL2EndpointConfig(ctx, log)
 	if err != nil {
 		return nil, fmt.Errorf("failed to load l2 endpoints info: %w", err)
@@ -82,11 +78,9 @@ func NewConfig(ctx *cli.Context, log log.Logger) (*node.Config, error) {
 	}
 	conductorRPCEndpoint := ctx.String(flags.ConductorRpcFlag.Name)
 	cfg := &node.Config{
-		L1:            l1Endpoint,
 		L2:            l2Endpoint,
 		Rollup:        *rollupConfig,
 		Driver:        *driverConfig,
-		Beacon:        NewBeaconEndpointConfig(ctx),
 		InteropConfig: NewSupervisorEndpointConfig(ctx),
 		RPC: node.RPCConfig{
 			ListenAddr:  ctx.String(flags.RPCListenAddr.Name),
@@ -141,29 +135,6 @@ func NewSupervisorEndpointConfig(ctx *cli.Context) *interop.Config {
 		RPCAddr:          ctx.String(flags.InteropRPCAddr.Name),
 		RPCPort:          ctx.Int(flags.InteropRPCPort.Name),
 		RPCJwtSecretPath: ctx.String(flags.InteropJWTSecret.Name),
-	}
-}
-
-func NewBeaconEndpointConfig(ctx *cli.Context) node.L1BeaconEndpointSetup {
-	return &node.L1BeaconEndpointConfig{
-		BeaconAddr:             ctx.String(flags.BeaconAddr.Name),
-		BeaconHeader:           ctx.String(flags.BeaconHeader.Name),
-		BeaconFallbackAddrs:    ctx.StringSlice(flags.BeaconFallbackAddrs.Name),
-		BeaconCheckIgnore:      ctx.Bool(flags.BeaconCheckIgnore.Name),
-		BeaconFetchAllSidecars: ctx.Bool(flags.BeaconFetchAllSidecars.Name),
-	}
-}
-
-func NewL1EndpointConfig(ctx *cli.Context) *node.L1EndpointConfig {
-	return &node.L1EndpointConfig{
-		L1NodeAddr:       ctx.String(flags.L1NodeAddr.Name),
-		L1TrustRPC:       ctx.Bool(flags.L1TrustRPC.Name),
-		L1RPCKind:        sources.RPCProviderKind(strings.ToLower(ctx.String(flags.L1RPCProviderKind.Name))),
-		RateLimit:        ctx.Float64(flags.L1RPCRateLimit.Name),
-		BatchSize:        ctx.Int(flags.L1RPCMaxBatchSize.Name),
-		HttpPollInterval: ctx.Duration(flags.L1HTTPPollInterval.Name),
-		MaxConcurrency:   ctx.Int(flags.L1RPCMaxConcurrency.Name),
-		CacheSize:        ctx.Uint(flags.L1CacheSize.Name),
 	}
 }
 

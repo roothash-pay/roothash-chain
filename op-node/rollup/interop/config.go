@@ -40,7 +40,7 @@ func (cfg *Config) Check() error {
 	return nil
 }
 
-func (cfg *Config) Setup(ctx context.Context, logger log.Logger, rollupCfg *rollup.Config, l1 L1Source, l2 L2Source, m opmetrics.RPCMetricer) (SubSystem, error) {
+func (cfg *Config) Setup(ctx context.Context, logger log.Logger, rollupCfg *rollup.Config, l2 L2Source, m opmetrics.RPCMetricer) (SubSystem, error) {
 	if cfg.RPCAddr != "" {
 		logger.Info("Setting up Interop RPC server to serve supervisor sync work")
 		// Load JWT secret, if any, generate one otherwise.
@@ -48,7 +48,7 @@ func (cfg *Config) Setup(ctx context.Context, logger log.Logger, rollupCfg *roll
 		if err != nil {
 			return nil, err
 		}
-		return managed.NewManagedMode(logger, rollupCfg, cfg.RPCAddr, cfg.RPCPort, jwtSecret, l1, l2, m), nil
+		return managed.NewManagedMode(logger, rollupCfg, cfg.RPCAddr, cfg.RPCPort, jwtSecret, l2, m), nil
 	} else {
 		logger.Info("Setting up Interop RPC client to sync from read-only supervisor")
 		cl, err := client.NewRPC(ctx, logger, cfg.SupervisorAddr, client.WithLazyDial())

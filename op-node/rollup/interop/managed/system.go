@@ -42,7 +42,6 @@ type ManagedMode struct {
 
 	emitter event.Emitter
 
-	l1 L1Source
 	l2 L2Source
 
 	events *rpc.Stream[supervisortypes.ManagedEvent]
@@ -53,11 +52,10 @@ type ManagedMode struct {
 	jwtSecret eth.Bytes32
 }
 
-func NewManagedMode(log log.Logger, cfg *rollup.Config, addr string, port int, jwtSecret eth.Bytes32, l1 L1Source, l2 L2Source, m opmetrics.RPCMetricer) *ManagedMode {
+func NewManagedMode(log log.Logger, cfg *rollup.Config, addr string, port int, jwtSecret eth.Bytes32, l2 L2Source, m opmetrics.RPCMetricer) *ManagedMode {
 	out := &ManagedMode{
 		log:       log,
 		cfg:       cfg,
-		l1:        l1,
 		l2:        l2,
 		jwtSecret: jwtSecret,
 		events:    rpc.NewStream[supervisortypes.ManagedEvent](log, 100),
@@ -233,16 +231,11 @@ func (m *ManagedMode) InvalidateBlock(ctx context.Context, seal supervisortypes.
 }
 
 func (m *ManagedMode) AnchorPoint(ctx context.Context) (supervisortypes.DerivedBlockRefPair, error) {
-	l1Ref, err := m.l1.L1BlockRefByHash(ctx, m.cfg.Genesis.L1.Hash)
-	if err != nil {
-		return supervisortypes.DerivedBlockRefPair{}, fmt.Errorf("failed to fetch L1 block ref: %w", err)
-	}
 	l2Ref, err := m.l2.L2BlockRefByHash(ctx, m.cfg.Genesis.L2.Hash)
 	if err != nil {
 		return supervisortypes.DerivedBlockRefPair{}, fmt.Errorf("failed to fetch L2 block ref: %w", err)
 	}
 	return supervisortypes.DerivedBlockRefPair{
-		Source:  l1Ref,
 		Derived: l2Ref.BlockRef(),
 	}, nil
 }

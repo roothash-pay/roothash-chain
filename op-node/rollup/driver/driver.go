@@ -12,7 +12,6 @@ import (
 	"github.com/ethereum-optimism/optimism/op-node/rollup/attributes"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/clsync"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/conductor"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/confdepth"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/derive"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/engine"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/event"
@@ -161,8 +160,6 @@ func NewDriver(
 	driverCfg *Config,
 	cfg *rollup.Config,
 	l2 L2Chain,
-	l1 L1Chain,
-	l1Blobs derive.L1BlobsFetcher,
 	altSync AltSync,
 	network Network,
 	log log.Logger,
@@ -181,33 +178,27 @@ func NewDriver(
 	statusTracker := status.NewStatusTracker(log, metrics)
 	sys.Register("status", statusTracker, opts)
 
-	l1Tracker := status.NewL1Tracker(l1)
-	sys.Register("l1-blocks", l1Tracker, opts)
-
-	l1 = NewMeteredL1Fetcher(l1Tracker, metrics)
-	verifConfDepth := confdepth.NewConfDepth(driverCfg.VerifierConfDepth, statusTracker.L1Head, l1)
-
 	ec := engine.NewEngineController(l2, log, metrics, cfg, syncCfg,
 		sys.Register("engine-controller", nil, opts))
 
 	sys.Register("engine-reset",
-		engine.NewEngineResetDeriver(driverCtx, log, cfg, l1, l2, syncCfg), opts)
+		engine.NewEngineResetDeriver(driverCtx, log, cfg, l2, syncCfg), opts)
 
 	clSync := clsync.NewCLSync(log, cfg, metrics) // alt-sync still uses cl-sync state to determine what to sync to
 	sys.Register("cl-sync", clSync, opts)
 
 	var finalizer Finalizer
 	if cfg.AltDAEnabled() {
-		finalizer = finality.NewAltDAFinalizer(driverCtx, log, cfg, l1, altDA)
+		finalizer = finality.NewAltDAFinalizer(driverCtx, log, cfg, altDA)
 	} else {
-		finalizer = finality.NewFinalizer(driverCtx, log, cfg, l1)
+		finalizer = finality.NewFinalizer(driverCtx, log, cfg)
 	}
 	sys.Register("finalizer", finalizer, opts)
 
 	sys.Register("attributes-handler",
 		attributes.NewAttributesHandler(log, cfg, driverCtx, l2), opts)
 
-	derivationPipeline := derive.NewDerivationPipeline(log, cfg, verifConfDepth, l1Blobs, altDA, l2, metrics, managedMode)
+	derivationPipeline := derive.NewDerivationPipeline(log, cfg, altDA, l2, metrics, managedMode)
 
 	sys.Register("pipeline",
 		derive.NewPipelineDeriver(driverCtx, derivationPipeline), opts)
@@ -219,7 +210,6 @@ func NewDriver(
 		Engine:         ec,
 		SyncCfg:        syncCfg,
 		Config:         cfg,
-		L1:             l1,
 		L2:             l2,
 		Log:            log,
 		Ctx:            driverCtx,
@@ -236,11 +226,8 @@ func NewDriver(
 	var sequencer sequencing.SequencerIface
 	if driverCfg.SequencerEnabled {
 		asyncGossiper := async.NewAsyncGossiper(driverCtx, network, log, metrics)
-		attrBuilder := derive.NewFetchingAttributesBuilder(cfg, l1, l2)
-		sequencerConfDepth := confdepth.NewConfDepth(driverCfg.SequencerConfDepth, statusTracker.L1Head, l1)
-		findL1Origin := sequencing.NewL1OriginSelector(driverCtx, log, cfg, sequencerConfDepth)
-		sys.Register("origin-selector", findL1Origin, opts)
-		sequencer = sequencing.NewSequencer(driverCtx, log, cfg, attrBuilder, findL1Origin,
+		attrBuilder := derive.NewFetchingAttributesBuilder(cfg, l2)
+		sequencer = sequencing.NewSequencer(driverCtx, log, cfg, attrBuilder,
 			sequencerStateListener, sequencerConductor, asyncGossiper, metrics)
 		sys.Register("sequencer", sequencer, opts)
 	} else {

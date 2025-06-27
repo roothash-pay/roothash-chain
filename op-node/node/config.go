@@ -20,10 +20,7 @@ import (
 )
 
 type Config struct {
-	L1 L1EndpointSetup
 	L2 L2EndpointSetup
-
-	Beacon L1BeaconEndpointSetup
 
 	InteropConfig interop.Setup
 
@@ -134,19 +131,8 @@ var ErrMissingPectraBlobSchedule = errors.New("probably missing Pectra blob sche
 
 // Check verifies that the given configuration makes sense
 func (cfg *Config) Check() error {
-	if err := cfg.L1.Check(); err != nil {
-		return fmt.Errorf("l1 endpoint config error: %w", err)
-	}
 	if err := cfg.L2.Check(); err != nil {
 		return fmt.Errorf("l2 endpoint config error: %w", err)
-	}
-	if cfg.Rollup.EcotoneTime != nil {
-		if cfg.Beacon == nil {
-			return fmt.Errorf("the Ecotone upgrade is scheduled (timestamp = %d) but no L1 Beacon API endpoint is configured", *cfg.Rollup.EcotoneTime)
-		}
-		if err := cfg.Beacon.Check(); err != nil {
-			return fmt.Errorf("misconfigured L1 Beacon API endpoint: %w", err)
-		}
 	}
 	if cfg.Rollup.InteropTime != nil {
 		if cfg.InteropConfig == nil {

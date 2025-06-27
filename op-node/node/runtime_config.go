@@ -46,7 +46,6 @@ type RuntimeConfig struct {
 
 	log log.Logger
 
-	l1Client  RuntimeCfgL1Source
 	rollupCfg *rollup.Config
 
 	// l1Ref is the current source of the data,
@@ -67,10 +66,9 @@ type runtimeConfigData struct {
 
 var _ p2p.GossipRuntimeConfig = (*RuntimeConfig)(nil)
 
-func NewRuntimeConfig(log log.Logger, l1Client RuntimeCfgL1Source, rollupCfg *rollup.Config) *RuntimeConfig {
+func NewRuntimeConfig(log log.Logger, rollupCfg *rollup.Config) *RuntimeConfig {
 	return &RuntimeConfig{
 		log:       log,
-		l1Client:  l1Client,
 		rollupCfg: rollupCfg,
 	}
 }

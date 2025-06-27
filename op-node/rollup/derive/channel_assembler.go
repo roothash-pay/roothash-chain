@@ -46,7 +46,7 @@ func (ca *ChannelAssembler) Origin() eth.L1BlockRef {
 	return ca.prev.Origin()
 }
 
-func (ca *ChannelAssembler) Reset(context.Context, eth.L1BlockRef, eth.SystemConfig) error {
+func (ca *ChannelAssembler) Reset(context.Context, eth.SystemConfig) error {
 	ca.resetChannel()
 	return io.EOF
 }

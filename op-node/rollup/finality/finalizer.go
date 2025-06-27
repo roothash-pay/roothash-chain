@@ -86,11 +86,9 @@ type Finalizer struct {
 
 	// Maximum amount of L2 blocks to store in finalityData.
 	finalityLookback uint64
-
-	l1Fetcher FinalizerL1Interface
 }
 
-func NewFinalizer(ctx context.Context, log log.Logger, cfg *rollup.Config, l1Fetcher FinalizerL1Interface) *Finalizer {
+func NewFinalizer(ctx context.Context, log log.Logger, cfg *rollup.Config) *Finalizer {
 	lookback := calcFinalityLookback(cfg)
 	return &Finalizer{
 		ctx:              ctx,
@@ -100,7 +98,6 @@ func NewFinalizer(ctx context.Context, log log.Logger, cfg *rollup.Config, l1Fet
 		triedFinalizeAt:  0,
 		finalityData:     make([]FinalityData, 0, lookback),
 		finalityLookback: lookback,
-		l1Fetcher:        l1Fetcher,
 	}
 }
 

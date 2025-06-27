@@ -37,7 +37,7 @@ type L1Fetcher interface {
 
 type ResettableStage interface {
 	// Reset resets a pull stage. `base` refers to the L1 Block Reference to reset to, with corresponding configuration.
-	Reset(ctx context.Context, base eth.L1BlockRef, baseCfg eth.SystemConfig) error
+	Reset(ctx context.Context, baseCfg eth.SystemConfig) error
 }
 
 // A ChannelFlusher flushes all internal state related to the current channel and then
@@ -70,7 +70,6 @@ type l1TraversalStage interface {
 type DerivationPipeline struct {
 	log       log.Logger
 	rollupCfg *rollup.Config
-	l1Fetcher L1Fetcher
 	altDA     AltDAInputFetcher
 
 	l2 L2Source
@@ -79,9 +78,6 @@ type DerivationPipeline struct {
 	// >= len(stages) if no additional resetting is required
 	resetting int
 	stages    []ResettableStage
-
-	// Special stages to keep track of
-	traversal l1TraversalStage
 
 	attrib *AttributesQueue
 
@@ -95,41 +91,24 @@ type DerivationPipeline struct {
 }
 
 // NewDerivationPipeline creates a DerivationPipeline, to turn L1 data into L2 block-inputs.
-func NewDerivationPipeline(log log.Logger, rollupCfg *rollup.Config, l1Fetcher L1Fetcher, l1Blobs L1BlobsFetcher,
+func NewDerivationPipeline(log log.Logger, rollupCfg *rollup.Config,
 	altDA AltDAInputFetcher, l2Source L2Source, metrics Metrics, managedMode bool,
 ) *DerivationPipeline {
-	spec := rollup.NewChainSpec(rollupCfg)
-	// Stages are strung together into a pipeline,
-	// results are pulled from the stage closed to the L2 engine, which pulls from the previous stage, and so on.
-	var l1Traversal l1TraversalStage
-	if managedMode {
-		l1Traversal = NewL1TraversalManaged(log, rollupCfg, l1Fetcher)
-	} else {
-		l1Traversal = NewL1Traversal(log, rollupCfg, l1Fetcher)
-	}
-	dataSrc := NewDataSourceFactory(log, rollupCfg, l1Fetcher, l1Blobs, altDA) // auxiliary stage for L1Retrieval
-	l1Src := NewL1Retrieval(log, dataSrc, l1Traversal)
-	frameQueue := NewFrameQueue(log, rollupCfg, l1Src)
-	channelMux := NewChannelMux(log, spec, frameQueue, metrics)
-	chInReader := NewChannelInReader(rollupCfg, log, channelMux, metrics)
-	batchMux := NewBatchMux(log, rollupCfg, chInReader, l2Source)
-	attrBuilder := NewFetchingAttributesBuilder(rollupCfg, l1Fetcher, l2Source)
-	attributesQueue := NewAttributesQueue(log, rollupCfg, attrBuilder, batchMux)
+	attrBuilder := NewFetchingAttributesBuilder(rollupCfg, l2Source)
+	attributesQueue := NewAttributesQueue(log, rollupCfg, attrBuilder)
 
 	// Reset from ResetEngine then up from L1 Traversal. The stages do not talk to each other during
 	// the ResetEngine, but after the ResetEngine, this is the order in which the stages could talk to each other.
 	// Note: The ResetEngine is the only reset that can fail.
-	stages := []ResettableStage{l1Traversal, l1Src, altDA, frameQueue, channelMux, chInReader, batchMux, attributesQueue}
+	stages := []ResettableStage{altDA, attributesQueue}
 
 	return &DerivationPipeline{
 		log:       log,
 		rollupCfg: rollupCfg,
-		l1Fetcher: l1Fetcher,
 		altDA:     altDA,
 		resetting: 0,
 		stages:    stages,
 		metrics:   metrics,
-		traversal: l1Traversal,
 		attrib:    attributesQueue,
 		l2:        l2Source,
 	}
@@ -189,8 +168,8 @@ func (dp *DerivationPipeline) Step(ctx context.Context, pendingSafeHead eth.L2Bl
 			}
 		}
 
-		if err := dp.stages[dp.resetting].Reset(ctx, dp.origin, dp.resetSysConfig); err == io.EOF {
-			dp.log.Debug("reset of stage completed", "stage", dp.resetting, "origin", dp.origin)
+		if err := dp.stages[dp.resetting].Reset(ctx, dp.resetSysConfig); err == io.EOF {
+			dp.log.Debug("reset of stage completed", "stage", dp.resetting)
 			dp.resetting += 1
 			return nil, nil
 		} else if err != nil {
@@ -204,7 +183,7 @@ func (dp *DerivationPipeline) Step(ctx context.Context, pendingSafeHead eth.L2Bl
 		return attrib, nil
 	} else if err == io.EOF {
 		// If every stage has returned io.EOF, try to advance the L1 Origin
-		return nil, dp.traversal.AdvanceL1Block(ctx)
+		return nil, err
 	} else if errors.Is(err, EngineELSyncing) {
 		return nil, err
 	} else {
@@ -217,42 +196,21 @@ func (dp *DerivationPipeline) initialReset(ctx context.Context, resetL2Safe eth.
 	dp.log.Info("Rewinding derivation-pipeline L1 traversal to handle reset")
 
 	dp.metrics.RecordPipelineReset()
-	spec := rollup.NewChainSpec(dp.rollupCfg)
 
 	// Walk back L2 chain to find the L1 origin that is old enough to start buffering channel data from.
 	pipelineL2 := resetL2Safe
-	l1Origin := resetL2Safe.L1Origin
 
-	pipelineOrigin, err := dp.l1Fetcher.L1BlockRefByHash(ctx, l1Origin.Hash)
+	parent, err := dp.l2.L2BlockRefByHash(ctx, pipelineL2.ParentHash)
 	if err != nil {
-		return NewTemporaryError(fmt.Errorf("failed to fetch the new L1 progress: origin: %s; err: %w", pipelineL2.L1Origin, err))
+		return NewResetError(fmt.Errorf("failed to fetch L2 parent block %s", pipelineL2.ParentID()))
 	}
-
-	for {
-		afterL2Genesis := pipelineL2.Number > dp.rollupCfg.Genesis.L2.Number
-		afterL1Genesis := pipelineL2.L1Origin.Number > dp.rollupCfg.Genesis.L1.Number
-		afterChannelTimeout := pipelineL2.L1Origin.Number+spec.ChannelTimeout(pipelineOrigin.Time) > l1Origin.Number
-		if afterL2Genesis && afterL1Genesis && afterChannelTimeout {
-			parent, err := dp.l2.L2BlockRefByHash(ctx, pipelineL2.ParentHash)
-			if err != nil {
-				return NewResetError(fmt.Errorf("failed to fetch L2 parent block %s", pipelineL2.ParentID()))
-			}
-			pipelineL2 = parent
-			pipelineOrigin, err = dp.l1Fetcher.L1BlockRefByHash(ctx, pipelineL2.L1Origin.Hash)
-			if err != nil {
-				return NewTemporaryError(fmt.Errorf("failed to fetch the new L1 progress: origin: %s; err: %w", pipelineL2.L1Origin, err))
-			}
-		} else {
-			break
-		}
-	}
+	pipelineL2 = parent
 
 	sysCfg, err := dp.l2.SystemConfigByL2Hash(ctx, pipelineL2.Hash)
 	if err != nil {
 		return NewTemporaryError(fmt.Errorf("failed to fetch L1 config of L2 block %s: %w", pipelineL2.ID(), err))
 	}
 
-	dp.origin = pipelineOrigin
 	dp.resetSysConfig = sysCfg
 	dp.resetL2Safe = resetL2Safe
 	return nil
