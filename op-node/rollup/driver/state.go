@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/ethereum-optimism/optimism/op-node/rollup/finality"
 	gosync "sync"
 	"time"
 
@@ -15,9 +16,7 @@ import (
 	"github.com/ethereum-optimism/optimism/op-node/rollup/derive"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/engine"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/event"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/finality"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/sequencing"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/status"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/sync"
 	"github.com/ethereum-optimism/optimism/op-service/eth"
 )
@@ -189,7 +188,7 @@ func (s *Driver) eventLoop() {
 			<-sequencerCh
 		}
 		delta := time.Until(nextAction)
-		s.log.Info("Scheduled sequencer action", "delta", delta)
+		s.log.Info("Scheduled sequencer action", "delta", delta.Seconds())
 		sequencerTimer.Reset(delta)
 	}
 
@@ -225,6 +224,9 @@ func (s *Driver) eventLoop() {
 			altSyncTicker.Reset(syncCheckInterval)
 		}
 
+		s.emitter.Emit(finality.FinalizeL1Event{})
+		reqStep() // we may be able to mark more L2 data as finalized now
+
 		select {
 		case <-sequencerCh:
 			s.Emitter.Emit(sequencing.SequencerActionEvent{})
@@ -257,15 +259,6 @@ func (s *Driver) eventLoop() {
 					s.log.Warn("Failed to insert unsafe payload for EL sync", "id", envelope.ExecutionPayload.ID(), "err", err)
 				}
 			}
-		case newL1Head := <-s.l1HeadSig:
-			s.Emitter.Emit(status.L1UnsafeEvent{L1Unsafe: newL1Head})
-			reqStep() // a new L1 head may mean we have the data to not get an EOF again.
-		case newL1Safe := <-s.l1SafeSig:
-			s.Emitter.Emit(status.L1SafeEvent{L1Safe: newL1Safe})
-			// no step, justified L1 information does not do anything for L2 derivation or status
-		case newL1Finalized := <-s.l1FinalizedSig:
-			s.emitter.Emit(finality.FinalizeL1Event{FinalizedL1: newL1Finalized})
-			reqStep() // we may be able to mark more L2 data as finalized now
 		case <-s.sched.NextDelayedStep():
 			s.emitter.Emit(StepAttemptEvent{})
 		case <-s.sched.NextStep():
@@ -278,6 +271,8 @@ func (s *Driver) eventLoop() {
 			s.metrics.RecordPipelineReset()
 			close(respCh)
 		case <-s.driverCtx.Done():
+			fmt.Println("****333*****")
+
 			return
 		}
 	}
@@ -344,7 +339,7 @@ func (s *SyncDeriver) OnEvent(ev event.Event) bool {
 	case derive.DeriverMoreEvent:
 		// If there is more data to process,
 		// continue derivation quickly
-		s.Emitter.Emit(StepReqEvent{ResetBackoff: true})
+		//s.Emitter.Emit(StepReqEvent{ResetBackoff: true})
 	case engine.SafeDerivedEvent:
 		s.onSafeDerivedBlock(x)
 	case derive.ProvideL1Traversal:
@@ -357,7 +352,7 @@ func (s *SyncDeriver) OnEvent(ev event.Event) bool {
 
 func (s *SyncDeriver) onSafeDerivedBlock(x engine.SafeDerivedEvent) {
 	if s.SafeHeadNotifs != nil && s.SafeHeadNotifs.Enabled() {
-		if err := s.SafeHeadNotifs.SafeHeadUpdated(x.Safe, x.Source.ID()); err != nil {
+		if err := s.SafeHeadNotifs.SafeHeadUpdated(x.Safe); err != nil {
 			// At this point our state is in a potentially inconsistent state as we've updated the safe head
 			// in the execution client but failed to post process it. Reset the pipeline so the safe head rolls back
 			// a little (it always rolls back at least 1 block) and then it will retry storing the entry
@@ -381,12 +376,7 @@ func (s *SyncDeriver) onEngineConfirmedReset(x engine.EngineResetConfirmedEvent)
 			// Note that it is not safe to use cfg.Genesis.L1 here as it is the block immediately before the L2 genesis
 			// but the contracts may have been deployed earlier than that, allowing creating a dispute game
 			// with a L1 head prior to cfg.Genesis.L1
-			l1Genesis, err := s.L1.L1BlockRefByNumber(s.Ctx, 0)
-			if err != nil {
-				s.Log.Error("Failed to retrieve L1 genesis, cannot notify genesis as safe block", "err", err)
-				return
-			}
-			if err := s.SafeHeadNotifs.SafeHeadUpdated(x.CrossSafe, l1Genesis.ID()); err != nil {
+			if err := s.SafeHeadNotifs.SafeHeadUpdated(x.CrossSafe); err != nil {
 				s.Log.Error("Failed to notify safe-head listener of safe-head", "err", err)
 				return
 			}

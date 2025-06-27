@@ -17,7 +17,6 @@ type OutputResponse struct {
 }
 
 type SafeHeadResponse struct {
-	L1Block  BlockID `json:"l1Block"`
 	SafeHead BlockID `json:"safeHead"`
 }
 

@@ -72,9 +72,6 @@ func (eq *AttributesHandler) OnEvent(ev event.Event) bool {
 	case rollup.EngineTemporaryErrorEvent:
 		eq.sentAttributes = false
 	case engine.InvalidPayloadAttributesEvent:
-		if !x.Attributes.IsDerived() {
-			return true // from sequencing
-		}
 		eq.sentAttributes = false
 		// If the engine signals that attributes are invalid,
 		// that should match our last applied attributes, which we should thus drop.
@@ -83,17 +80,11 @@ func (eq *AttributesHandler) OnEvent(ev event.Event) bool {
 		// (the pending-safe state will then be forwarded to our source of attributes).
 		eq.emitter.Emit(engine.PendingSafeRequestEvent{})
 	case engine.PayloadSealExpiredErrorEvent:
-		if x.DerivedFrom == (eth.L1BlockRef{}) {
-			return true // from sequencing
-		}
 		eq.log.Warn("Block sealing job of derived attributes expired, job will be re-attempted.",
 			"build_id", x.Info.ID, "timestamp", x.Info.Timestamp, "err", x.Err)
 		// If the engine failed to seal temporarily, just allow to resubmit (triggered on next safe-head poke)
 		eq.sentAttributes = false
 	case engine.PayloadSealInvalidEvent:
-		if x.DerivedFrom == (eth.L1BlockRef{}) {
-			return true // from sequencing
-		}
 		eq.log.Warn("Cannot seal derived block attributes, input is invalid",
 			"build_id", x.Info.ID, "timestamp", x.Info.Timestamp, "err", x.Err)
 		eq.sentAttributes = false
@@ -195,7 +186,6 @@ func (eq *AttributesHandler) consolidateNextSafeAttributes(attributes *derive.At
 		eq.emitter.Emit(engine.PromotePendingSafeEvent{
 			Ref:        ref,
 			Concluding: attributes.Concluding,
-			Source:     attributes.DerivedFrom,
 		})
 	}
 

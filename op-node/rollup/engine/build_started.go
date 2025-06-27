@@ -16,7 +16,6 @@ type BuildStartedEvent struct {
 	// if payload should be promoted to (local) safe (must also be pending safe, see DerivedFrom)
 	Concluding bool
 	// payload is promoted to pending-safe if non-zero
-	DerivedFrom eth.L1BlockRef
 }
 
 func (ev BuildStartedEvent) String() string {
@@ -25,12 +24,9 @@ func (ev BuildStartedEvent) String() string {
 
 func (eq *EngDeriver) onBuildStarted(ev BuildStartedEvent) {
 	// If a (pending) safe block, immediately seal the block
-	if ev.DerivedFrom != (eth.L1BlockRef{}) {
-		eq.emitter.Emit(BuildSealEvent{
-			Info:         ev.Info,
-			BuildStarted: ev.BuildStarted,
-			Concluding:   ev.Concluding,
-			DerivedFrom:  ev.DerivedFrom,
-		})
-	}
+	//eq.emitter.Emit(BuildSealEvent{
+	//	Info:         ev.Info,
+	//	BuildStarted: ev.BuildStarted,
+	//	Concluding:   ev.Concluding,
+	//})
 }

@@ -199,15 +199,6 @@ func (d *Sequencer) OnEvent(ev event.Event) bool {
 }
 
 func (d *Sequencer) onBuildStarted(x engine.BuildStartedEvent) {
-	if x.DerivedFrom != (eth.L1BlockRef{}) {
-		// If we are adding new blocks onto the tip of the chain, derived from L1,
-		// then don't try to build on top of it immediately, as sequencer.
-		d.log.Warn("Detected new block-building from L1 derivation, avoiding sequencing for now.",
-			"build_job", x.Info.ID, "build_timestamp", x.Info.Timestamp,
-			"parent", x.Parent, "derived_from", x.DerivedFrom)
-		d.nextActionOK = false
-		return
-	}
 	if d.latest.Onto != x.Parent {
 		d.log.Warn("Canceling stale block-building job that was just started, as target to build onto has changed",
 			"stale", x.Parent, "new", d.latest.Onto, "job_id", x.Info.ID, "job_timestamp", x.Info.Timestamp)
@@ -249,9 +240,6 @@ func (d *Sequencer) handleInvalid() {
 }
 
 func (d *Sequencer) onInvalidPayloadAttributes(x engine.InvalidPayloadAttributesEvent) {
-	if x.Attributes.DerivedFrom != (eth.L1BlockRef{}) {
-		return // not our payload, should be ignored.
-	}
 	d.log.Error("Cannot sequence invalid payload attributes",
 		"attributes_parent", x.Attributes.Parent,
 		"timestamp", x.Attributes.Attributes.Timestamp, "err", x.Err)
@@ -286,7 +274,6 @@ func (d *Sequencer) onBuildSealed(x engine.BuildSealedEvent) {
 	// Now after having gossiped the block, try to put it in our own canonical chain
 	d.emitter.Emit(engine.PayloadProcessEvent{
 		Concluding:   x.Concluding,
-		DerivedFrom:  x.DerivedFrom,
 		BuildStarted: x.BuildStarted,
 		Envelope:     x.Envelope,
 		Ref:          x.Ref,
@@ -361,10 +348,9 @@ func (d *Sequencer) onSequencerAction(SequencerActionEvent) {
 		// meaning that we have seen BuildSealedEvent already.
 		// We can retry processing to make it canonical.
 		d.emitter.Emit(engine.PayloadProcessEvent{
-			Concluding:  false,
-			DerivedFrom: eth.L1BlockRef{},
-			Envelope:    payload,
-			Ref:         ref,
+			Concluding: false,
+			Envelope:   payload,
+			Ref:        ref,
 		})
 		d.latest.Ref = ref
 	} else {
@@ -376,8 +362,7 @@ func (d *Sequencer) onSequencerAction(SequencerActionEvent) {
 			d.emitter.Emit(engine.BuildSealEvent{
 				Info:         d.latest.Info,
 				BuildStarted: d.latest.Started,
-				Concluding:   false,
-				DerivedFrom:  eth.L1BlockRef{},
+				Concluding:   true,
 			})
 		} else if d.latest == (BuildingState{}) {
 			// If we have not started building anything, start building.
@@ -493,29 +478,12 @@ func (d *Sequencer) startBuildingBlock() {
 
 	recoverMode := d.recoverMode.Load()
 
-	// Figure out which L1 origin block we're going to be building on top of.
-	l1Origin, err := d.l1OriginSelector.FindL1Origin(ctx, l2Head)
-	if err != nil {
-		d.nextAction = d.timeNow().Add(time.Second)
-		d.nextActionOK = d.active.Load()
-		d.log.Error("Error finding next L1 Origin", "err", err)
-		d.emitter.Emit(rollup.L1TemporaryErrorEvent{Err: err})
-		return
-	}
-
-	if !(l2Head.L1Origin.Hash == l1Origin.ParentHash || l2Head.L1Origin.Hash == l1Origin.Hash) {
-		d.metrics.RecordSequencerInconsistentL1Origin(l2Head.L1Origin, l1Origin.ID())
-		d.emitter.Emit(rollup.ResetEvent{Err: fmt.Errorf("cannot build new L2 block with L1 origin %s (parent L1 %s) on current L2 head %s with L1 origin %s",
-			l1Origin, l1Origin.ParentHash, l2Head, l2Head.L1Origin)})
-		return
-	}
-
-	d.log.Info("Started sequencing new block", "parent", l2Head, "l1Origin", l1Origin)
+	d.log.Info("Started sequencing new block", "parent", l2Head)
 
 	fetchCtx, cancel := context.WithTimeout(ctx, time.Second*20)
 	defer cancel()
 
-	attrs, err := d.attrBuilder.PreparePayloadAttributes(fetchCtx, l2Head, l1Origin.ID())
+	attrs, err := d.attrBuilder.PreparePayloadAttributes(fetchCtx, l2Head)
 	if err != nil {
 		if errors.Is(err, derive.ErrTemporary) {
 			d.emitter.Emit(rollup.EngineTemporaryErrorEvent{Err: err})
@@ -532,11 +500,7 @@ func (d *Sequencer) startBuildingBlock() {
 		}
 	}
 
-	// If our next L2 block timestamp is beyond the Sequencer drift threshold, then we must produce
-	// empty blocks (other than the L1 info deposit and any user deposits). We handle this by
-	// setting NoTxPool to true, which will cause the Sequencer to not include any transactions
-	// from the transaction pool.
-	attrs.NoTxPool = uint64(attrs.Timestamp) > l1Origin.Time+d.spec.MaxSequencerDrift(l1Origin.Time)
+	attrs.NoTxPool = uint64(attrs.Timestamp) > uint64(time.Now().Unix())
 
 	// For the Ecotone activation block we shouldn't include any sequencer transactions.
 	if d.rollupCfg.IsEcotoneActivationBlock(uint64(attrs.Timestamp)) {
@@ -574,14 +538,13 @@ func (d *Sequencer) startBuildingBlock() {
 
 	d.log.Debug("prepared attributes for new block",
 		"num", l2Head.Number+1, "time", uint64(attrs.Timestamp),
-		"origin", l1Origin, "origin_time", l1Origin.Time, "noTxPool", attrs.NoTxPool)
+		"noTxPool", attrs.NoTxPool)
 
 	// Start a payload building process.
 	withParent := &derive.AttributesWithParent{
-		Attributes:  attrs,
-		Parent:      l2Head,
-		Concluding:  false,
-		DerivedFrom: eth.L1BlockRef{}, // zero, not going to be pending-safe / safe
+		Attributes: attrs,
+		Parent:     l2Head,
+		Concluding: true,
 	}
 
 	// Don't try to start building a block again, until we have heard back from this attempt

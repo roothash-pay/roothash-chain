@@ -39,27 +39,6 @@ func AttributesMatchBlock(rollupCfg *rollup.Config, attrs *eth.PayloadAttributes
 	if attrs.PrevRandao != block.PrevRandao {
 		return fmt.Errorf("random field does not match. expected: %v. got: %v", attrs.PrevRandao, block.PrevRandao)
 	}
-	if len(attrs.Transactions) != len(block.Transactions) {
-		missingSafeHashes, missingUnsafeHashes, err := getMissingTxnHashes(l, attrs.Transactions, block.Transactions)
-		if err != nil {
-			l.Error("failed to get missing txn hashes", "err", err)
-		} else {
-			l.Error("mismatched hashes",
-				"missingSafeHashes", missingSafeHashes,
-				"missingUnsafeHashes", missingUnsafeHashes,
-			)
-		}
-
-		return fmt.Errorf("transaction count does not match. expected: %d. got: %d", len(attrs.Transactions), len(block.Transactions))
-	}
-	for i, otx := range attrs.Transactions {
-		if expect := block.Transactions[i]; !bytes.Equal(otx, expect) {
-			if i == 0 {
-				logL1InfoTxns(rollupCfg, l, uint64(block.BlockNumber), uint64(block.Timestamp), otx, block.Transactions[i])
-			}
-			return fmt.Errorf("transaction %d does not match. expected: %v. got: %v", i, expect, otx)
-		}
-	}
 	if attrs.GasLimit == nil {
 		return fmt.Errorf("expected gaslimit in attributes to not be nil, expected %d", block.GasLimit)
 	}
@@ -68,9 +47,6 @@ func AttributesMatchBlock(rollupCfg *rollup.Config, attrs *eth.PayloadAttributes
 	}
 	if withdrawalErr := checkWithdrawals(rollupCfg, attrs, block); withdrawalErr != nil {
 		return withdrawalErr
-	}
-	if err := checkParentBeaconBlockRootMatch(attrs.ParentBeaconBlockRoot, envelope.ParentBeaconBlockRoot); err != nil {
-		return err
 	}
 	if attrs.SuggestedFeeRecipient != block.FeeRecipient {
 		return fmt.Errorf("fee recipient data does not match, expected %s but got %s", block.FeeRecipient, attrs.SuggestedFeeRecipient)

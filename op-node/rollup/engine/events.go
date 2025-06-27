@@ -112,7 +112,6 @@ func (ev PendingSafeUpdateEvent) String() string {
 type PromotePendingSafeEvent struct {
 	Ref        eth.L2BlockRef
 	Concluding bool // Concludes the pending phase, so can be promoted to (local) safe
-	Source     eth.L1BlockRef
 }
 
 func (ev PromotePendingSafeEvent) String() string {
@@ -121,8 +120,7 @@ func (ev PromotePendingSafeEvent) String() string {
 
 // PromoteLocalSafeEvent signals that a block can be promoted to local-safe.
 type PromoteLocalSafeEvent struct {
-	Ref    eth.L2BlockRef
-	Source eth.L1BlockRef
+	Ref eth.L2BlockRef
 }
 
 func (ev PromoteLocalSafeEvent) String() string {
@@ -147,8 +145,7 @@ func (ev CrossSafeUpdateEvent) String() string {
 
 // LocalSafeUpdateEvent signals that a block is now considered to be local-safe.
 type LocalSafeUpdateEvent struct {
-	Ref    eth.L2BlockRef
-	Source eth.L1BlockRef
+	Ref eth.L2BlockRef
 }
 
 func (ev LocalSafeUpdateEvent) String() string {
@@ -157,8 +154,7 @@ func (ev LocalSafeUpdateEvent) String() string {
 
 // PromoteSafeEvent signals that a block can be promoted to cross-safe.
 type PromoteSafeEvent struct {
-	Ref    eth.L2BlockRef
-	Source eth.L1BlockRef
+	Ref eth.L2BlockRef
 }
 
 func (ev PromoteSafeEvent) String() string {
@@ -168,8 +164,7 @@ func (ev PromoteSafeEvent) String() string {
 // SafeDerivedEvent signals that a block was determined to be safe, and derived from the given L1 block.
 // This is signaled upon successful processing of PromoteSafeEvent.
 type SafeDerivedEvent struct {
-	Safe   eth.L2BlockRef
-	Source eth.L1BlockRef
+	Safe eth.L2BlockRef
 }
 
 func (ev SafeDerivedEvent) String() string {
@@ -504,8 +499,7 @@ func (d *EngDeriver) OnEvent(ev event.Event) bool {
 		}
 		if x.Concluding && x.Ref.Number > d.ec.LocalSafeL2Head().Number {
 			d.emitter.Emit(PromoteLocalSafeEvent{
-				Ref:    x.Ref,
-				Source: x.Source,
+				Ref: x.Ref,
 			})
 		}
 	case PromoteLocalSafeEvent:
@@ -521,7 +515,7 @@ func (d *EngDeriver) OnEvent(ev event.Event) bool {
 		d.log.Debug("Updating safe", "safe", x.Ref, "unsafe", d.ec.UnsafeL2Head())
 		d.ec.SetSafeHead(x.Ref)
 		// Finalizer can pick up this safe cross-block now
-		d.emitter.Emit(SafeDerivedEvent{Safe: x.Ref, Source: x.Source})
+		d.emitter.Emit(SafeDerivedEvent{Safe: x.Ref})
 		d.emitter.Emit(CrossSafeUpdateEvent{
 			CrossSafe: d.ec.SafeL2Head(),
 			LocalSafe: d.ec.LocalSafeL2Head(),

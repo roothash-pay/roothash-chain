@@ -18,11 +18,11 @@ func (d *DisabledDB) Enabled() bool {
 	return false
 }
 
-func (d *DisabledDB) SafeHeadUpdated(_ eth.L2BlockRef, _ eth.BlockID) error {
+func (d *DisabledDB) SafeHeadUpdated(_ eth.L2BlockRef) error {
 	return nil
 }
 
-func (d *DisabledDB) SafeHeadAtL1(_ context.Context, _ uint64) (l1 eth.BlockID, safeHead eth.BlockID, err error) {
+func (d *DisabledDB) SafeHeadAtL2(_ context.Context, _ uint64) (safeHead eth.BlockID, err error) {
 	err = ErrNotEnabled
 	return
 }

@@ -21,11 +21,11 @@ var (
 
 const (
 	// Keys are prefixed with a constant byte to allow us to differentiate different "columns" within the data
-	keyPrefixSafeByL1BlockNum byte = 0
+	keyPrefixSafeByL2BlockNum byte = 0
 )
 
 var (
-	safeByL1BlockNumKey = uint64Key{prefix: keyPrefixSafeByL1BlockNum}
+	safeByL2BlockNumKey = uint64Key{prefix: keyPrefixSafeByL2BlockNum}
 )
 
 type uint64Key struct {
@@ -61,23 +61,20 @@ type SafeDB struct {
 	closed bool
 }
 
-func safeByL1BlockNumValue(l1 eth.BlockID, l2 eth.BlockID) []byte {
-	val := make([]byte, 0, 72)
-	val = append(val, l1.Hash.Bytes()...)
+func safeByL2BlockNumValue(l2 eth.BlockID) []byte {
+	val := make([]byte, 0, 32)
 	val = append(val, l2.Hash.Bytes()...)
 	val = binary.BigEndian.AppendUint64(val, l2.Number)
 	return val
 }
 
-func decodeSafeByL1BlockNum(key []byte, val []byte) (l1 eth.BlockID, l2 eth.BlockID, err error) {
-	if len(key) != 9 || len(val) != 72 || key[0] != keyPrefixSafeByL1BlockNum {
+func decodeSafeByL2BlockNum(key []byte, val []byte) (l2 eth.BlockID, err error) {
+	if len(key) != 9 || len(val) != 72 || key[0] != keyPrefixSafeByL2BlockNum {
 		err = ErrInvalidEntry
 		return
 	}
-	copy(l1.Hash[:], val[:32])
-	l1.Number = binary.BigEndian.Uint64(key[1:])
-	copy(l2.Hash[:], val[32:64])
-	l2.Number = binary.BigEndian.Uint64(val[64:])
+	copy(l2.Hash[:], val[:32])
+	l2.Number = binary.BigEndian.Uint64(key[1:])
 	return
 }
 
@@ -97,13 +94,13 @@ func (d *SafeDB) Enabled() bool {
 	return true
 }
 
-func (d *SafeDB) SafeHeadUpdated(safeHead eth.L2BlockRef, l1Head eth.BlockID) error {
+func (d *SafeDB) SafeHeadUpdated(safeHead eth.L2BlockRef) error {
 	d.m.Lock()
 	defer d.m.Unlock()
-	d.log.Info("Record safe head", "l2", safeHead.ID(), "l1", l1Head)
+	d.log.Info("Record safe head", "l2", safeHead.ID())
 	batch := d.db.NewBatch()
 	defer batch.Close()
-	if err := batch.Set(safeByL1BlockNumKey.Of(l1Head.Number), safeByL1BlockNumValue(l1Head, safeHead.ID()), d.writeOpts); err != nil {
+	if err := batch.Set(safeByL2BlockNumKey.Of(safeHead.Number), safeByL2BlockNumValue(safeHead.ID()), d.writeOpts); err != nil {
 		return fmt.Errorf("failed to record safe head update: %w", err)
 	}
 	if err := batch.Commit(d.writeOpts); err != nil {
@@ -115,12 +112,12 @@ func (d *SafeDB) SafeHeadUpdated(safeHead eth.L2BlockRef, l1Head eth.BlockID) er
 func (d *SafeDB) SafeHeadReset(safeHead eth.L2BlockRef) error {
 	d.m.Lock()
 	defer d.m.Unlock()
-	iter, err := d.db.NewIter(safeByL1BlockNumKey.IterRange())
+	iter, err := d.db.NewIter(safeByL2BlockNumKey.IterRange())
 	if err != nil {
 		return fmt.Errorf("reset failed to create iterator: %w", err)
 	}
 	defer iter.Close()
-	if valid := iter.SeekGE(safeByL1BlockNumKey.Of(safeHead.L1Origin.Number)); !valid {
+	if valid := iter.SeekGE(safeByL2BlockNumKey.Of(safeHead.L1Origin.Number)); !valid {
 		// Reached end of column without finding any entries to delete
 		return nil
 	}
@@ -129,7 +126,7 @@ func (d *SafeDB) SafeHeadReset(safeHead eth.L2BlockRef) error {
 		if err != nil {
 			return fmt.Errorf("reset failed to read entry: %w", err)
 		}
-		l1Block, l2Block, err := decodeSafeByL1BlockNum(iter.Key(), val)
+		l2Block, err := decodeSafeByL2BlockNum(iter.Key(), val)
 		if err != nil {
 			return fmt.Errorf("reset encountered invalid entry: %w", err)
 		}
@@ -139,7 +136,7 @@ func (d *SafeDB) SafeHeadReset(safeHead eth.L2BlockRef) error {
 			hasPrevEntry := iter.Prev()
 			// Found the first entry that made the new safe head safe.
 			batch := d.db.NewBatch()
-			if err := batch.DeleteRange(l1HeadKey, safeByL1BlockNumKey.Max(), d.writeOpts); err != nil {
+			if err := batch.DeleteRange(l1HeadKey, safeByL2BlockNumKey.Max(), d.writeOpts); err != nil {
 				return fmt.Errorf("reset failed to delete entries after %v: %w", l1HeadKey, err)
 			}
 
@@ -147,7 +144,7 @@ func (d *SafeDB) SafeHeadReset(safeHead eth.L2BlockRef) error {
 			// safe in that L1 block or if it was just before our records start, so don't record it as safe at the
 			// specified L1 block.
 			if hasPrevEntry {
-				if err := batch.Set(l1HeadKey, safeByL1BlockNumValue(l1Block, safeHead.ID()), d.writeOpts); err != nil {
+				if err := batch.Set(l1HeadKey, safeByL2BlockNumValue(safeHead.ID()), d.writeOpts); err != nil {
 					return fmt.Errorf("reset failed to record safe head update: %w", err)
 				}
 			}
@@ -163,15 +160,15 @@ func (d *SafeDB) SafeHeadReset(safeHead eth.L2BlockRef) error {
 	}
 }
 
-func (d *SafeDB) SafeHeadAtL1(ctx context.Context, l1BlockNum uint64) (l1Block eth.BlockID, safeHead eth.BlockID, err error) {
+func (d *SafeDB) SafeHeadAtL2(ctx context.Context, l2BlockNum uint64) (safeHead eth.BlockID, err error) {
 	d.m.RLock()
 	defer d.m.RUnlock()
-	iter, err := d.db.NewIterWithContext(ctx, safeByL1BlockNumKey.IterRange())
+	iter, err := d.db.NewIterWithContext(ctx, safeByL2BlockNumKey.IterRange())
 	if err != nil {
 		return
 	}
 	defer iter.Close()
-	if valid := iter.SeekLT(safeByL1BlockNumKey.Of(l1BlockNum + 1)); !valid {
+	if valid := iter.SeekLT(safeByL2BlockNumKey.Of(l2BlockNum + 1)); !valid {
 		err = ErrNotFound
 		return
 	}
@@ -180,7 +177,7 @@ func (d *SafeDB) SafeHeadAtL1(ctx context.Context, l1BlockNum uint64) (l1Block e
 	if err != nil {
 		return
 	}
-	l1Block, safeHead, err = decodeSafeByL1BlockNum(iter.Key(), val)
+	safeHead, err = decodeSafeByL2BlockNum(iter.Key(), val)
 	return
 }
 

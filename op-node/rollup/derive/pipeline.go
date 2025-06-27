@@ -200,17 +200,6 @@ func (dp *DerivationPipeline) Step(ctx context.Context, pendingSafeHead eth.L2Bl
 		}
 	}
 
-	prevOrigin := dp.origin
-	newOrigin := dp.attrib.Origin()
-	if prevOrigin != newOrigin {
-		// Check if the L2 unsafe head origin is consistent with the new origin
-		if err := VerifyNewL1Origin(ctx, prevOrigin, dp.l1Fetcher, newOrigin); err != nil {
-			return nil, fmt.Errorf("failed to verify L1 origin transition: %w", err)
-		}
-		dp.transformStages(prevOrigin, newOrigin)
-		dp.origin = newOrigin
-	}
-
 	if attrib, err := dp.attrib.NextAttributes(ctx, pendingSafeHead); err == nil {
 		return attrib, nil
 	} else if err == io.EOF {

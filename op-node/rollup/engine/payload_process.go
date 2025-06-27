@@ -13,7 +13,6 @@ type PayloadProcessEvent struct {
 	// if payload should be promoted to (local) safe (must also be pending safe, see DerivedFrom)
 	Concluding bool
 	// payload is promoted to pending-safe if non-zero
-	DerivedFrom  eth.L1BlockRef
 	BuildStarted time.Time
 
 	Envelope *eth.ExecutionPayloadEnvelope
@@ -39,13 +38,6 @@ func (eq *EngDeriver) onPayloadProcess(ev PayloadProcessEvent) {
 	}
 	switch status.Status {
 	case eth.ExecutionInvalid, eth.ExecutionInvalidBlockHash:
-		// Depending on execution engine, not all block-validity checks run immediately on build-start
-		// at the time of the forkchoiceUpdated engine-API call, nor during getPayload.
-		if ev.DerivedFrom != (eth.L1BlockRef{}) && eq.cfg.IsHolocene(ev.DerivedFrom.Time) {
-			eq.emitDepositsOnlyPayloadAttributesRequest(ev.Ref.ParentID(), ev.DerivedFrom)
-			return
-		}
-
 		eq.emitter.Emit(PayloadInvalidEvent{
 			Envelope: ev.Envelope,
 			Err:      eth.NewPayloadErr(ev.Envelope.ExecutionPayload, status),
@@ -54,7 +46,6 @@ func (eq *EngDeriver) onPayloadProcess(ev PayloadProcessEvent) {
 	case eth.ExecutionValid:
 		eq.emitter.Emit(PayloadSuccessEvent{
 			Concluding:    ev.Concluding,
-			DerivedFrom:   ev.DerivedFrom,
 			BuildStarted:  ev.BuildStarted,
 			InsertStarted: insertStart,
 			Envelope:      ev.Envelope,

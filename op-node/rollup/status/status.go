@@ -109,7 +109,7 @@ func (st *StatusTracker) OnEvent(ev event.Event) bool {
 		st.metrics.RecordL1Ref("l1_safe", x.L1Safe)
 		st.data.SafeL1 = x.L1Safe
 	case finality.FinalizeL1Event:
-		st.log.Info("New L1 finalized block", "l1_finalized", x.FinalizedL1)
+		st.log.Info("New finalized block")
 		st.metrics.RecordL1Ref("l1_finalized", x.FinalizedL1)
 		st.data.FinalizedL1 = x.FinalizedL1
 		st.data.CurrentL1Finalized = x.FinalizedL1

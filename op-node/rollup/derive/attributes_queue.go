@@ -25,15 +25,13 @@ import (
 // This stage does not need to retain any references to L1 blocks.
 
 type AttributesBuilder interface {
-	PreparePayloadAttributes(ctx context.Context, l2Parent eth.L2BlockRef, epoch eth.BlockID) (attrs *eth.PayloadAttributes, err error)
+	PreparePayloadAttributes(ctx context.Context, l2Parent eth.L2BlockRef) (attrs *eth.PayloadAttributes, err error)
 }
 
 type AttributesWithParent struct {
 	Attributes *eth.PayloadAttributes
 	Parent     eth.L2BlockRef
 	Concluding bool // Concluding indicates that the attributes conclude the pending safe phase
-
-	DerivedFrom eth.L1BlockRef
 }
 
 // WithDepositsOnly return a shallow clone with all non-Deposit transactions
@@ -42,10 +40,6 @@ func (a *AttributesWithParent) WithDepositsOnly() *AttributesWithParent {
 	clone := *a
 	clone.Attributes = clone.Attributes.WithDepositsOnly()
 	return &clone
-}
-
-func (a *AttributesWithParent) IsDerived() bool {
-	return a.DerivedFrom != (eth.L1BlockRef{})
 }
 
 type AttributesQueue struct {
@@ -80,26 +74,16 @@ func (aq *AttributesQueue) Origin() eth.L1BlockRef {
 }
 
 func (aq *AttributesQueue) NextAttributes(ctx context.Context, parent eth.L2BlockRef) (*AttributesWithParent, error) {
-	// Get a batch if we need it
-	if aq.batch == nil {
-		batch, concluding, err := aq.prev.NextBatch(ctx, parent)
-		if err != nil {
-			return nil, err
-		}
-		aq.batch = batch
-		aq.concluding = concluding
-	}
 
 	// Actually generate the next attributes
-	if attrs, err := aq.createNextAttributes(ctx, aq.batch, parent); err != nil {
+	if attrs, err := aq.createNextAttributes(ctx, parent); err != nil {
 		return nil, err
 	} else {
 		// Clear out the local state once we will succeed
 		attr := AttributesWithParent{
-			Attributes:  attrs,
-			Parent:      parent,
-			Concluding:  aq.concluding,
-			DerivedFrom: aq.Origin(),
+			Attributes: attrs,
+			Parent:     parent,
+			Concluding: true,
 		}
 		aq.lastAttribs = &attr
 		aq.batch = nil
@@ -110,18 +94,10 @@ func (aq *AttributesQueue) NextAttributes(ctx context.Context, parent eth.L2Bloc
 
 // createNextAttributes transforms a batch into a payload attributes. This sets `NoTxPool` and appends the batched transactions
 // to the attributes transaction list
-func (aq *AttributesQueue) createNextAttributes(ctx context.Context, batch *SingularBatch, l2SafeHead eth.L2BlockRef) (*eth.PayloadAttributes, error) {
-	// sanity check parent hash
-	if batch.ParentHash != l2SafeHead.Hash {
-		return nil, NewResetError(fmt.Errorf("valid batch has bad parent hash %s, expected %s", batch.ParentHash, l2SafeHead.Hash))
-	}
-	// sanity check timestamp
-	if expected := l2SafeHead.Time + aq.config.BlockTime; expected != batch.Timestamp {
-		return nil, NewResetError(fmt.Errorf("valid batch has bad timestamp %d, expected %d", batch.Timestamp, expected))
-	}
+func (aq *AttributesQueue) createNextAttributes(ctx context.Context, l2SafeHead eth.L2BlockRef) (*eth.PayloadAttributes, error) {
 	fetchCtx, cancel := context.WithTimeout(ctx, 20*time.Second)
 	defer cancel()
-	attrs, err := aq.builder.PreparePayloadAttributes(fetchCtx, l2SafeHead, batch.Epoch())
+	attrs, err := aq.builder.PreparePayloadAttributes(fetchCtx, l2SafeHead)
 	if err != nil {
 		return nil, err
 	}
@@ -129,9 +105,8 @@ func (aq *AttributesQueue) createNextAttributes(ctx context.Context, batch *Sing
 	// we are verifying, not sequencing, we've got all transactions and do not pull from the tx-pool
 	// (that would make the block derivation non-deterministic)
 	attrs.NoTxPool = true
-	attrs.Transactions = append(attrs.Transactions, batch.Transactions...)
 
-	aq.log.Info("generated attributes in payload queue", "txs", len(attrs.Transactions), "timestamp", batch.Timestamp)
+	aq.log.Info("generated attributes in payload queue", "txs", len(attrs.Transactions), "timestamp", time.Now().Unix())
 
 	return attrs, nil
 }
@@ -153,10 +128,6 @@ func (aq *AttributesQueue) DepositsOnlyAttributes(parent eth.BlockID, derivedFro
 		return nil, fmt.Errorf("unexpected buffered batch, parent hash: %s, epoch: %s", aq.batch.ParentHash, aq.batch.Epoch())
 	} else if aq.lastAttribs == nil {
 		return nil, errors.New("no attributes generated yet")
-	} else if derivedFrom != aq.lastAttribs.DerivedFrom {
-		return nil, fmt.Errorf(
-			"unexpected derivation origin, last_origin: %s, invalid_origin: %s",
-			aq.lastAttribs.DerivedFrom, derivedFrom)
 	} else if parent != aq.lastAttribs.Parent.ID() {
 		return nil, fmt.Errorf(
 			"unexpected parent: last_parent: %s, invalid_parent: %s",

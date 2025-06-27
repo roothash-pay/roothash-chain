@@ -17,8 +17,7 @@ type PayloadSealInvalidEvent struct {
 	Info eth.PayloadInfo
 	Err  error
 
-	Concluding  bool
-	DerivedFrom eth.L1BlockRef
+	Concluding bool
 }
 
 func (ev PayloadSealInvalidEvent) String() string {
@@ -33,8 +32,7 @@ type PayloadSealExpiredErrorEvent struct {
 	Info eth.PayloadInfo
 	Err  error
 
-	Concluding  bool
-	DerivedFrom eth.L1BlockRef
+	Concluding bool
 }
 
 func (ev PayloadSealExpiredErrorEvent) String() string {
@@ -47,7 +45,6 @@ type BuildSealEvent struct {
 	// if payload should be promoted to safe (must also be pending safe, see DerivedFrom)
 	Concluding bool
 	// payload is promoted to pending-safe if non-zero
-	DerivedFrom eth.L1BlockRef
 }
 
 func (ev BuildSealEvent) String() string {
@@ -73,21 +70,9 @@ func (eq *EngDeriver) onBuildSeal(ev BuildSealEvent) {
 		// same attributes with a new block-building job from here to recover from this error.
 		// We name it "expired", as this generally identifies a timeout, unknown job, or otherwise invalidated work.
 		eq.emitter.Emit(PayloadSealExpiredErrorEvent{
-			Info:        ev.Info,
-			Err:         fmt.Errorf("failed to seal execution payload (ID: %s): %w", ev.Info.ID, err),
-			Concluding:  ev.Concluding,
-			DerivedFrom: ev.DerivedFrom,
-		})
-		return
-	}
-
-	if err := sanityCheckPayload(envelope.ExecutionPayload); err != nil {
-		eq.emitter.Emit(PayloadSealInvalidEvent{
-			Info: ev.Info,
-			Err: fmt.Errorf("failed sanity-check of execution payload contents (ID: %s, blockhash: %s): %w",
-				ev.Info.ID, envelope.ExecutionPayload.BlockHash, err),
-			Concluding:  ev.Concluding,
-			DerivedFrom: ev.DerivedFrom,
+			Info:       ev.Info,
+			Err:        fmt.Errorf("failed to seal execution payload (ID: %s): %w", ev.Info.ID, err),
+			Concluding: ev.Concluding,
 		})
 		return
 	}
@@ -95,10 +80,9 @@ func (eq *EngDeriver) onBuildSeal(ev BuildSealEvent) {
 	ref, err := derive.PayloadToBlockRef(eq.cfg, envelope.ExecutionPayload)
 	if err != nil {
 		eq.emitter.Emit(PayloadSealInvalidEvent{
-			Info:        ev.Info,
-			Err:         fmt.Errorf("failed to decode L2 block ref from payload: %w", err),
-			Concluding:  ev.Concluding,
-			DerivedFrom: ev.DerivedFrom,
+			Info:       ev.Info,
+			Err:        fmt.Errorf("failed to decode L2 block ref from payload: %w", err),
+			Concluding: ev.Concluding,
 		})
 		return
 	}
@@ -110,15 +94,12 @@ func (eq *EngDeriver) onBuildSeal(ev BuildSealEvent) {
 	eq.metrics.RecordSequencerBuildingDiffTime(buildTime - time.Duration(eq.cfg.BlockTime)*time.Second)
 
 	txnCount := len(envelope.ExecutionPayload.Transactions)
-	depositCount, _ := lastDeposit(envelope.ExecutionPayload.Transactions)
-	eq.metrics.CountSequencedTxsInBlock(txnCount, depositCount)
 
 	eq.log.Debug("Built new L2 block", "l2_unsafe", ref, "l1_origin", ref.L1Origin,
-		"txs", txnCount, "deposits", depositCount, "time", ref.Time, "seal_time", sealTime, "build_time", buildTime)
+		"txs", txnCount, "time", ref.Time, "seal_time", sealTime, "build_time", buildTime)
 
 	eq.emitter.Emit(BuildSealedEvent{
 		Concluding:   ev.Concluding,
-		DerivedFrom:  ev.DerivedFrom,
 		BuildStarted: ev.BuildStarted,
 		Info:         ev.Info,
 		Envelope:     envelope,

@@ -2,11 +2,8 @@ package finality
 
 import (
 	"context"
-	"fmt"
-	"sync"
-	"time"
-
 	"github.com/ethereum/go-ethereum/log"
+	"sync"
 
 	"github.com/ethereum-optimism/optimism/op-node/rollup"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/derive"
@@ -52,9 +49,6 @@ func calcFinalityLookback(cfg *rollup.Config) uint64 {
 type FinalityData struct {
 	// The last L2 block that was fully derived and inserted into the L2 engine while processing this L1 block.
 	L2Block eth.L2BlockRef
-	// The L1 block this stage was at when inserting the L2 block.
-	// When this L1 block is finalized, the L2 chain up to this block can be fully reproduced from finalized L1 data.
-	L1Block eth.BlockID
 }
 
 type FinalizerEngine interface {
@@ -140,9 +134,9 @@ func (ev TryFinalizeEvent) String() string {
 func (fi *Finalizer) OnEvent(ev event.Event) bool {
 	switch x := ev.(type) {
 	case FinalizeL1Event:
-		fi.onL1Finalized(x.FinalizedL1)
+		fi.onL1Finalized()
 	case engine.SafeDerivedEvent:
-		fi.onDerivedSafeBlock(x.Safe, x.Source)
+		fi.onDerivedSafeBlock(x.Safe)
 	case derive.DeriverIdleEvent:
 		fi.onDerivationIdle(x.Origin)
 	case rollup.ResetEvent:
@@ -158,24 +152,9 @@ func (fi *Finalizer) OnEvent(ev event.Event) bool {
 }
 
 // onL1Finalized applies a L1 finality signal
-func (fi *Finalizer) onL1Finalized(l1Origin eth.L1BlockRef) {
+func (fi *Finalizer) onL1Finalized() {
 	fi.mu.Lock()
 	defer fi.mu.Unlock()
-	prevFinalizedL1 := fi.finalizedL1
-	if l1Origin.Number < fi.finalizedL1.Number {
-		fi.log.Error("ignoring old L1 finalized block signal! Is the L1 provider corrupted?",
-			"prev_finalized_l1", prevFinalizedL1, "signaled_finalized_l1", l1Origin)
-		return
-	}
-
-	if fi.finalizedL1 != l1Origin {
-		// reset triedFinalizeAt, so we give finalization a shot with the new signal
-		fi.triedFinalizeAt = 0
-
-		// remember the L1 finalization signal
-		fi.finalizedL1 = l1Origin
-	}
-
 	// when the L1 change we can suggest to try to finalize, as the pre-condition for L2 finality has now changed
 	fi.emitter.Emit(TryFinalizeEvent{})
 }
@@ -209,50 +188,19 @@ func (fi *Finalizer) tryFinalize() {
 
 	// overwritten if we finalize
 	finalizedL2 := fi.lastFinalizedL2 // may be zeroed if nothing was finalized since startup.
-	var finalizedDerivedFrom eth.BlockID
 	// go through the latest inclusion data, and find the last L2 block that was derived from a finalized L1 block
 	for _, fd := range fi.finalityData {
-		if fd.L2Block.Number > finalizedL2.Number && fd.L1Block.Number <= fi.finalizedL1.Number {
+		if fd.L2Block.Number > finalizedL2.Number {
 			finalizedL2 = fd.L2Block
-			finalizedDerivedFrom = fd.L1Block
 			// keep iterating, there may be later L2 blocks that can also be finalized
 		}
 	}
-	if finalizedDerivedFrom != (eth.BlockID{}) {
-		ctx, cancel := context.WithTimeout(fi.ctx, time.Second*10)
-		defer cancel()
-		// Sanity check the finality signal of L1.
-		// Even though the signal is trusted and we do the below check also,
-		// the signal itself has to be canonical to proceed.
-		signalRef, err := fi.l1Fetcher.L1BlockRefByNumber(ctx, fi.finalizedL1.Number)
-		if err != nil {
-			fi.emitter.Emit(rollup.L1TemporaryErrorEvent{Err: fmt.Errorf("failed to check if on finalizing L1 chain, could not fetch block %d: %w", fi.finalizedL1.Number, err)})
-			return
-		}
-		if signalRef.Hash != fi.finalizedL1.Hash {
-			fi.emitter.Emit(rollup.ResetEvent{Err: fmt.Errorf("need to reset, we assumed %s is finalized, but canonical chain is %s", fi.finalizedL1, signalRef)})
-			return
-		}
-
-		// Sanity check we are indeed on the finalizing chain, and not stuck on something else.
-		// We assume that the block-by-number query is consistent with the previously received finalized chain signal
-		derivedRef, err := fi.l1Fetcher.L1BlockRefByNumber(ctx, finalizedDerivedFrom.Number)
-		if err != nil {
-			fi.emitter.Emit(rollup.L1TemporaryErrorEvent{Err: fmt.Errorf("failed to check if on finalizing L1 chain, could not fetch block %d: %w", finalizedDerivedFrom.Number, err)})
-			return
-		}
-		if derivedRef.Hash != finalizedDerivedFrom.Hash {
-			fi.emitter.Emit(rollup.ResetEvent{Err: fmt.Errorf("need to reset, we are on %s, not on the finalizing L1 chain %s (towards %s)",
-				finalizedDerivedFrom, derivedRef, fi.finalizedL1)})
-			return
-		}
-		fi.emitter.Emit(engine.PromoteFinalizedEvent{Ref: finalizedL2})
-	}
+	fi.emitter.Emit(engine.PromoteFinalizedEvent{Ref: finalizedL2})
 }
 
 // onDerivedSafeBlock buffers the L1 block the safe head was fully derived from,
 // to finalize it once the derived-from L1 block, or a later L1 block, finalizes.
-func (fi *Finalizer) onDerivedSafeBlock(l2Safe eth.L2BlockRef, derivedFrom eth.L1BlockRef) {
+func (fi *Finalizer) onDerivedSafeBlock(l2Safe eth.L2BlockRef) {
 	fi.mu.Lock()
 	defer fi.mu.Unlock()
 
@@ -264,7 +212,7 @@ func (fi *Finalizer) onDerivedSafeBlock(l2Safe eth.L2BlockRef, derivedFrom eth.L
 	}
 
 	// remember the last L2 block that we fully derived from the given finality data
-	if len(fi.finalityData) == 0 || fi.finalityData[len(fi.finalityData)-1].L1Block.Number < derivedFrom.Number {
+	if len(fi.finalityData) == 0 {
 		// prune finality data if necessary, before appending any data.
 		if uint64(len(fi.finalityData)) >= fi.finalityLookback {
 			fi.finalityData = append(fi.finalityData[:0], fi.finalityData[1:fi.finalityLookback]...)
@@ -272,16 +220,15 @@ func (fi *Finalizer) onDerivedSafeBlock(l2Safe eth.L2BlockRef, derivedFrom eth.L
 		// append entry for new L1 block
 		fi.finalityData = append(fi.finalityData, FinalityData{
 			L2Block: l2Safe,
-			L1Block: derivedFrom.ID(),
 		})
 		last := &fi.finalityData[len(fi.finalityData)-1]
-		fi.log.Debug("extended finality-data", "last_l1", last.L1Block, "last_l2", last.L2Block)
+		fi.log.Debug("extended finality-data", "last_l2", last.L2Block)
 	} else {
 		// if it's a new L2 block that was derived from the same latest L1 block, then just update the entry
 		last := &fi.finalityData[len(fi.finalityData)-1]
 		if last.L2Block != l2Safe { // avoid logging if there are no changes
 			last.L2Block = l2Safe
-			fi.log.Debug("updated finality-data", "last_l1", last.L1Block, "last_l2", last.L2Block)
+			fi.log.Debug("updated finality-data", "last_l2", last.L2Block)
 		}
 	}
 }

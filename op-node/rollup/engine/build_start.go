@@ -22,8 +22,7 @@ func (eq *EngDeriver) onBuildStart(ev BuildStartEvent) {
 	ctx, cancel := context.WithTimeout(eq.ctx, buildStartTimeout)
 	defer cancel()
 
-	if ev.Attributes.DerivedFrom != (eth.L1BlockRef{}) &&
-		eq.ec.PendingSafeL2Head().Hash != ev.Attributes.Parent.Hash {
+	if eq.ec.PendingSafeL2Head().Hash != ev.Attributes.Parent.Hash {
 		// Warn about small reorgs, happens when pending safe head is getting rolled back
 		eq.log.Warn("block-attributes derived from L1 do not build on pending safe head, likely reorg",
 			"pending_safe", eq.ec.PendingSafeL2Head(), "attributes_parent", ev.Attributes.Parent)
@@ -69,7 +68,6 @@ func (eq *EngDeriver) onBuildStart(ev BuildStartEvent) {
 		Info:         eth.PayloadInfo{ID: id, Timestamp: uint64(ev.Attributes.Attributes.Timestamp)},
 		BuildStarted: buildStartTime,
 		Concluding:   ev.Attributes.Concluding,
-		DerivedFrom:  ev.Attributes.DerivedFrom,
 		Parent:       ev.Attributes.Parent,
 	})
 }

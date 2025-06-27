@@ -14,7 +14,7 @@ type SafeHeadListener interface {
 
 	// SafeHeadUpdated indicates that the safe head has been updated in response to processing batch data
 	// The l1Block specified is the first L1 block containing all required batch data to derive newSafeHead
-	SafeHeadUpdated(newSafeHead eth.L2BlockRef, l1Block eth.BlockID) error
+	SafeHeadUpdated(newSafeHead eth.L2BlockRef) error
 
 	// SafeHeadReset indicates that the derivation pipeline reset back to the specified safe head
 	// The L1 block that made the new safe head safe is unknown.

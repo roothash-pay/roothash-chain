@@ -40,11 +40,6 @@ func (eq *EngDeriver) onBuildInvalid(ev BuildInvalidEvent) {
 		return
 	}
 
-	if ev.Attributes.IsDerived() && eq.cfg.IsHolocene(ev.Attributes.DerivedFrom.Time) {
-		eq.emitDepositsOnlyPayloadAttributesRequest(ev.Attributes.Parent.ID(), ev.Attributes.DerivedFrom)
-		return
-	}
-
 	// Revert the pending safe head to the safe head.
 	eq.ec.SetPendingSafeL2Head(eq.ec.SafeL2Head())
 	// suppress the error b/c we want to retry with the next batch from the batch queue
