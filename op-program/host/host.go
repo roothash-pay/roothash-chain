@@ -6,7 +6,6 @@ import (
 
 	"github.com/ethereum-optimism/optimism/op-node/chaincfg"
 	"github.com/ethereum-optimism/optimism/op-node/rollup"
-	preimage "github.com/ethereum-optimism/optimism/op-preimage"
 	"github.com/ethereum-optimism/optimism/op-program/client/l2"
 	hostcommon "github.com/ethereum-optimism/optimism/op-program/host/common"
 	"github.com/ethereum-optimism/optimism/op-program/host/config"
@@ -54,9 +53,8 @@ func Main(logger log.Logger, cfg *config.Config) error {
 	defer stop()
 	ctx := ctxinterrupt.WithCancelOnInterrupt(hostCtx)
 	if cfg.ServerMode {
-		preimageChan := preimage.ClientPreimageChannel()
-		hinterChan := preimage.ClientHinterChannel()
-		return hostcommon.PreimageServer(ctx, logger, cfg, preimageChan, hinterChan, makeDefaultPrefetcher)
+
+		return hostcommon.PreimageServer(ctx, logger, cfg, nil, nil, makeDefaultPrefetcher)
 	}
 
 	if err := FaultProofProgramWithDefaultPrefecher(ctx, logger, cfg); err != nil {

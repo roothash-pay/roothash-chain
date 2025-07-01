@@ -3,7 +3,6 @@ package interop
 import (
 	"fmt"
 
-	preimage "github.com/ethereum-optimism/optimism/op-preimage"
 	interopTypes "github.com/ethereum-optimism/optimism/op-program/client/interop/types"
 	"github.com/ethereum-optimism/optimism/op-program/client/l2"
 	l2Types "github.com/ethereum-optimism/optimism/op-program/client/l2/types"
@@ -42,7 +41,7 @@ func (o *ConsolidateOracle) BlockByHash(blockHash common.Hash, chainID eth.Chain
 }
 
 func (o *ConsolidateOracle) OutputByRoot(root common.Hash, chainID eth.ChainID) eth.Output {
-	key := preimage.Keccak256Key(root).PreimageKey()
+	var key []byte
 	b, err := o.db.Get(key[:])
 	if err == nil {
 		output, err := eth.UnmarshalOutput(b)
@@ -66,7 +65,7 @@ func (o *ConsolidateOracle) ReceiptsByBlockHash(blockHash common.Hash, chainID e
 	block := o.consolidatedBlockByHash(blockHash)
 	if block != nil {
 		opaqueReceipts := mpt.ReadTrie(block.ReceiptHash(), func(key common.Hash) []byte {
-			k := preimage.Keccak256Key(key).PreimageKey()
+			var k []byte
 			b, err := o.db.Get(k[:])
 			if err != nil {
 				panic(fmt.Errorf("missing receipt trie node %s: %w", key, err))
@@ -112,7 +111,7 @@ func (o *ConsolidateOracle) TransitionStateByRoot(root common.Hash) *interopType
 }
 
 func (o *ConsolidateOracle) headerByBlockHash(blockHash common.Hash) *types.Header {
-	blockHashKey := preimage.Keccak256Key(blockHash).PreimageKey()
+	var blockHashKey []byte
 	headerRlp, err := o.db.Get(blockHashKey[:])
 	if err != nil {
 		return nil
@@ -126,7 +125,7 @@ func (o *ConsolidateOracle) headerByBlockHash(blockHash common.Hash) *types.Head
 
 func (o *ConsolidateOracle) loadTransactions(txHash common.Hash) []*types.Transaction {
 	opaqueTxs := mpt.ReadTrie(txHash, func(key common.Hash) []byte {
-		k := preimage.Keccak256Key(key).PreimageKey()
+		var k []byte
 		b, err := o.db.Get(k[:])
 		if err != nil {
 			panic(fmt.Sprintf("missing tx trie node %s", key))

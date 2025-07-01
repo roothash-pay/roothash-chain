@@ -7,7 +7,6 @@ import (
 
 	"github.com/ethereum-optimism/optimism/op-node/rollup"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/interop/managed"
-	preimage "github.com/ethereum-optimism/optimism/op-preimage"
 	"github.com/ethereum-optimism/optimism/op-program/client/l1"
 	"github.com/ethereum-optimism/optimism/op-program/client/l2"
 	"github.com/ethereum-optimism/optimism/op-service/eth"
@@ -97,7 +96,7 @@ func BuildDepositOnlyBlock(
 	}
 	marshaledOutput := output.Marshal()
 	outputRoot := eth.Bytes32(crypto.Keccak256Hash(marshaledOutput))
-	outputRootKey := preimage.Keccak256Key(outputRoot).PreimageKey()
+	var outputRootKey []byte
 	if err := db.Put(outputRootKey[:], marshaledOutput); err != nil {
 		return common.Hash{}, eth.Bytes32{}, fmt.Errorf("failed to store L2 output: %w", err)
 	}

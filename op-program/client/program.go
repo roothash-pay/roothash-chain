@@ -6,7 +6,6 @@ import (
 	"io"
 	"os"
 
-	preimage "github.com/ethereum-optimism/optimism/op-preimage"
 	"github.com/ethereum-optimism/optimism/op-program/client/boot"
 	"github.com/ethereum-optimism/optimism/op-program/client/claim"
 	"github.com/ethereum-optimism/optimism/op-program/client/interop"
@@ -40,8 +39,8 @@ func Main(useInterop bool) {
 	oplog.SetGlobalLogHandler(logger.Handler())
 
 	logger.Info("Starting fault proof program client", "useInterop", useInterop)
-	preimageOracle := preimage.ClientPreimageChannel()
-	preimageHinter := preimage.ClientHinterChannel()
+	var preimageOracle io.ReadWriter
+	var preimageHinter io.ReadWriter
 	config := Config{
 		InteropEnabled: useInterop,
 		DB:             memorydb.New(),
@@ -60,19 +59,18 @@ func Main(useInterop bool) {
 
 // RunProgram executes the Program, while attached to an IO based pre-image oracle, to be served by a host.
 func RunProgram(logger log.Logger, preimageOracle io.ReadWriter, preimageHinter io.ReadWriter, cfg Config) error {
-	pClient := preimage.NewOracleClient(preimageOracle)
-	hClient := preimage.NewHintWriter(preimageHinter)
-	l1PreimageOracle := l1.NewCachingOracle(l1.NewPreimageOracle(pClient, hClient))
-	l2PreimageOracle := l2.NewCachingOracle(l2.NewPreimageOracle(pClient, hClient, cfg.InteropEnabled))
+
+	l1PreimageOracle := l1.NewCachingOracle(l1.NewPreimageOracle(nil, nil))
+	l2PreimageOracle := l2.NewCachingOracle(l2.NewPreimageOracle(nil, nil, cfg.InteropEnabled))
 
 	if cfg.InteropEnabled {
-		bootInfo := boot.BootstrapInterop(pClient)
+		bootInfo := boot.BootstrapInterop(nil)
 		return interop.RunInteropProgram(logger, bootInfo, l1PreimageOracle, l2PreimageOracle, !cfg.SkipValidation)
 	}
 	if cfg.DB == nil {
 		return fmt.Errorf("%w: db config is required", errInvalidConfig)
 	}
-	bootInfo := boot.NewBootstrapClient(pClient).BootInfo()
+	bootInfo := boot.NewBootstrapClient(nil).BootInfo()
 	derivationOptions := tasks.DerivationOptions{StoreBlockData: cfg.StoreBlockData}
 	return RunPreInteropProgram(logger, bootInfo, l1PreimageOracle, l2PreimageOracle, cfg.DB, derivationOptions)
 }

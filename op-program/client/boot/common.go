@@ -1,9 +1,7 @@
 package boot
 
-import preimage "github.com/ethereum-optimism/optimism/op-preimage"
-
 const (
-	L1HeadLocalIndex preimage.LocalIndexKey = iota + 1
+	L1HeadLocalIndex = iota + 1
 	L2OutputRootLocalIndex
 	L2ClaimLocalIndex
 	L2ClaimBlockNumberLocalIndex
@@ -16,5 +14,5 @@ const (
 )
 
 type oracleClient interface {
-	Get(key preimage.Key) []byte
+	Get(key uint64) []byte
 }

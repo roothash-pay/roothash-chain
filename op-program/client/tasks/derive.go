@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/ethereum-optimism/optimism/op-node/rollup"
-	preimage "github.com/ethereum-optimism/optimism/op-preimage"
 	cldr "github.com/ethereum-optimism/optimism/op-program/client/driver"
 	"github.com/ethereum-optimism/optimism/op-program/client/l1"
 	"github.com/ethereum-optimism/optimism/op-program/client/l2"
@@ -14,7 +13,6 @@ import (
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
-	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/ethereum/go-ethereum/rlp"
@@ -98,7 +96,7 @@ func storeBlockData(derivedBlockHash common.Hash, db l2.KeyValueStore, backend e
 	if err != nil {
 		return fmt.Errorf("failed to encode block header: %w", err)
 	}
-	blockHashKey := preimage.Keccak256Key(derivedBlockHash).PreimageKey()
+	var blockHashKey []byte
 	if err := db.Put(blockHashKey[:], headerRLP); err != nil {
 		return fmt.Errorf("failed to store block header: %w", err)
 	}
@@ -124,7 +122,7 @@ func storeBlockData(derivedBlockHash common.Hash, db l2.KeyValueStore, backend e
 func storeTrieNodes(values []hexutil.Bytes, db l2.KeyValueStore) error {
 	_, nodes := mpt.WriteTrie(values)
 	for _, node := range nodes {
-		key := preimage.Keccak256Key(crypto.Keccak256Hash(node)).PreimageKey()
+		var key []byte
 		if err := db.Put(key[:], node); err != nil {
 			return fmt.Errorf("failed to store node: %w", err)
 		}
