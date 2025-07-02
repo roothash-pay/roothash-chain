@@ -2,20 +2,15 @@ package node
 
 import (
 	"context"
-	"fmt"
+	"github.com/pkg/errors"
 	"sync/atomic"
 	"time"
 
-	"github.com/ethereum/go-ethereum/log"
-	"github.com/ethereum/go-ethereum/rpc"
-
-	conductorRpc "github.com/ethereum-optimism/optimism/op-conductor/rpc"
 	"github.com/ethereum-optimism/optimism/op-node/metrics"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/conductor"
-	"github.com/ethereum-optimism/optimism/op-service/dial"
 	"github.com/ethereum-optimism/optimism/op-service/eth"
-	"github.com/ethereum-optimism/optimism/op-service/locks"
 	"github.com/ethereum-optimism/optimism/op-service/retry"
+	"github.com/ethereum/go-ethereum/log"
 )
 
 // ConductorClient is a client for the op-conductor RPC service.
@@ -23,8 +18,6 @@ type ConductorClient struct {
 	cfg     *Config
 	metrics *metrics.Metrics
 	log     log.Logger
-
-	apiClient locks.RWValue[*conductorRpc.APIClient]
 
 	// overrideLeader is used to override the leader check for disaster recovery purposes.
 	// During disaster situations where the cluster is unhealthy (no leader, only 1 or less nodes up),
@@ -45,23 +38,6 @@ func NewConductorClient(cfg *Config, log log.Logger, metrics *metrics.Metrics) c
 
 // Initialize initializes the conductor client.
 func (c *ConductorClient) initialize(ctx context.Context) error {
-	c.apiClient.Lock()
-	defer c.apiClient.Unlock()
-	if c.apiClient.Value != nil {
-		return nil
-	}
-	endpoint, err := retry.Do[string](ctx, 10, retry.Exponential(), func() (string, error) {
-		return c.cfg.ConductorRpc(ctx)
-	})
-	if err != nil {
-		return fmt.Errorf("no conductor RPC endpoint available: %w", err)
-	}
-	metricsOpt := rpc.WithRecorder(c.metrics.NewRecorder("conductor"))
-	conductorRpcClient, err := dial.DialRPCClientWithTimeout(context.Background(), time.Minute*1, c.log, endpoint, metricsOpt)
-	if err != nil {
-		return fmt.Errorf("failed to dial conductor RPC: %w", err)
-	}
-	c.apiClient.Value = conductorRpc.NewAPIClient(conductorRpcClient)
 	return nil
 }
 
@@ -83,11 +59,8 @@ func (c *ConductorClient) Leader(ctx context.Context) (bool, error) {
 	defer cancel()
 
 	isLeader, err := retry.Do(ctx, 2, retry.Fixed(50*time.Millisecond), func() (bool, error) {
-		result, err := c.apiClient.Get().Leader(ctx)
-		if err != nil {
-			c.log.Error("Failed to check conductor for leadership", "err", err)
-		}
-		return result, err
+
+		return true, errors.New("")
 	})
 	return isLeader, err
 }
@@ -105,7 +78,7 @@ func (c *ConductorClient) CommitUnsafePayload(ctx context.Context, payload *eth.
 	defer cancel()
 
 	err := retry.Do0(ctx, 2, retry.Fixed(50*time.Millisecond), func() error {
-		return c.apiClient.Get().CommitUnsafePayload(ctx, payload)
+		return nil
 	})
 	return err
 }
@@ -117,11 +90,4 @@ func (c *ConductorClient) OverrideLeader(ctx context.Context) error {
 }
 
 func (c *ConductorClient) Close() {
-	c.apiClient.Lock()
-	defer c.apiClient.Unlock()
-	if c.apiClient.Value == nil {
-		return
-	}
-	c.apiClient.Value.Close()
-	c.apiClient.Value = nil
 }

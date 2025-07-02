@@ -542,7 +542,7 @@ func (d *Sequencer) startBuildingBlock() {
 	withParent := &derive.AttributesWithParent{
 		Attributes: attrs,
 		Parent:     l2Head,
-		Concluding: true,
+		Concluding: true, // todo: after vote change Concluding from false to true
 	}
 
 	// Don't try to start building a block again, until we have heard back from this attempt

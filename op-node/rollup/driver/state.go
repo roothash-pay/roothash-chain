@@ -224,8 +224,8 @@ func (s *Driver) eventLoop() {
 			altSyncTicker.Reset(syncCheckInterval)
 		}
 
-		s.emitter.Emit(finality.FinalizeL1Event{})
-		reqStep() // we may be able to mark more L2 data as finalized now
+		s.emitter.Emit(finality.FinalizeL1Event{}) // todo: if all node vote change block to finalized
+		reqStep()                                  // we may be able to mark more L2 data as finalized now
 
 		select {
 		case <-sequencerCh:
