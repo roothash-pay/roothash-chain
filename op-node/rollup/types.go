@@ -9,7 +9,6 @@ import (
 	"math/big"
 	"time"
 
-	altda "github.com/ethereum-optimism/optimism/op-alt-da"
 	"github.com/ethereum-optimism/optimism/op-service/eth"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -149,11 +148,6 @@ type Config struct {
 	// parameters to the protocol values, like the execution layer does.
 	// If missing, it is loaded by the op-node from the embedded superchain config at startup.
 	ChainOpConfig *params.OptimismConfig `json:"chain_op_config,omitempty"`
-
-	// Optional Features
-
-	// AltDAConfig. We are in the process of migrating to the AltDAConfig from these legacy top level values
-	AltDAConfig *AltDAConfig `json:"alt_da,omitempty"`
 
 	// PectraBlobScheduleTime sets the time until which (but not including) the blob base fee
 	// calculations for the L1 Block Info use the pre-Prague=Cancun blob parameters.
@@ -391,16 +385,6 @@ func (cfg *Config) ProbablyMissingPectraBlobSchedule() bool {
 // validateAltDAConfig checks the two approaches to configuring alt-da mode.
 // If the legacy values are set, they are copied to the new location. If both are set, they are check for consistency.
 func validateAltDAConfig(cfg *Config) error {
-	if cfg.AltDAConfig != nil {
-		if !(cfg.AltDAConfig.CommitmentType == altda.KeccakCommitmentString || cfg.AltDAConfig.CommitmentType == altda.GenericCommitmentString) {
-			return fmt.Errorf("invalid commitment type: %v", cfg.AltDAConfig.CommitmentType)
-		}
-		if cfg.AltDAConfig.CommitmentType == altda.KeccakCommitmentString && cfg.AltDAConfig.DAChallengeAddress == (common.Address{}) {
-			return errors.New("Must set da_challenge_contract_address for keccak commitments")
-		} else if cfg.AltDAConfig.CommitmentType == altda.GenericCommitmentString && cfg.AltDAConfig.DAChallengeAddress != (common.Address{}) {
-			return errors.New("Must set empty da_challenge_contract_address for generic commitments")
-		}
-	}
 	return nil
 }
 
@@ -642,41 +626,9 @@ func (c *Config) GetPayloadVersion(timestamp uint64) eth.EngineAPIMethod {
 	}
 }
 
-// GetOPAltDAConfig validates and returns the altDA config from the rollup config.
-func (c *Config) GetOPAltDAConfig() (altda.Config, error) {
-	if c.AltDAConfig == nil {
-		return altda.Config{}, errors.New("no altDA config")
-	}
-	if c.AltDAConfig.DAChallengeWindow == uint64(0) {
-		return altda.Config{}, errors.New("missing DAChallengeWindow")
-	}
-	if c.AltDAConfig.DAResolveWindow == uint64(0) {
-		return altda.Config{}, errors.New("missing DAResolveWindow")
-	}
-	t, err := altda.CommitmentTypeFromString(c.AltDAConfig.CommitmentType)
-	if err != nil {
-		return altda.Config{}, err
-	}
-	return altda.Config{
-		DAChallengeContractAddress: c.AltDAConfig.DAChallengeAddress,
-		ChallengeWindow:            c.AltDAConfig.DAChallengeWindow,
-		ResolveWindow:              c.AltDAConfig.DAResolveWindow,
-		CommitmentType:             t,
-	}, nil
-}
-
-func (c *Config) AltDAEnabled() bool {
-	return c.AltDAConfig != nil
-}
-
 // SyncLookback computes the number of blocks to walk back in order to find the correct L1 origin.
 // In alt-da mode longest possible window is challenge + resolve windows.
 func (c *Config) SyncLookback() uint64 {
-	if c.AltDAEnabled() {
-		if win := (c.AltDAConfig.DAChallengeWindow + c.AltDAConfig.DAResolveWindow); win > c.SeqWindowSize {
-			return win
-		}
-	}
 	return c.SeqWindowSize
 }
 
@@ -711,9 +663,6 @@ func (c *Config) Description(l2Chains map[string]string) string {
 	})
 	// Report the protocol version
 	banner += fmt.Sprintf("Node supports up to OP-Stack Protocol Version: %s\n", OPStackSupport)
-	if c.AltDAConfig != nil {
-		banner += fmt.Sprintf("Node supports Alt-DA Mode with CommitmentType %v\n", c.AltDAConfig.CommitmentType)
-	}
 	return banner
 }
 
@@ -748,9 +697,6 @@ func (c *Config) LogDescription(log log.Logger, l2Chains map[string]string) {
 	c.forEachFork(func(_ string, logName string, time *uint64) {
 		ctx = append(ctx, logName, fmtForkTimeOrUnset(time))
 	})
-	if c.AltDAConfig != nil {
-		ctx = append(ctx, "alt_da", *c.AltDAConfig)
-	}
 	if c.PectraBlobScheduleTime != nil {
 		// only print in config if set at all
 		ctx = append(ctx, "pectra_blob_schedule_time", fmtForkTimeOrUnset(c.PectraBlobScheduleTime))

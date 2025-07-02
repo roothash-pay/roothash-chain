@@ -6,12 +6,10 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/log"
 
-	altda "github.com/ethereum-optimism/optimism/op-alt-da"
 	"github.com/ethereum-optimism/optimism/op-node/rollup"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/async"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/attributes"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/clsync"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/conductor"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/derive"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/engine"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/event"
@@ -105,15 +103,6 @@ type Finalizer interface {
 	event.Deriver
 }
 
-type AltDAIface interface {
-	// Notify L1 finalized head so AltDA finality is always behind L1
-	Finalize(ref eth.L1BlockRef)
-	// Set the engine finalization signal callback
-	OnFinalizedHeadSignal(f altda.HeadSignalFn)
-
-	derive.AltDAInputFetcher
-}
-
 type SyncStatusTracker interface {
 	event.Deriver
 	SyncStatus() *eth.SyncStatus
@@ -167,8 +156,6 @@ func NewDriver(
 	sequencerStateListener sequencing.SequencerStateListener,
 	safeHeadListener rollup.SafeHeadListener,
 	syncCfg *sync.Config,
-	sequencerConductor conductor.SequencerConductor,
-	altDA AltDAIface,
 	managedMode bool,
 ) *Driver {
 	driverCtx, driverCancel := context.WithCancel(context.Background())
@@ -188,17 +175,15 @@ func NewDriver(
 	sys.Register("cl-sync", clSync, opts)
 
 	var finalizer Finalizer
-	if cfg.AltDAEnabled() {
-		finalizer = finality.NewAltDAFinalizer(driverCtx, log, cfg, altDA)
-	} else {
-		finalizer = finality.NewFinalizer(driverCtx, log, cfg)
-	}
+
+	finalizer = finality.NewFinalizer(driverCtx, log, cfg)
+
 	sys.Register("finalizer", finalizer, opts)
 
 	sys.Register("attributes-handler",
 		attributes.NewAttributesHandler(log, cfg, driverCtx, l2), opts)
 
-	derivationPipeline := derive.NewDerivationPipeline(log, cfg, altDA, l2, metrics, managedMode)
+	derivationPipeline := derive.NewDerivationPipeline(log, cfg, l2, metrics, managedMode)
 
 	sys.Register("pipeline",
 		derive.NewPipelineDeriver(driverCtx, derivationPipeline), opts)
@@ -228,7 +213,7 @@ func NewDriver(
 		asyncGossiper := async.NewAsyncGossiper(driverCtx, network, log, metrics)
 		attrBuilder := derive.NewFetchingAttributesBuilder(cfg, l2)
 		sequencer = sequencing.NewSequencer(driverCtx, log, cfg, attrBuilder,
-			sequencerStateListener, sequencerConductor, asyncGossiper, metrics)
+			sequencerStateListener, asyncGossiper, metrics)
 		sys.Register("sequencer", sequencer, opts)
 	} else {
 		sequencer = sequencing.DisabledSequencer{}

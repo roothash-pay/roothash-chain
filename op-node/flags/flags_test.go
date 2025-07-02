@@ -100,7 +100,6 @@ func TestHasEnvVar(t *testing.T) {
 
 func TestEnvVarFormat(t *testing.T) {
 	skippedFlags := []string{
-		L1NodeAddr.Name,
 		L2EngineAddr.Name,
 		L2EngineJWTSecret.Name,
 		L1TrustRPC.Name,

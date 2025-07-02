@@ -70,7 +70,6 @@ type l1TraversalStage interface {
 type DerivationPipeline struct {
 	log       log.Logger
 	rollupCfg *rollup.Config
-	altDA     AltDAInputFetcher
 
 	l2 L2Source
 
@@ -91,8 +90,7 @@ type DerivationPipeline struct {
 }
 
 // NewDerivationPipeline creates a DerivationPipeline, to turn L1 data into L2 block-inputs.
-func NewDerivationPipeline(log log.Logger, rollupCfg *rollup.Config,
-	altDA AltDAInputFetcher, l2Source L2Source, metrics Metrics, managedMode bool,
+func NewDerivationPipeline(log log.Logger, rollupCfg *rollup.Config, l2Source L2Source, metrics Metrics, managedMode bool,
 ) *DerivationPipeline {
 	attrBuilder := NewFetchingAttributesBuilder(rollupCfg, l2Source)
 	attributesQueue := NewAttributesQueue(log, rollupCfg, attrBuilder)
@@ -100,12 +98,11 @@ func NewDerivationPipeline(log log.Logger, rollupCfg *rollup.Config,
 	// Reset from ResetEngine then up from L1 Traversal. The stages do not talk to each other during
 	// the ResetEngine, but after the ResetEngine, this is the order in which the stages could talk to each other.
 	// Note: The ResetEngine is the only reset that can fail.
-	stages := []ResettableStage{altDA, attributesQueue}
+	stages := []ResettableStage{attributesQueue}
 
 	return &DerivationPipeline{
 		log:       log,
 		rollupCfg: rollupCfg,
-		altDA:     altDA,
 		resetting: 0,
 		stages:    stages,
 		metrics:   metrics,

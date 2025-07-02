@@ -16,7 +16,6 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/ethereum/go-ethereum/rpc"
 
-	altda "github.com/ethereum-optimism/optimism/op-alt-da"
 	opparams "github.com/ethereum-optimism/optimism/op-node/params"
 	"github.com/ethereum-optimism/optimism/op-node/rollup"
 	"github.com/ethereum-optimism/optimism/op-service/eth"
@@ -661,20 +660,6 @@ type AltDADeployConfig struct {
 var _ ConfigChecker = (*AltDADeployConfig)(nil)
 
 func (d *AltDADeployConfig) Check(log log.Logger) error {
-	if d.UseAltDA {
-		if !(d.DACommitmentType == altda.KeccakCommitmentString || d.DACommitmentType == altda.GenericCommitmentString) {
-			return fmt.Errorf("%w: DACommitmentType must be either KeccakCommitment or GenericCommitment", ErrInvalidDeployConfig)
-		}
-		// only enforce challenge and resolve window if using alt-da mode with Keccak Commitments
-		if d.DACommitmentType != altda.GenericCommitmentString {
-			if d.DAChallengeWindow == 0 {
-				return fmt.Errorf("%w: DAChallengeWindow cannot be 0 when using alt-da mode with Keccak Commitments", ErrInvalidDeployConfig)
-			}
-			if d.DAResolveWindow == 0 {
-				return fmt.Errorf("%w: DAResolveWindow cannot be 0 when using alt-da mode with Keccak Commitments", ErrInvalidDeployConfig)
-			}
-		}
-	}
 	return nil
 }
 
@@ -888,12 +873,6 @@ func (d *L1DependenciesConfig) CheckAddresses(dependencyContext DependencyContex
 	if d.OptimismPortalProxy == (common.Address{}) {
 		return fmt.Errorf("%w: OptimismPortalProxy cannot be address(0)", ErrInvalidDeployConfig)
 	}
-
-	if dependencyContext.UseAltDA && dependencyContext.DACommitmentType == altda.KeccakCommitmentString && d.DAChallengeProxy == (common.Address{}) {
-		return fmt.Errorf("%w: DAChallengeContract cannot be address(0) when using alt-da mode", ErrInvalidDeployConfig)
-	} else if dependencyContext.UseAltDA && dependencyContext.DACommitmentType == altda.GenericCommitmentString && d.DAChallengeProxy != (common.Address{}) {
-		return fmt.Errorf("%w: DAChallengeContract must be address(0) when using generic commitments in alt-da mode", ErrInvalidDeployConfig)
-	}
 	return nil
 }
 
@@ -1016,16 +995,6 @@ func (d *DeployConfig) RollupConfig(l1StartBlock *eth.BlockRef, l2GenesisBlockHa
 		EIP1559DenominatorCanyon: &d.EIP1559DenominatorCanyon,
 	}
 
-	var altDA *rollup.AltDAConfig
-	if d.UseAltDA {
-		altDA = &rollup.AltDAConfig{
-			CommitmentType:     d.DACommitmentType,
-			DAChallengeAddress: d.DAChallengeProxy,
-			DAChallengeWindow:  d.DAChallengeWindow,
-			DAResolveWindow:    d.DAResolveWindow,
-		}
-	}
-
 	l1StartTime := l1StartBlock.Time
 
 	return &rollup.Config{
@@ -1062,7 +1031,6 @@ func (d *DeployConfig) RollupConfig(l1StartBlock *eth.BlockRef, l2GenesisBlockHa
 		JovianTime:              d.JovianTime(l1StartTime),
 		InteropTime:             d.InteropTime(l1StartTime),
 		ProtocolVersionsAddress: d.ProtocolVersionsProxy,
-		AltDAConfig:             altDA,
 		ChainOpConfig:           chainOpConfig,
 	}, nil
 }

@@ -13,7 +13,6 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 
 	"github.com/ethereum-optimism/optimism/op-node/rollup"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/conductor"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/derive"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/engine"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/event"
@@ -96,8 +95,6 @@ type Sequencer struct {
 	// May be used to ensure sequencer-state is accurately persisted.
 	listener SequencerStateListener
 
-	conductor conductor.SequencerConductor
-
 	asyncGossip AsyncGossiper
 
 	emitter event.Emitter
@@ -129,7 +126,6 @@ var _ SequencerIface = (*Sequencer)(nil)
 func NewSequencer(driverCtx context.Context, log log.Logger, rollupCfg *rollup.Config,
 	attributesBuilder derive.AttributesBuilder,
 	listener SequencerStateListener,
-	conductor conductor.SequencerConductor,
 	asyncGossip AsyncGossiper,
 	metrics Metrics,
 ) *Sequencer {
@@ -139,7 +135,6 @@ func NewSequencer(driverCtx context.Context, log log.Logger, rollupCfg *rollup.C
 		rollupCfg:   rollupCfg,
 		spec:        rollup.NewChainSpec(rollupCfg),
 		listener:    listener,
-		conductor:   conductor,
 		asyncGossip: asyncGossip,
 		attrBuilder: attributesBuilder,
 		metrics:     metrics,
@@ -254,16 +249,6 @@ func (d *Sequencer) onBuildSealed(x engine.BuildSealedEvent) {
 		"parent", x.Envelope.ExecutionPayload.ParentID(),
 		"txs", len(x.Envelope.ExecutionPayload.Transactions),
 		"time", uint64(x.Envelope.ExecutionPayload.Timestamp))
-
-	// generous timeout, the conductor is important
-	ctx, cancel := context.WithTimeout(d.ctx, time.Second*30)
-	defer cancel()
-	if err := d.conductor.CommitUnsafePayload(ctx, x.Envelope); err != nil {
-		d.emitter.Emit(rollup.EngineTemporaryErrorEvent{
-			Err: fmt.Errorf("failed to commit unsafe payload to conductor: %w", err),
-		})
-		return
-	}
 
 	// begin gossiping as soon as possible
 	// asyncGossip.Clear() will be called later if an non-temporary error is found,
@@ -568,13 +553,6 @@ func (d *Sequencer) Active() bool {
 }
 
 func (d *Sequencer) Start(ctx context.Context, head common.Hash) error {
-	// must be leading to activate
-	if isLeader, err := d.conductor.Leader(ctx); err != nil {
-		return fmt.Errorf("sequencer leader check failed: %w", err)
-	} else if !isLeader {
-		return errors.New("sequencer is not the leader, aborting")
-	}
-
 	// Note: leader check happens before locking; this is how the Driver used to work,
 	// and prevents the event-processing of the sequencer from being stalled due to a potentially slow conductor call.
 	if err := d.l.LockCtx(ctx); err != nil {
@@ -657,16 +635,6 @@ func (d *Sequencer) Stop(ctx context.Context) (common.Hash, error) {
 
 	// ensure latestHead has been updated to the latest sealed/gossiped block before stopping the sequencer
 	for d.latestHead.Hash != d.latestSealed.Hash {
-
-		// if we are not the leader, latestSealed will never be updated and we will wait forever
-		if isLeader, err := d.conductor.Leader(ctx); err != nil {
-			d.log.Warn("Could not determine leadership while stopping. Skipping wait.", "err", err)
-			break
-		} else if !isLeader {
-			d.log.Info("Not leader anymore, skipping head sync wait")
-			break
-		}
-
 		latestHeadSet := make(chan struct{})
 		d.latestHeadSet = latestHeadSet
 		d.l.Unlock()
@@ -707,11 +675,11 @@ func (d *Sequencer) SetMaxSafeLag(ctx context.Context, v uint64) error {
 }
 
 func (d *Sequencer) OverrideLeader(ctx context.Context) error {
-	return d.conductor.OverrideLeader(ctx)
+	return nil
 }
 
 func (d *Sequencer) ConductorEnabled(ctx context.Context) bool {
-	return d.conductor.Enabled(ctx)
+	return true
 }
 
 func (d *Sequencer) SetRecoverMode(mode bool) {
@@ -719,6 +687,5 @@ func (d *Sequencer) SetRecoverMode(mode bool) {
 }
 
 func (d *Sequencer) Close() {
-	d.conductor.Close()
 	d.asyncGossip.Stop()
 }

@@ -16,12 +16,10 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rpc"
 
-	altda "github.com/ethereum-optimism/optimism/op-alt-da"
 	"github.com/ethereum-optimism/optimism/op-node/metrics"
 	"github.com/ethereum-optimism/optimism/op-node/node/safedb"
 	"github.com/ethereum-optimism/optimism/op-node/p2p"
 	"github.com/ethereum-optimism/optimism/op-node/rollup"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/conductor"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/driver"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/event"
 	"github.com/ethereum-optimism/optimism/op-node/rollup/interop"
@@ -214,17 +212,6 @@ func (n *OpNode) initL2(ctx context.Context, cfg *Config) error {
 		n.eventSys.Register("interop", n.interopSys, event.DefaultRegisterOpts())
 	}
 
-	var sequencerConductor conductor.SequencerConductor = &conductor.NoOpConductor{}
-	if cfg.ConductorEnabled {
-		sequencerConductor = NewConductorClient(cfg, n.log, n.metrics)
-	}
-
-	// if altDA is not explicitly activated in the node CLI, the config + any error will be ignored.
-	rpCfg, err := cfg.Rollup.GetOPAltDAConfig()
-	if cfg.AltDA.Enabled && err != nil {
-		return fmt.Errorf("failed to get altDA config: %w", err)
-	}
-	altDA := altda.NewAltDA(n.log, cfg.AltDA, rpCfg, n.metrics.AltDAMetrics)
 	if cfg.SafeDBPath != "" {
 		n.log.Info("Safe head database enabled", "path", cfg.SafeDBPath)
 		safeDB, err := safedb.NewSafeDB(n.log, cfg.SafeDBPath)
@@ -240,7 +227,7 @@ func (n *OpNode) initL2(ctx context.Context, cfg *Config) error {
 		return fmt.Errorf("cfg.Rollup.ChainOpConfig is nil. Please see https://github.com/ethereum-optimism/optimism/releases/tag/op-node/v1.11.0: %w", err)
 	}
 
-	n.l2Driver = driver.NewDriver(n.eventSys, n.eventDrain, &cfg.Driver, &cfg.Rollup, n.l2Source, n, n, n.log, n.metrics, cfg.ConfigPersistence, n.safeDB, &cfg.Sync, sequencerConductor, altDA, managedMode)
+	n.l2Driver = driver.NewDriver(n.eventSys, n.eventDrain, &cfg.Driver, &cfg.Rollup, n.l2Source, n, n, n.log, n.metrics, cfg.ConfigPersistence, n.safeDB, &cfg.Sync, managedMode)
 	return nil
 }
 

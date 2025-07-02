@@ -8,7 +8,6 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/log"
 
-	altda "github.com/ethereum-optimism/optimism/op-alt-da"
 	"github.com/ethereum-optimism/optimism/op-node/rollup"
 	"github.com/ethereum-optimism/optimism/op-service/eth"
 )
@@ -26,15 +25,6 @@ type L1BlobsFetcher interface {
 	GetBlobs(ctx context.Context, ref eth.L1BlockRef, hashes []eth.IndexedBlobHash) ([]*eth.Blob, error)
 }
 
-type AltDAInputFetcher interface {
-	// GetInput fetches the input for the given commitment at the given block number from the DA storage service.
-	GetInput(ctx context.Context, l1 altda.L1Fetcher, c altda.CommitmentData, blockId eth.L1BlockRef) (eth.Data, error)
-	// AdvanceL1Origin advances the L1 origin to the given block number, syncing the DA challenge events.
-	AdvanceL1Origin(ctx context.Context, l1 altda.L1Fetcher, blockId eth.BlockID) error
-	// Reset the challenge origin in case of L1 reorg
-	Reset(ctx context.Context, baseCfg eth.SystemConfig) error
-}
-
 // DataSourceFactory reads raw transactions from a given block & then filters for
 // batch submitter transactions.
 // This is not a stage in the pipeline, but a wrapper for another stage in the pipeline
@@ -43,21 +33,18 @@ type DataSourceFactory struct {
 	dsCfg        DataSourceConfig
 	fetcher      L1Fetcher
 	blobsFetcher L1BlobsFetcher
-	altDAFetcher AltDAInputFetcher
 	ecotoneTime  *uint64
 }
 
-func NewDataSourceFactory(log log.Logger, cfg *rollup.Config, altDAFetcher AltDAInputFetcher) *DataSourceFactory {
+func NewDataSourceFactory(log log.Logger, cfg *rollup.Config) *DataSourceFactory {
 	config := DataSourceConfig{
 		l1Signer:          cfg.L1Signer(),
 		batchInboxAddress: cfg.BatchInboxAddress,
-		altDAEnabled:      cfg.AltDAEnabled(),
 	}
 	return &DataSourceFactory{
-		log:          log,
-		dsCfg:        config,
-		altDAFetcher: altDAFetcher,
-		ecotoneTime:  cfg.EcotoneTime,
+		log:         log,
+		dsCfg:       config,
+		ecotoneTime: cfg.EcotoneTime,
 	}
 }
 
@@ -74,10 +61,7 @@ func (ds *DataSourceFactory) OpenData(ctx context.Context, ref eth.L1BlockRef, b
 	} else {
 		src = NewCalldataSource(ctx, ds.log, ds.dsCfg, ds.fetcher, ref, batcherAddr)
 	}
-	if ds.dsCfg.altDAEnabled {
-		// altDA([calldata | blobdata](l1Ref)) -> data
-		return NewAltDADataSource(ds.log, src, ds.fetcher, ds.altDAFetcher, ref), nil
-	}
+
 	return src, nil
 }
 

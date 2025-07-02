@@ -60,7 +60,7 @@ func Main(useInterop bool) {
 // RunProgram executes the Program, while attached to an IO based pre-image oracle, to be served by a host.
 func RunProgram(logger log.Logger, preimageOracle io.ReadWriter, preimageHinter io.ReadWriter, cfg Config) error {
 
-	l1PreimageOracle := l1.NewCachingOracle(l1.NewPreimageOracle(nil, nil))
+	l1PreimageOracle := l1.NewCachingOracle(l1.NewPreimageOracle())
 	l2PreimageOracle := l2.NewCachingOracle(l2.NewPreimageOracle(nil, nil, cfg.InteropEnabled))
 
 	if cfg.InteropEnabled {

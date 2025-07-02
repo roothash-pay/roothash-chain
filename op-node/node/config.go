@@ -9,7 +9,6 @@ import (
 
 	"github.com/ethereum/go-ethereum/log"
 
-	altda "github.com/ethereum-optimism/optimism/op-alt-da"
 	"github.com/ethereum-optimism/optimism/op-node/flags"
 	"github.com/ethereum-optimism/optimism/op-node/p2p"
 	"github.com/ethereum-optimism/optimism/op-node/rollup"
@@ -70,9 +69,6 @@ type Config struct {
 	ConductorEnabled    bool
 	ConductorRpc        ConductorRPCFunc
 	ConductorRpcTimeout time.Duration
-
-	// AltDA config
-	AltDA altda.CLIConfig
 
 	IgnoreMissingPectraBlobSchedule bool
 	FetchWithdrawalRootFromState    bool
@@ -173,12 +169,6 @@ func (cfg *Config) Check() error {
 		if !cfg.Driver.SequencerEnabled {
 			return fmt.Errorf("sequencer must be enabled when conductor is enabled")
 		}
-	}
-	if err := cfg.AltDA.Check(); err != nil {
-		return fmt.Errorf("altDA config error: %w", err)
-	}
-	if cfg.AltDA.Enabled {
-		log.Warn("Alt-DA Mode is a Beta feature of the MIT licensed OP Stack.  While it has received initial review from core contributors, it is still undergoing testing, and may have bugs or other issues.")
 	}
 	return nil
 }

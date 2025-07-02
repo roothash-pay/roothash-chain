@@ -46,16 +46,6 @@ func LoadOPStackRollupConfig(chainID uint64) (*Config, error) {
 
 	addrs := chConfig.Addresses
 
-	var altDA *AltDAConfig
-	if chConfig.AltDA != nil {
-		altDA = &AltDAConfig{
-			DAChallengeAddress: chConfig.AltDA.DaChallengeContractAddress,
-			DAChallengeWindow:  chConfig.AltDA.DaChallengeWindow,
-			DAResolveWindow:    chConfig.AltDA.DaResolveWindow,
-			CommitmentType:     chConfig.AltDA.DaCommitmentType,
-		}
-	}
-
 	hardforks := chConfig.Hardforks
 	regolithTime := uint64(0)
 	cfg := &Config{
@@ -94,7 +84,6 @@ func LoadOPStackRollupConfig(chainID uint64) (*Config, error) {
 		BatchInboxAddress:      chConfig.BatchInboxAddr,
 		DepositContractAddress: *addrs.OptimismPortalProxy,
 		L1SystemConfigAddress:  *addrs.SystemConfigProxy,
-		AltDAConfig:            altDA,
 		ChainOpConfig:          chOpConfig,
 	}
 
