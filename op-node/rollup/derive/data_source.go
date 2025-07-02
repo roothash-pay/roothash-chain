@@ -37,10 +37,7 @@ type DataSourceFactory struct {
 }
 
 func NewDataSourceFactory(log log.Logger, cfg *rollup.Config) *DataSourceFactory {
-	config := DataSourceConfig{
-		l1Signer:          cfg.L1Signer(),
-		batchInboxAddress: cfg.BatchInboxAddress,
-	}
+	config := DataSourceConfig{}
 	return &DataSourceFactory{
 		log:         log,
 		dsCfg:       config,

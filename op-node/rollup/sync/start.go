@@ -124,8 +124,7 @@ func FindL2Heads(ctx context.Context, cfg *rollup.Config, l2 L2Chain, lgr log.Lo
 	// This is the equivalent of the "syncStatusFinishedELButNotFinalized" post-processing in the engine controller.
 	if result.Finalized.Hash == cfg.Genesis.L2.Hash &&
 		result.Safe.Hash == cfg.Genesis.L2.Hash &&
-		result.Unsafe.Number > cfg.Genesis.L2.Number &&
-		result.Unsafe.L1Origin.Number > cfg.Genesis.L1.Number+(RecoverMinSeqWindows*cfg.SeqWindowSize) {
+		result.Unsafe.Number > cfg.Genesis.L2.Number {
 		lgr.Warn("Attempting recovery from sync state without finality.", "head", result.Unsafe)
 		return &FindHeadsResult{Unsafe: result.Unsafe, Safe: result.Unsafe, Finalized: result.Unsafe}, nil
 	}

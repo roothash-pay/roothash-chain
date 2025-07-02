@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/urfave/cli/v2"
 
@@ -34,11 +33,6 @@ func NewConfig(ctx *cli.Context, log log.Logger) (*node.Config, error) {
 	rollupConfig, err := NewRollupConfigFromCLI(log, ctx)
 	if err != nil {
 		return nil, err
-	}
-
-	if !ctx.Bool(flags.RollupLoadProtocolVersions.Name) {
-		log.Info("Not opted in to ProtocolVersions signal loading, disabling ProtocolVersions contract now.")
-		rollupConfig.ProtocolVersionsAddress = common.Address{}
 	}
 
 	configPersistence := NewConfigPersistence(ctx)

@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"math"
 	"math/big"
 	"reflect"
 	"strconv"
@@ -500,16 +499,6 @@ type ForkchoiceUpdatedResult struct {
 // and may be changed through L1 system config events.
 // The initial SystemConfig at rollup genesis is embedded in the rollup configuration.
 type SystemConfig struct {
-	// BatcherAddr identifies the batch-sender address used in batch-inbox data-transaction filtering.
-	BatcherAddr common.Address `json:"batcherAddr"`
-	// Overhead identifies the L1 fee overhead.
-	// Pre-Ecotone this is passed as-is to the engine.
-	// Post-Ecotone this is always zero, and not passed into the engine.
-	Overhead Bytes32 `json:"overhead"`
-	// Scalar identifies the L1 fee scalar
-	// Pre-Ecotone this is passed as-is to the engine.
-	// Post-Ecotone this encodes multiple pieces of scalar data.
-	Scalar Bytes32 `json:"scalar"`
 	// GasLimit identifies the L2 block gas limit
 	GasLimit uint64 `json:"gasLimit"`
 	// EIP1559Params contains the Holocene-encoded EIP-1559 parameters. This
@@ -541,16 +530,10 @@ func jsonMarshalHolocene(sysCfg SystemConfig) ([]byte, error) {
 
 func jsonMarshalPreHolocene(sysCfg SystemConfig) ([]byte, error) {
 	type sysCfgMarshaling struct {
-		BatcherAddr common.Address `json:"batcherAddr"`
-		Overhead    Bytes32        `json:"overhead"`
-		Scalar      Bytes32        `json:"scalar"`
-		GasLimit    uint64         `json:"gasLimit"`
+		GasLimit uint64 `json:"gasLimit"`
 	}
 	sc := sysCfgMarshaling{
-		BatcherAddr: sysCfg.BatcherAddr,
-		Overhead:    sysCfg.Overhead,
-		Scalar:      sysCfg.Scalar,
-		GasLimit:    sysCfg.GasLimit,
+		GasLimit: sysCfg.GasLimit,
 	}
 	return json.Marshal(sc)
 }
@@ -567,18 +550,6 @@ const (
 type EcotoneScalars struct {
 	BlobBaseFeeScalar uint32
 	BaseFeeScalar     uint32
-}
-
-func (sysCfg *SystemConfig) EcotoneScalars() (EcotoneScalars, error) {
-	if err := CheckEcotoneL1SystemConfigScalar(sysCfg.Scalar); err != nil {
-		if errors.Is(err, ErrBedrockScalarPaddingNotEmpty) {
-			// L2 spec mandates we set baseFeeScalar to MaxUint32 if there are non-zero bytes in
-			// the padding area.
-			return EcotoneScalars{BlobBaseFeeScalar: 0, BaseFeeScalar: math.MaxUint32}, nil
-		}
-		return EcotoneScalars{}, err
-	}
-	return DecodeScalar(sysCfg.Scalar)
 }
 
 // DecodeScalar decodes the blobBaseFeeScalar and baseFeeScalar from a 32-byte scalar value.

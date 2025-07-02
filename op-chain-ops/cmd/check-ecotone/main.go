@@ -529,7 +529,6 @@ func checkBlobTxDenial(ctx context.Context, env *actionEnv) error {
 		return fmt.Errorf("failed to retrieve rollup config: %w", err)
 	}
 	txData := &types.BlobTx{
-		To:         rollupCfg.BatchInboxAddress,
 		Data:       nil,
 		Gas:        params.TxGas, // intrinsic gas only
 		BlobHashes: blobHashes,

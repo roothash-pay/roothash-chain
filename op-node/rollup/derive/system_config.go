@@ -39,7 +39,7 @@ func UpdateSystemConfigWithL1Receipts(sysCfg *eth.SystemConfig, receipts []*type
 			continue
 		}
 		for j, log := range rec.Logs {
-			if log.Address == cfg.L1SystemConfigAddress && len(log.Topics) > 0 && log.Topics[0] == ConfigUpdateEventABIHash {
+			if len(log.Topics) > 0 && log.Topics[0] == ConfigUpdateEventABIHash {
 				if err := ProcessSystemConfigUpdateLogEvent(sysCfg, log, cfg, l1Time); err != nil {
 					result = multierror.Append(result, fmt.Errorf("malformatted L1 system sysCfg log in receipt %d, log %d: %w", i, j, err))
 				}
@@ -86,14 +86,9 @@ func ProcessSystemConfigUpdateLogEvent(destSysCfg *eth.SystemConfig, ev *types.L
 		if length, err := solabi.ReadUint64(reader); err != nil || length != 32 {
 			return NewCriticalError(errors.New("invalid length field"))
 		}
-		address, err := solabi.ReadAddress(reader)
-		if err != nil {
-			return NewCriticalError(errors.New("could not read address"))
-		}
 		if !solabi.EmptyReader(reader) {
 			return NewCriticalError(errors.New("too many bytes"))
 		}
-		destSysCfg.BatcherAddr = address
 		return nil
 	case SystemConfigUpdateFeeScalars:
 		if pointer, err := solabi.ReadUint64(reader); err != nil || pointer != 32 {
@@ -101,29 +96,6 @@ func ProcessSystemConfigUpdateLogEvent(destSysCfg *eth.SystemConfig, ev *types.L
 		}
 		if length, err := solabi.ReadUint64(reader); err != nil || length != 64 {
 			return NewCriticalError(errors.New("invalid length field"))
-		}
-		overhead, err := solabi.ReadEthBytes32(reader)
-		if err != nil {
-			return NewCriticalError(errors.New("could not read overhead"))
-		}
-		scalar, err := solabi.ReadEthBytes32(reader)
-		if err != nil {
-			return NewCriticalError(errors.New("could not read scalar"))
-		}
-		if !solabi.EmptyReader(reader) {
-			return NewCriticalError(errors.New("too many bytes"))
-		}
-		if rollupCfg.IsEcotone(l1Time) {
-			if err := eth.CheckEcotoneL1SystemConfigScalar(scalar); err != nil {
-				return nil // ignore invalid scalars, retain the old system-config scalar
-			}
-			// retain the scalar data in encoded form
-			destSysCfg.Scalar = scalar
-			// zero out the overhead, it will not affect the state-transition after Ecotone
-			destSysCfg.Overhead = eth.Bytes32{}
-		} else {
-			destSysCfg.Overhead = overhead
-			destSysCfg.Scalar = scalar
 		}
 		return nil
 	case SystemConfigUpdateGasLimit:

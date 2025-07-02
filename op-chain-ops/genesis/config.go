@@ -999,10 +999,6 @@ func (d *DeployConfig) RollupConfig(l1StartBlock *eth.BlockRef, l2GenesisBlockHa
 
 	return &rollup.Config{
 		Genesis: rollup.Genesis{
-			L1: eth.BlockID{
-				Hash:   l1StartBlock.Hash,
-				Number: l1StartBlock.Number,
-			},
 			L2: eth.BlockID{
 				Hash:   l2GenesisBlockHash,
 				Number: l2GenesisBlockNumber,
@@ -1010,28 +1006,23 @@ func (d *DeployConfig) RollupConfig(l1StartBlock *eth.BlockRef, l2GenesisBlockHa
 			L2Time:       l1StartBlock.Time,
 			SystemConfig: d.GenesisSystemConfig(),
 		},
-		BlockTime:               d.L2BlockTime,
-		MaxSequencerDrift:       d.MaxSequencerDrift,
-		SeqWindowSize:           d.SequencerWindowSize,
-		ChannelTimeoutBedrock:   d.ChannelTimeoutBedrock,
-		L1ChainID:               new(big.Int).SetUint64(d.L1ChainID),
-		L2ChainID:               new(big.Int).SetUint64(d.L2ChainID),
-		BatchInboxAddress:       d.BatchInboxAddress,
-		DepositContractAddress:  d.OptimismPortalProxy,
-		L1SystemConfigAddress:   d.SystemConfigProxy,
-		RegolithTime:            d.RegolithTime(l1StartTime),
-		CanyonTime:              d.CanyonTime(l1StartTime),
-		DeltaTime:               d.DeltaTime(l1StartTime),
-		EcotoneTime:             d.EcotoneTime(l1StartTime),
-		FjordTime:               d.FjordTime(l1StartTime),
-		GraniteTime:             d.GraniteTime(l1StartTime),
-		HoloceneTime:            d.HoloceneTime(l1StartTime),
-		PectraBlobScheduleTime:  d.PectraBlobScheduleTime(l1StartTime),
-		IsthmusTime:             d.IsthmusTime(l1StartTime),
-		JovianTime:              d.JovianTime(l1StartTime),
-		InteropTime:             d.InteropTime(l1StartTime),
-		ProtocolVersionsAddress: d.ProtocolVersionsProxy,
-		ChainOpConfig:           chainOpConfig,
+		BlockTime:              d.L2BlockTime,
+		MaxSequencerDrift:      d.MaxSequencerDrift,
+		SeqWindowSize:          d.SequencerWindowSize,
+		ChannelTimeoutBedrock:  d.ChannelTimeoutBedrock,
+		L2ChainID:              new(big.Int).SetUint64(d.L2ChainID),
+		RegolithTime:           d.RegolithTime(l1StartTime),
+		CanyonTime:             d.CanyonTime(l1StartTime),
+		DeltaTime:              d.DeltaTime(l1StartTime),
+		EcotoneTime:            d.EcotoneTime(l1StartTime),
+		FjordTime:              d.FjordTime(l1StartTime),
+		GraniteTime:            d.GraniteTime(l1StartTime),
+		HoloceneTime:           d.HoloceneTime(l1StartTime),
+		PectraBlobScheduleTime: d.PectraBlobScheduleTime(l1StartTime),
+		IsthmusTime:            d.IsthmusTime(l1StartTime),
+		JovianTime:             d.JovianTime(l1StartTime),
+		InteropTime:            d.InteropTime(l1StartTime),
+		ChainOpConfig:          chainOpConfig,
 	}, nil
 }
 
@@ -1039,9 +1030,6 @@ func (d *DeployConfig) RollupConfig(l1StartBlock *eth.BlockRef, l2GenesisBlockHa
 // Overhead value is considered a noop.
 func (d *DeployConfig) GenesisSystemConfig() eth.SystemConfig {
 	return eth.SystemConfig{
-		BatcherAddr:       d.BatchSenderAddress,
-		Overhead:          eth.Bytes32(common.BigToHash(new(big.Int).SetUint64(d.GasPriceOracleOverhead))),
-		Scalar:            d.FeeScalar(),
 		GasLimit:          uint64(d.L2GenesisBlockGasLimit),
 		OperatorFeeParams: d.OperatorFeeParams(),
 	}

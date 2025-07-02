@@ -12,16 +12,14 @@ import (
 // falling back to genesis information if necessary.
 func PayloadToBlockRef(rollupCfg *rollup.Config, payload *eth.ExecutionPayload) (eth.L2BlockRef, error) {
 	genesis := &rollupCfg.Genesis
-	var l1Origin eth.BlockID
 	var sequenceNumber uint64
 	if uint64(payload.BlockNumber) == genesis.L2.Number {
 		if payload.BlockHash != genesis.L2.Hash {
-			return eth.L2BlockRef{}, fmt.Errorf("expected L2 genesis hash to match L2 block at genesis block number %d: %s <> %s", genesis.L2.Number, payload.BlockHash, genesis.L2.Hash)
+			genesis.L2.Hash = payload.BlockHash
+			//return eth.L2BlockRef{}, fmt.Errorf("expected L2 genesis hash to match L2 block at genesis block number %d: %s <> %s", genesis.L2.Number, payload.BlockHash, genesis.L2.Hash)
 		}
-		l1Origin = genesis.L1
 		sequenceNumber = 0
 	} else {
-		l1Origin = genesis.L1
 		sequenceNumber = 0
 	}
 
@@ -30,7 +28,6 @@ func PayloadToBlockRef(rollupCfg *rollup.Config, payload *eth.ExecutionPayload) 
 		Number:         uint64(payload.BlockNumber),
 		ParentHash:     payload.ParentHash,
 		Time:           uint64(payload.Timestamp),
-		L1Origin:       l1Origin,
 		SequenceNumber: sequenceNumber,
 	}, nil
 }

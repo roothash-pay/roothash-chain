@@ -11,7 +11,6 @@ import (
 
 	"github.com/ethereum-optimism/optimism/op-service/eth"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/params"
 )
@@ -21,25 +20,17 @@ var (
 	ErrMissingChannelTimeout         = errors.New("channel timeout must be set, this should cover at least a L1 block time")
 	ErrInvalidSeqWindowSize          = errors.New("sequencing window size must at least be 2")
 	ErrInvalidMaxSeqDrift            = errors.New("maximum sequencer drift must be greater than 0")
-	ErrMissingGenesisL1Hash          = errors.New("genesis L1 hash cannot be empty")
 	ErrMissingGenesisL2Hash          = errors.New("genesis L2 hash cannot be empty")
-	ErrGenesisHashesSame             = errors.New("achievement get! rollup inception: L1 and L2 genesis cannot be the same")
 	ErrMissingGenesisL2Time          = errors.New("missing L2 genesis time")
-	ErrMissingBatcherAddr            = errors.New("missing genesis system config batcher address")
-	ErrMissingScalar                 = errors.New("missing genesis system config scalar")
 	ErrMissingGasLimit               = errors.New("missing genesis system config gas limit")
 	ErrMissingBatchInboxAddress      = errors.New("missing batch inbox address")
 	ErrMissingDepositContractAddress = errors.New("missing deposit contract address")
-	ErrMissingL1ChainID              = errors.New("L1 chain ID must not be nil")
 	ErrMissingL2ChainID              = errors.New("L2 chain ID must not be nil")
-	ErrChainIDsSame                  = errors.New("L1 and L2 chain IDs must be different")
-	ErrL1ChainIDNotPositive          = errors.New("L1 chain ID must be non-zero and positive")
 	ErrL2ChainIDNotPositive          = errors.New("L2 chain ID must be non-zero and positive")
 )
 
 type Genesis struct {
 	// The L1 block that the rollup starts *after* (no derived transactions)
-	L1 eth.BlockID `json:"l1"`
 	// The L2 block the rollup starts from (no transactions, pre-configured state)
 	L2 eth.BlockID `json:"l2"`
 	// Timestamp of L2 block
@@ -83,8 +74,6 @@ type Config struct {
 	SeqWindowSize uint64 `json:"seq_window_size"`
 	// Number of L1 blocks between when a channel can be opened and when it must be closed by.
 	ChannelTimeoutBedrock uint64 `json:"channel_timeout"`
-	// Required to verify L1 signatures
-	L1ChainID *big.Int `json:"l1_chain_id"`
 	// Required to identify the L2 network and create p2p signatures unique for this chain.
 	L2ChainID *big.Int `json:"l2_chain_id"`
 
@@ -133,16 +122,6 @@ type Config struct {
 	// Note: below addresses are part of the block-derivation process,
 	// and required to be the same network-wide to stay in consensus.
 
-	// L1 address that batches are sent to.
-	BatchInboxAddress common.Address `json:"batch_inbox_address"`
-	// L1 Deposit Contract Address
-	DepositContractAddress common.Address `json:"deposit_contract_address"`
-	// L1 System Config Address
-	L1SystemConfigAddress common.Address `json:"l1_system_config_address"`
-
-	// L1 address that declares the protocol versions, optional (Beta feature)
-	ProtocolVersionsAddress common.Address `json:"protocol_versions_address,omitempty"`
-
 	// ChainOpConfig is the OptimismConfig of the execution layer ChainConfig.
 	// It is used during safe chain consolidation to translate zero SystemConfig EIP1559
 	// parameters to the protocol values, like the execution layer does.
@@ -156,21 +135,6 @@ type Config struct {
 	// This feature (de)activates by L1 origin timestamp, to keep a consistent L1 block info per L2
 	// epoch.
 	PectraBlobScheduleTime *uint64 `json:"pectra_blob_schedule_time,omitempty"`
-}
-
-// ValidateL1Config checks L1 config variables for errors.
-func (cfg *Config) ValidateL1Config(ctx context.Context, client L1Client) error {
-	// Validate the L1 Client Chain ID
-	if err := cfg.CheckL1ChainID(ctx, client); err != nil {
-		return err
-	}
-
-	// Validate the Rollup L1 Genesis Blockhash
-	if err := cfg.CheckL1GenesisBlockHash(ctx, client); err != nil {
-		return err
-	}
-
-	return nil
 }
 
 // ValidateL2Config checks L2 config variables for errors.
@@ -212,30 +176,6 @@ func (cfg *Config) TargetBlockNumber(timestamp uint64) (num uint64, err error) {
 type L1Client interface {
 	ChainID(context.Context) (*big.Int, error)
 	L1BlockRefByNumber(context.Context, uint64) (eth.L1BlockRef, error)
-}
-
-// CheckL1ChainID checks that the configured L1 chain ID matches the client's chain ID.
-func (cfg *Config) CheckL1ChainID(ctx context.Context, client L1Client) error {
-	id, err := client.ChainID(ctx)
-	if err != nil {
-		return fmt.Errorf("failed to get L1 chain ID: %w", err)
-	}
-	if cfg.L1ChainID.Cmp(id) != 0 {
-		return fmt.Errorf("incorrect L1 RPC chain id %d, expected %d", id, cfg.L1ChainID)
-	}
-	return nil
-}
-
-// CheckL1GenesisBlockHash checks that the configured L1 genesis block hash is valid for the given client.
-func (cfg *Config) CheckL1GenesisBlockHash(ctx context.Context, client L1Client) error {
-	l1GenesisBlockRef, err := client.L1BlockRefByNumber(ctx, cfg.Genesis.L1.Number)
-	if err != nil {
-		return fmt.Errorf("failed to get L1 genesis blockhash: %w", err)
-	}
-	if l1GenesisBlockRef.Hash != cfg.Genesis.L1.Hash {
-		return fmt.Errorf("incorrect L1 genesis block hash %s, expected %s", l1GenesisBlockRef.Hash, cfg.Genesis.L1.Hash)
-	}
-	return nil
 }
 
 type L2Client interface {
@@ -281,44 +221,17 @@ func (cfg *Config) Check() error {
 	if cfg.MaxSequencerDrift == 0 {
 		return ErrInvalidMaxSeqDrift
 	}
-	if cfg.Genesis.L1.Hash == (common.Hash{}) {
-		return ErrMissingGenesisL1Hash
-	}
 	if cfg.Genesis.L2.Hash == (common.Hash{}) {
 		return ErrMissingGenesisL2Hash
-	}
-	if cfg.Genesis.L2.Hash == cfg.Genesis.L1.Hash {
-		return ErrGenesisHashesSame
 	}
 	if cfg.Genesis.L2Time == 0 {
 		return ErrMissingGenesisL2Time
 	}
-	if cfg.Genesis.SystemConfig.BatcherAddr == (common.Address{}) {
-		return ErrMissingBatcherAddr
-	}
-	if cfg.Genesis.SystemConfig.Scalar == (eth.Bytes32{}) {
-		return ErrMissingScalar
-	}
 	if cfg.Genesis.SystemConfig.GasLimit == 0 {
 		return ErrMissingGasLimit
 	}
-	if cfg.BatchInboxAddress == (common.Address{}) {
-		return ErrMissingBatchInboxAddress
-	}
-	if cfg.DepositContractAddress == (common.Address{}) {
-		return ErrMissingDepositContractAddress
-	}
-	if cfg.L1ChainID == nil {
-		return ErrMissingL1ChainID
-	}
 	if cfg.L2ChainID == nil {
 		return ErrMissingL2ChainID
-	}
-	if cfg.L1ChainID.Cmp(cfg.L2ChainID) == 0 {
-		return ErrChainIDsSame
-	}
-	if cfg.L1ChainID.Sign() < 1 {
-		return ErrL1ChainIDNotPositive
 	}
 	if cfg.L2ChainID.Sign() < 1 {
 		return ErrL2ChainIDNotPositive
@@ -356,32 +269,6 @@ func (cfg *Config) HasOptimismWithdrawalsRoot(timestamp uint64) bool {
 	return cfg.IsIsthmus(timestamp)
 }
 
-// ProbablyMissingPectraBlobSchedule returns whether the chain is likely missing the Pectra blob
-// schedule fix.
-// A chain probably needs the Pectra blob schedule fix if:
-// - its L1 in Holesky or Sepolia, and
-// - its genesis is before the L1's Prague activation.
-func (cfg *Config) ProbablyMissingPectraBlobSchedule() bool {
-	if cfg.PectraBlobScheduleTime != nil {
-		return false
-	}
-
-	var pragueTime uint64
-	if cfg.L1ChainID.Cmp(params.HoleskyChainConfig.ChainID) == 0 {
-		pragueTime = *params.HoleskyChainConfig.PragueTime
-	} else if cfg.L1ChainID.Cmp(params.SepoliaChainConfig.ChainID) == 0 {
-		pragueTime = *params.SepoliaChainConfig.PragueTime
-	} else {
-		// Only Holesky and Sepolia chains may have run into the
-		// Pectra blob schedule bug.
-		return false
-	}
-
-	// Only chains whose genesis was before the L1's prague activation need
-	// the Pectra blob schedule fix.
-	return pragueTime >= cfg.Genesis.L2Time
-}
-
 // validateAltDAConfig checks the two approaches to configuring alt-da mode.
 // If the legacy values are set, they are copied to the new location. If both are set, they are check for consistency.
 func validateAltDAConfig(cfg *Config) error {
@@ -403,10 +290,6 @@ func checkFork(a, b *uint64, aName, bName ForkName) error {
 		return fmt.Errorf("fork %s set to %d, but prior fork %s has higher offset %d", bName, *b, aName, *a)
 	}
 	return nil
-}
-
-func (c *Config) L1Signer() types.Signer {
-	return types.NewCancunSigner(c.L1ChainID)
 }
 
 // IsRegolith returns true if the Regolith hardfork is active at or past the given timestamp.
@@ -645,17 +528,11 @@ func (c *Config) Description(l2Chains map[string]string) string {
 	if networkL2 == "" {
 		networkL2 = "unknown L2"
 	}
-	networkL1 := params.NetworkNames[c.L1ChainID.String()]
-	if networkL1 == "" {
-		networkL1 = "unknown L1"
-	}
 	banner += fmt.Sprintf("L2 Chain ID: %v (%s)\n", c.L2ChainID, networkL2)
-	banner += fmt.Sprintf("L1 Chain ID: %v (%s)\n", c.L1ChainID, networkL1)
 	// Report the genesis configuration
 	banner += "Bedrock starting point:\n"
 	banner += fmt.Sprintf("  L2 starting time: %d ~ %s\n", c.Genesis.L2Time, fmtTime(c.Genesis.L2Time))
 	banner += fmt.Sprintf("  L2 block: %s %d\n", c.Genesis.L2.Hash, c.Genesis.L2.Number)
-	banner += fmt.Sprintf("  L1 block: %s %d\n", c.Genesis.L1.Hash, c.Genesis.L1.Number)
 	// Report the upgrade configuration
 	banner += "Post-Bedrock Network Upgrades (timestamp based):\n"
 	c.forEachFork(func(name string, _ string, time *uint64) {
@@ -678,21 +555,13 @@ func (c *Config) LogDescription(log log.Logger, l2Chains map[string]string) {
 	if networkL2 == "" {
 		networkL2 = "unknown L2"
 	}
-	networkL1 := params.NetworkNames[c.L1ChainID.String()]
-	if networkL1 == "" {
-		networkL1 = "unknown L1"
-	}
 
 	ctx := []any{
 		"l2_chain_id", c.L2ChainID,
 		"l2_network", networkL2,
-		"l1_chain_id", c.L1ChainID,
-		"l1_network", networkL1,
 		"l2_start_time", c.Genesis.L2Time,
 		"l2_block_hash", c.Genesis.L2.Hash.String(),
 		"l2_block_number", c.Genesis.L2.Number,
-		"l1_block_hash", c.Genesis.L1.Hash.String(),
-		"l1_block_number", c.Genesis.L1.Number,
 	}
 	c.forEachFork(func(_ string, logName string, time *uint64) {
 		ctx = append(ctx, logName, fmtForkTimeOrUnset(time))

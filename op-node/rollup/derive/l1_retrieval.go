@@ -54,7 +54,7 @@ func (l1r *L1Retrieval) NextData(ctx context.Context) ([]byte, error) {
 		} else if err != nil {
 			return nil, err
 		}
-		if l1r.datas, err = l1r.dataSrc.OpenData(ctx, next, l1r.prev.SystemConfig().BatcherAddr); err != nil {
+		if l1r.datas, err = l1r.dataSrc.OpenData(ctx, next, common.Address{}); err != nil {
 			return nil, fmt.Errorf("failed to open data source: %w", err)
 		}
 	}
@@ -77,7 +77,7 @@ func (l1r *L1Retrieval) NextData(ctx context.Context) ([]byte, error) {
 // internal invariants that later propagate up the derivation pipeline.
 func (l1r *L1Retrieval) Reset(ctx context.Context, sysCfg eth.SystemConfig) error {
 	var err error
-	if l1r.datas, err = l1r.dataSrc.OpenData(ctx, eth.L1BlockRef{}, sysCfg.BatcherAddr); err != nil {
+	if l1r.datas, err = l1r.dataSrc.OpenData(ctx, eth.L1BlockRef{}, common.Address{}); err != nil {
 		return fmt.Errorf("failed to open data source: %w", err)
 	}
 	l1r.log.Info("Reset of L1Retrieval done")

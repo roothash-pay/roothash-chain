@@ -411,7 +411,6 @@ func L1InfoDeposit(rollupCfg *rollup.Config, sysCfg eth.SystemConfig, seqNumber 
 		BaseFee:        block.BaseFee(),
 		BlockHash:      block.Hash(),
 		SequenceNumber: seqNumber,
-		BatcherAddr:    sysCfg.BatcherAddr,
 	}
 	var data []byte
 	if isEcotoneButNotFirstBlock(rollupCfg, l2Timestamp) {
@@ -434,12 +433,6 @@ func L1InfoDeposit(rollupCfg *rollup.Config, sysCfg eth.SystemConfig, seqNumber 
 			// The L2 spec states to use the MIN_BLOB_GASPRICE from EIP-4844 if not yet active on L1.
 			l1BlockInfo.BlobBaseFee = big.NewInt(1)
 		}
-		scalars, err := sysCfg.EcotoneScalars()
-		if err != nil {
-			return nil, err
-		}
-		l1BlockInfo.BlobBaseFeeScalar = scalars.BlobBaseFeeScalar
-		l1BlockInfo.BaseFeeScalar = scalars.BaseFeeScalar
 
 		if isIsthmusActivated {
 			operatorFee := sysCfg.OperatorFee()
@@ -462,8 +455,6 @@ func L1InfoDeposit(rollupCfg *rollup.Config, sysCfg eth.SystemConfig, seqNumber 
 		}
 
 	} else {
-		l1BlockInfo.L1FeeOverhead = sysCfg.Overhead
-		l1BlockInfo.L1FeeScalar = sysCfg.Scalar
 		out, err := l1BlockInfo.marshalBinaryBedrock()
 		if err != nil {
 			return nil, fmt.Errorf("failed to marshal Bedrock l1 block info: %w", err)

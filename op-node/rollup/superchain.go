@@ -30,30 +30,16 @@ func LoadOPStackRollupConfig(chainID uint64) (*Config, error) {
 		EIP1559DenominatorCanyon: chConfig.Optimism.EIP1559DenominatorCanyon,
 	}
 
-	superConfig, err := superchain.GetSuperchain(chain.Network)
-	if err != nil {
-		return nil, fmt.Errorf("unable to get superchain %q from superchain registry: %w", chain.Network, err)
-	}
-
 	sysCfg := chConfig.Genesis.SystemConfig
 
 	genesisSysConfig := eth.SystemConfig{
-		BatcherAddr: sysCfg.BatcherAddr,
-		Overhead:    eth.Bytes32(sysCfg.Overhead),
-		Scalar:      eth.Bytes32(sysCfg.Scalar),
-		GasLimit:    sysCfg.GasLimit,
+		GasLimit: sysCfg.GasLimit,
 	}
-
-	addrs := chConfig.Addresses
 
 	hardforks := chConfig.Hardforks
 	regolithTime := uint64(0)
 	cfg := &Config{
 		Genesis: Genesis{
-			L1: eth.BlockID{
-				Hash:   chConfig.Genesis.L1.Hash,
-				Number: chConfig.Genesis.L1.Number,
-			},
 			L2: eth.BlockID{
 				Hash:   chConfig.Genesis.L2.Hash,
 				Number: chConfig.Genesis.L2.Number,
@@ -69,7 +55,6 @@ func LoadOPStackRollupConfig(chainID uint64) (*Config, error) {
 		MaxSequencerDrift:      chConfig.MaxSequencerDrift,
 		SeqWindowSize:          chConfig.SeqWindowSize,
 		ChannelTimeoutBedrock:  300,
-		L1ChainID:              new(big.Int).SetUint64(superConfig.L1.ChainID),
 		L2ChainID:              new(big.Int).SetUint64(chConfig.ChainID),
 		RegolithTime:           &regolithTime,
 		CanyonTime:             hardforks.CanyonTime,
@@ -81,12 +66,8 @@ func LoadOPStackRollupConfig(chainID uint64) (*Config, error) {
 		PectraBlobScheduleTime: hardforks.PectraBlobScheduleTime,
 		IsthmusTime:            hardforks.IsthmusTime,
 		JovianTime:             hardforks.JovianTime,
-		BatchInboxAddress:      chConfig.BatchInboxAddr,
-		DepositContractAddress: *addrs.OptimismPortalProxy,
-		L1SystemConfigAddress:  *addrs.SystemConfigProxy,
 		ChainOpConfig:          chOpConfig,
 	}
 
-	cfg.ProtocolVersionsAddress = superConfig.ProtocolVersionsAddr
 	return cfg, nil
 }

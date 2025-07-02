@@ -28,14 +28,12 @@ type L2BlockRefSource interface {
 func L2BlockToBlockRef(rollupCfg *rollup.Config, block L2BlockRefSource) (eth.L2BlockRef, error) {
 	hash, number := block.Hash(), block.NumberU64()
 
-	var l1Origin eth.BlockID
 	var sequenceNumber uint64
 	genesis := &rollupCfg.Genesis
 	if number == genesis.L2.Number {
 		if hash != genesis.L2.Hash {
 			return eth.L2BlockRef{}, fmt.Errorf("expected L2 genesis hash to match L2 block at genesis block number %d: %s <> %s", genesis.L2.Number, hash, genesis.L2.Hash)
 		}
-		l1Origin = genesis.L1
 		sequenceNumber = 0
 	} else {
 		txs := block.Transactions()
@@ -50,7 +48,6 @@ func L2BlockToBlockRef(rollupCfg *rollup.Config, block L2BlockRefSource) (eth.L2
 		if err != nil {
 			return eth.L2BlockRef{}, fmt.Errorf("failed to parse L1 info deposit tx from L2 block: %w", err)
 		}
-		l1Origin = eth.BlockID{Hash: info.BlockHash, Number: info.Number}
 		sequenceNumber = info.SequenceNumber
 	}
 
@@ -59,7 +56,6 @@ func L2BlockToBlockRef(rollupCfg *rollup.Config, block L2BlockRefSource) (eth.L2
 		Number:         number,
 		ParentHash:     block.ParentHash(),
 		Time:           block.Time(),
-		L1Origin:       l1Origin,
 		SequenceNumber: sequenceNumber,
 	}, nil
 }
