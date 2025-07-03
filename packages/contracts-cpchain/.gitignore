@@ -1,0 +1,23 @@
+# Artifacts and Cache
+artifacts
+forge-artifacts
+cache
+broadcast
+kout-proofs
+test/kontrol/logs
+
+# Metrics
+coverage.out
+.resource-metering.csv
+
+# Testing State
+.testdata
+kontrol_prove_report.xml
+
+# Scripts
+scripts/go-ffi/go-ffi
+scripts/go-ffi/go-ffi-cannon64
+
+# Environment Variables
+.envrc
+!.envrc.example
