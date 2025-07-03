@@ -42,7 +42,7 @@ abstract contract ResourceMetering is Initializable {
     ///                                            value.
     /// @custom:field systemTxMaxGas               The amount of gas supplied to the system
     ///                                            transaction. This should be set to the same
-    ///                                            number that the op-node sets as the gas limit
+    ///                                            number that the cp-node sets as the gas limit
     ///                                            for the system transaction.
     /// @custom:field maximumBaseFee               The max deposit base fee, it is clamped to this
     ///                                            value.

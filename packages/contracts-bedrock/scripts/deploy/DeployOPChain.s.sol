@@ -487,7 +487,7 @@ contract DeployOPChain is Script {
             return;
         }
 
-        // This hex string is the absolutePrestate of the latest op-program release, see where the
+        // This hex string is the absolutePrestate of the latest cp-program release, see where the
         // `EXPECTED_PRESTATE_HASH` is defined in `config.yml`.
         require(
             Claim.unwrap(game.absolutePrestate())

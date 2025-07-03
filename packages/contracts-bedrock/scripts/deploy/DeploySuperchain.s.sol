@@ -20,7 +20,7 @@ import { BaseDeployIO } from "scripts/deploy/BaseDeployIO.sol";
 //
 // There are three categories of users that are expected to interact with the scripts:
 //   1. End users that want to run live contract deployments. These users are expected to run these scripts via
-//      'op-deployer' which uses a go interface to interact with the scripts.
+//      'cp-deployer' which uses a go interface to interact with the scripts.
 //   2. Solidity developers that want to use or test these scripts in a standard forge test environment.
 //   3. Go developers that want to run the deploy scripts as part of e2e testing with other aspects of the OP Stack.
 //

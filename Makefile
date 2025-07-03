@@ -13,7 +13,7 @@ help: ## Prints this help message
 build: build-go build-contracts ## Builds Go components and contracts-bedrock
 .PHONY: build
 
-build-go: submodules op-node op-deployer## Builds op-node and op-deployer
+build-go: submodules cp-node cp-deployer## Builds cp-node and cp-deployer
 .PHONY: build-go
 
 build-contracts:
@@ -22,7 +22,7 @@ build-contracts:
 
 lint-go: ## Lints Go code with specific linters
 	golangci-lint run -E goimports,sqlclosecheck,bodyclose,asciicheck,misspell,errorlint --timeout 5m -e "errors.As" -e "errors.Is" ./...
-	golangci-lint run -E err113 --timeout 5m -e "errors.As" -e "errors.Is" ./op-program/client/...
+	golangci-lint run -E err113 --timeout 5m -e "errors.As" -e "errors.Is" ./cp-program/client/...
 .PHONY: lint-go
 
 lint-go-fix: ## Lints Go code with specific linters and fixes reported issues
@@ -38,7 +38,7 @@ golang-docker: ## Builds Docker images for Go components using buildx
 			--progress plain \
 			--load \
 			-f docker-bake.hcl \
-			op-node op-batcher op-proposer op-challenger op-dispute-mon op-supervisor
+			cp-node op-batcher op-proposer op-challenger op-dispute-mon cp-supervisor
 .PHONY: golang-docker
 
 docker-builder-clean: ## Removes the Docker buildx builder
@@ -51,13 +51,13 @@ docker-builder: ## Creates a Docker buildx builder
 .PHONY: docker-builder
 
 # add --print to dry-run
-cross-op-node: ## Builds cross-platform Docker image for op-node
+cross-cp-node: ## Builds cross-platform Docker image for cp-node
 	# We don't use a buildx builder here, and just load directly into regular docker, for convenience.
 	GIT_COMMIT=$$(git rev-parse HEAD) \
 	GIT_DATE=$$(git show -s --format='%ct') \
 	IMAGE_TAGS=$$(git rev-parse HEAD),latest \
 	PLATFORMS="linux/arm64" \
-	GIT_VERSION=$(shell tags=$$(git tag --points-at $(GITCOMMIT) | grep '^op-node/' | sed 's/op-node\///' | sort -V); \
+	GIT_VERSION=$(shell tags=$$(git tag --points-at $(GITCOMMIT) | grep '^cp-node/' | sed 's/cp-node\///' | sort -V); \
              preferred_tag=$$(echo "$$tags" | grep -v -- '-rc' | tail -n 1); \
              if [ -z "$$preferred_tag" ]; then \
                  if [ -z "$$tags" ]; then \
@@ -74,8 +74,8 @@ cross-op-node: ## Builds cross-platform Docker image for op-node
 			--load \
 			--no-cache \
 			-f docker-bake.hcl \
-			op-node
-.PHONY: cross-op-node
+			cp-node
+.PHONY: cross-cp-node
 
 contracts-bedrock-docker: ## Builds Docker image for Bedrock contracts
 	IMAGE_TAGS=$$(git rev-parse HEAD),latest \
@@ -91,17 +91,17 @@ submodules: ## Updates git submodules
 .PHONY: submodules
 
 
-op-node: ## Builds op-node binary
-	just $(JUSTFLAGS) ./op-node/op-node
-.PHONY: op-node
+cp-node: ## Builds cp-node binary
+	just $(JUSTFLAGS) ./cp-node/cp-node
+.PHONY: cp-node
 
-generate-mocks-op-node: ## Generates mocks for op-node
-	make -C ./op-node generate-mocks
-.PHONY: generate-mocks-op-node
+generate-mocks-cp-node: ## Generates mocks for cp-node
+	make -C ./cp-node generate-mocks
+.PHONY: generate-mocks-cp-node
 
-generate-mocks-op-service: ## Generates mocks for op-service
-	make -C ./op-service generate-mocks
-.PHONY: generate-mocks-op-service
+generate-mocks-cp-service: ## Generates mocks for cp-service
+	make -C ./cp-service generate-mocks
+.PHONY: generate-mocks-cp-service
 
 op-batcher: ## Builds op-batcher binary
 	just $(JUSTFLAGS) ./op-batcher/op-batcher
@@ -111,9 +111,9 @@ op-proposer: ## Builds op-proposer binary
 	just $(JUSTFLAGS) ./op-proposer/op-proposer
 .PHONY: op-proposer
 
-op-deployer: ## Builds op-deployer binary
-	just $(JUSTFLAGS) ./op-deployer/build
-.PHONY: op-deployer
+cp-deployer: ## Builds cp-deployer binary
+	just $(JUSTFLAGS) ./cp-deployer/build
+.PHONY: cp-deployer
 
 op-challenger: ## Builds op-challenger binary
 	make -C ./op-challenger op-challenger
@@ -123,20 +123,20 @@ op-dispute-mon: ## Builds op-dispute-mon binary
 	make -C ./op-dispute-mon op-dispute-mon
 .PHONY: op-dispute-mon
 
-op-program: ## Builds op-program binary
-	make -C ./op-program op-program
-.PHONY: op-program
+cp-program: ## Builds cp-program binary
+	make -C ./cp-program cp-program
+.PHONY: cp-program
 
 cannon:  ## Builds cannon binary
 	make -C ./cannon cannon
 .PHONY: cannon
 
 reproducible-prestate:   ## Builds reproducible-prestate binary
-	make -C ./op-program reproducible-prestate
+	make -C ./cp-program reproducible-prestate
 .PHONY: reproducible-prestate
 
 # Include any files required for the devnet to build and run.
-DEVNET_CANNON_PRESTATE_FILES := op-program/bin/prestate-proof.json op-program/bin/prestate.bin.gz op-program/bin/prestate-proof-mt64.json op-program/bin/prestate-mt64.bin.gz op-program/bin/prestate-interop.bin.gz
+DEVNET_CANNON_PRESTATE_FILES := cp-program/bin/prestate-proof.json cp-program/bin/prestate.bin.gz cp-program/bin/prestate-proof-mt64.json cp-program/bin/prestate-mt64.bin.gz cp-program/bin/prestate-interop.bin.gz
 
 
 $(DEVNET_CANNON_PRESTATE_FILES):
@@ -147,22 +147,22 @@ $(DEVNET_CANNON_PRESTATE_FILES):
 cannon-prestates: cannon-prestate cannon-prestate-mt64 cannon-prestate-interop
 .PHONY: cannon-prestates
 
-cannon-prestate: op-program cannon ## Generates prestate using cannon and op-program
-	./cannon/bin/cannon load-elf --type singlethreaded-2 --path op-program/bin/op-program-client.elf --out op-program/bin/prestate.bin.gz --meta op-program/bin/meta.json
-	./cannon/bin/cannon run --proof-at '=0'  --stop-at '=1' --input op-program/bin/prestate.bin.gz --meta op-program/bin/meta.json --proof-fmt 'op-program/bin/%d.json' --output ""
-	mv op-program/bin/0.json op-program/bin/prestate-proof.json
+cannon-prestate: cp-program cannon ## Generates prestate using cannon and cp-program
+	./cannon/bin/cannon load-elf --type singlethreaded-2 --path cp-program/bin/cp-program-client.elf --out cp-program/bin/prestate.bin.gz --meta cp-program/bin/meta.json
+	./cannon/bin/cannon run --proof-at '=0'  --stop-at '=1' --input cp-program/bin/prestate.bin.gz --meta cp-program/bin/meta.json --proof-fmt 'cp-program/bin/%d.json' --output ""
+	mv cp-program/bin/0.json cp-program/bin/prestate-proof.json
 .PHONY: cannon-prestate
 
-cannon-prestate-mt64: op-program cannon ## Generates prestate using cannon and op-program in the latest 64-bit multithreaded cannon format
-	./cannon/bin/cannon load-elf --type multithreaded64-3 --path op-program/bin/op-program-client64.elf --out op-program/bin/prestate-mt64.bin.gz --meta op-program/bin/meta-mt64.json
-	./cannon/bin/cannon run --proof-at '=0' --stop-at '=1' --input op-program/bin/prestate-mt64.bin.gz --meta op-program/bin/meta-mt64.json --proof-fmt 'op-program/bin/%d-mt64.json' --output ""
-	mv op-program/bin/0-mt64.json op-program/bin/prestate-proof-mt64.json
+cannon-prestate-mt64: cp-program cannon ## Generates prestate using cannon and cp-program in the latest 64-bit multithreaded cannon format
+	./cannon/bin/cannon load-elf --type multithreaded64-3 --path cp-program/bin/cp-program-client64.elf --out cp-program/bin/prestate-mt64.bin.gz --meta cp-program/bin/meta-mt64.json
+	./cannon/bin/cannon run --proof-at '=0' --stop-at '=1' --input cp-program/bin/prestate-mt64.bin.gz --meta cp-program/bin/meta-mt64.json --proof-fmt 'cp-program/bin/%d-mt64.json' --output ""
+	mv cp-program/bin/0-mt64.json cp-program/bin/prestate-proof-mt64.json
 .PHONY: cannon-prestate-mt64
 
-cannon-prestate-interop: op-program cannon ## Generates interop prestate using cannon and op-program in the latest 64-bit multithreaded cannon format
-	./cannon/bin/cannon load-elf --type multithreaded64-3 --path op-program/bin/op-program-client-interop.elf --out op-program/bin/prestate-interop.bin.gz --meta op-program/bin/meta-interop.json
-	./cannon/bin/cannon run --proof-at '=0' --stop-at '=1' --input op-program/bin/prestate-interop.bin.gz --meta op-program/bin/meta-interop.json --proof-fmt 'op-program/bin/%d-interop.json' --output ""
-	mv op-program/bin/0-interop.json op-program/bin/prestate-proof-interop.json
+cannon-prestate-interop: cp-program cannon ## Generates interop prestate using cannon and cp-program in the latest 64-bit multithreaded cannon format
+	./cannon/bin/cannon load-elf --type multithreaded64-3 --path cp-program/bin/cp-program-client-interop.elf --out cp-program/bin/prestate-interop.bin.gz --meta cp-program/bin/meta-interop.json
+	./cannon/bin/cannon run --proof-at '=0' --stop-at '=1' --input cp-program/bin/prestate-interop.bin.gz --meta cp-program/bin/meta-interop.json --proof-fmt 'cp-program/bin/%d-interop.json' --output ""
+	mv cp-program/bin/0-interop.json cp-program/bin/prestate-proof-interop.json
 .PHONY: cannon-prestate-interop
 
 mod-tidy: ## Cleans up unused dependencies in Go modules
@@ -184,7 +184,7 @@ nuke: clean ## Completely clean the project directory
 .PHONY: nuke
 
 test-unit: ## Runs unit tests for all components
-	make -C ./op-node test
+	make -C ./cp-node test
 	make -C ./op-proposer test
 	make -C ./op-batcher test
 	make -C ./op-e2e test

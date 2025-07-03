@@ -71,7 +71,7 @@ contract CrossDomainOwnableThroughPortal_Test is CommonTest {
             _data: abi.encodeCall(XDomainSetter.set, (1))
         });
 
-        // Simulate the operation of the `op-node` by parsing data
+        // Simulate the operation of the `cp-node` by parsing data
         // from logs
         VmSafe.Log[] memory logs = vm.getRecordedLogs();
         // Only 1 log emitted

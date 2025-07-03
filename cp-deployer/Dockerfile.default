@@ -1,0 +1,9 @@
+FROM debian:bookworm-20240812-slim
+ENTRYPOINT ["/cp-deployer"]
+COPY cp-deployer /cp-deployer
+
+# Install ca-certificates so that HTTPS requests work
+RUN apt-get update && apt-get install -y ca-certificates
+
+# Symlink onto the PATH
+RUN ln -s /cp-deployer /usr/local/bin/cp-deployer

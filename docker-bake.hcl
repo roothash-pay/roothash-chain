@@ -86,7 +86,7 @@ variable "OP_DRIPPER_VERSION" {
 }
 
 
-target "op-node" {
+target "cp-node" {
   dockerfile = "ops/docker/op-stack-go/Dockerfile"
   context = "."
   args = {
@@ -94,9 +94,9 @@ target "op-node" {
     GIT_DATE = "${GIT_DATE}"
     OP_NODE_VERSION = "${OP_NODE_VERSION}"
   }
-  target = "op-node-target"
+  target = "cp-node-target"
   platforms = split(",", PLATFORMS)
-  tags = [for tag in split(",", IMAGE_TAGS) : "${REGISTRY}/${REPOSITORY}/op-node:${tag}"]
+  tags = [for tag in split(",", IMAGE_TAGS) : "${REGISTRY}/${REPOSITORY}/cp-node:${tag}"]
 }
 
 target "op-batcher" {
@@ -178,7 +178,7 @@ target "da-server" {
   tags = [for tag in split(",", IMAGE_TAGS) : "${REGISTRY}/${REPOSITORY}/da-server:${tag}"]
 }
 
-target "op-program" {
+target "cp-program" {
   dockerfile = "ops/docker/op-stack-go/Dockerfile"
   context = "."
   args = {
@@ -186,12 +186,12 @@ target "op-program" {
     GIT_DATE = "${GIT_DATE}"
     OP_PROGRAM_VERSION = "${OP_PROGRAM_VERSION}"
   }
-  target = "op-program-target"
+  target = "cp-program-target"
   platforms = split(",", PLATFORMS)
-  tags = [for tag in split(",", IMAGE_TAGS) : "${REGISTRY}/${REPOSITORY}/op-program:${tag}"]
+  tags = [for tag in split(",", IMAGE_TAGS) : "${REGISTRY}/${REPOSITORY}/cp-program:${tag}"]
 }
 
-target "op-supervisor" {
+target "cp-supervisor" {
   dockerfile = "ops/docker/op-stack-go/Dockerfile"
   context = "."
   args = {
@@ -199,9 +199,9 @@ target "op-supervisor" {
     GIT_DATE = "${GIT_DATE}"
     OP_SUPERVISOR_VERSION = "${OP_SUPERVISOR_VERSION}"
   }
-  target = "op-supervisor-target"
+  target = "cp-supervisor-target"
   platforms = split(",", PLATFORMS)
-  tags = [for tag in split(",", IMAGE_TAGS) : "${REGISTRY}/${REPOSITORY}/op-supervisor:${tag}"]
+  tags = [for tag in split(",", IMAGE_TAGS) : "${REGISTRY}/${REPOSITORY}/cp-supervisor:${tag}"]
 }
 
 target "cannon" {
@@ -228,7 +228,7 @@ target "holocene-deployer" {
   tags = [for tag in split(",", IMAGE_TAGS) : "${REGISTRY}/${REPOSITORY}/holocene-deployer:${tag}"]
 }
 
-target "op-deployer" {
+target "cp-deployer" {
   dockerfile = "ops/docker/op-stack-go/Dockerfile"
   context = "."
   args = {
@@ -236,9 +236,9 @@ target "op-deployer" {
     GIT_DATE = "${GIT_DATE}"
     OP_DEPLOYER_VERSION = "${OP_DEPLOYER_VERSION}"
   }
-  target = "op-deployer-target"
+  target = "cp-deployer-target"
   platforms = split(",", PLATFORMS)
-  tags = [for tag in split(",", IMAGE_TAGS) : "${REGISTRY}/${REPOSITORY}/op-deployer:${tag}"]
+  tags = [for tag in split(",", IMAGE_TAGS) : "${REGISTRY}/${REPOSITORY}/cp-deployer:${tag}"]
 }
 
 target "op-dripper" {

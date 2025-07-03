@@ -12,7 +12,7 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 
 	"github.com/cpchain-network/cp-chain/common/genesis/beacondeposit"
-	"github.com/cpchain-network/cp-chain/op-service/predeploys"
+	"github.com/cpchain-network/cp-chain/cp-service/predeploys"
 )
 
 // PrecompileCount represents the number of precompile addresses

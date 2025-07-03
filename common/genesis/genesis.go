@@ -6,8 +6,8 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/op-service/eth"
-	"github.com/cpchain-network/cp-chain/op-service/predeploys"
+	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/cpchain-network/cp-chain/cp-service/predeploys"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/consensus/misc/eip1559"

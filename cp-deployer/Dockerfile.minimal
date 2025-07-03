@@ -1,0 +1,3 @@
+FROM scratch
+ENTRYPOINT ["/cp-deployer"]
+COPY cp-deployer /cp-deployer

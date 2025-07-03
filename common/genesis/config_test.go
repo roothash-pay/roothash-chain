@@ -14,8 +14,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/cpchain-network/cp-chain/op-node/rollup"
-	"github.com/cpchain-network/cp-chain/op-service/testlog"
+	"github.com/cpchain-network/cp-chain/cp-node/rollup"
+	"github.com/cpchain-network/cp-chain/cp-service/testlog"
 )
 
 func TestConfigDataMarshalUnmarshal(t *testing.T) {

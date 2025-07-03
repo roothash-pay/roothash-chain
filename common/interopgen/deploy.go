@@ -18,9 +18,9 @@ import (
 	"github.com/cpchain-network/cp-chain/common/genesis"
 	"github.com/cpchain-network/cp-chain/common/genesis/beacondeposit"
 	"github.com/cpchain-network/cp-chain/common/script"
-	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/interop"
-	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/opcm"
-	"github.com/cpchain-network/cp-chain/op-service/eth"
+	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/interop"
+	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/opcm"
+	"github.com/cpchain-network/cp-chain/cp-service/eth"
 )
 
 var (

@@ -64,8 +64,8 @@ Bounty hunters are encouraged to check out the [CpChain Immunefi bug bounty prog
 ├── <a href="./kurtosis-devnet">kurtosis-devnet</a>: OP-Stack Kurtosis devnet
 ├── <a href="./op-chain-ops">op-chain-ops</a>: State surgery utilities
 ├── <a href="./op-e2e">op-e2e</a>: End-to-End testing of all CpChain components in Go
-├── <a href="./op-node">op-node</a>: consensus-layer of CpChain
-├── <a href="./op-service">op-service</a>: Common codebase utilities
+├── <a href="./cp-node">cp-node</a>: consensus-layer of CpChain
+├── <a href="./cp-service">cp-service</a>: Common codebase utilities
 ├── <a href="./ops">ops</a>: Various operational packages
 ├── <a href="./packages">packages</a>
 │   ├── <a href="./packages/contracts-cpchain">contracts-cpchain</a>: CpChain smart contracts

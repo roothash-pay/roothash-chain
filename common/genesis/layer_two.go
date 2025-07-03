@@ -14,8 +14,8 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 
 	"github.com/cpchain-network/cp-chain/common/foundry"
-	"github.com/cpchain-network/cp-chain/op-service/eth"
-	"github.com/cpchain-network/cp-chain/op-service/predeploys"
+	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/cpchain-network/cp-chain/cp-service/predeploys"
 )
 
 type L2AllocsMode string
