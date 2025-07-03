@@ -8,12 +8,12 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ethereum-optimism/optimism/op-service/superutil"
-	"github.com/ethereum-optimism/optimism/op-supervisor/supervisor/backend/depset"
+	"github.com/cpchain-network/cp-chain/op-service/superutil"
+	"github.com/cpchain-network/cp-chain/op-supervisor/supervisor/backend/depset"
 
-	"github.com/ethereum-optimism/optimism/op-node/chaincfg"
-	"github.com/ethereum-optimism/optimism/op-node/rollup"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-node/chaincfg"
+	"github.com/cpchain-network/cp-chain/op-node/rollup"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/params"
 )

@@ -1,10 +1,10 @@
 # `op-node`
 
 Issues:
-[monorepo](https://github.com/ethereum-optimism/optimism/issues?q=is%3Aissue%20state%3Aopen%20label%3AA-op-node)
+[monorepo](https://github.com/cpchain-network/cp-chain/issues?q=is%3Aissue%20state%3Aopen%20label%3AA-op-node)
 
 Pull requests:
-[monorepo](https://github.com/ethereum-optimism/optimism/pulls?q=is%3Aopen+is%3Apr+label%3AA-op-node)
+[monorepo](https://github.com/cpchain-network/cp-chain/pulls?q=is%3Aopen+is%3Apr+label%3AA-op-node)
 
 User docs:
 
@@ -138,9 +138,9 @@ The op-node is changing in two ways:
 
 #### Reliability
 
-- Parallel derivation processes: [Issue 10864](https://github.com/ethereum-optimism/optimism/issues/10864)
-- Event tests: [Issue 13163](https://github.com/ethereum-optimism/optimism/issues/13163)
-- Improving P2P sync: [Issue 11779](https://github.com/ethereum-optimism/optimism/issues/11779)
+- Parallel derivation processes: [Issue 10864](https://github.com/cpchain-network/cp-chain/issues/10864)
+- Event tests: [Issue 13163](https://github.com/cpchain-network/cp-chain/issues/13163)
+- Improving P2P sync: [Issue 11779](https://github.com/cpchain-network/cp-chain/issues/11779)
 
 #### Interoperability
 

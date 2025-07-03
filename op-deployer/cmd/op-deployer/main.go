@@ -6,17 +6,17 @@ import (
 
 	cli "github.com/urfave/cli/v2"
 
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/clean"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/verify"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/clean"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/verify"
 
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/bootstrap"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/inspect"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/version"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/bootstrap"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/inspect"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/version"
 
-	opservice "github.com/ethereum-optimism/optimism/op-service"
+	opservice "github.com/cpchain-network/cp-chain/op-service"
 
-	"github.com/ethereum-optimism/optimism/op-service/cliapp"
+	"github.com/cpchain-network/cp-chain/op-service/cliapp"
 )
 
 var (

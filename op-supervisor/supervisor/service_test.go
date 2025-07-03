@@ -5,21 +5,21 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ethereum-optimism/optimism/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
 	"github.com/stretchr/testify/require"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/ethereum-optimism/optimism/op-service/dial"
-	oplog "github.com/ethereum-optimism/optimism/op-service/log"
-	opmetrics "github.com/ethereum-optimism/optimism/op-service/metrics"
-	"github.com/ethereum-optimism/optimism/op-service/oppprof"
-	oprpc "github.com/ethereum-optimism/optimism/op-service/rpc"
-	"github.com/ethereum-optimism/optimism/op-service/testlog"
-	"github.com/ethereum-optimism/optimism/op-supervisor/config"
-	"github.com/ethereum-optimism/optimism/op-supervisor/supervisor/backend/depset"
-	"github.com/ethereum-optimism/optimism/op-supervisor/supervisor/types"
+	"github.com/cpchain-network/cp-chain/op-service/dial"
+	oplog "github.com/cpchain-network/cp-chain/op-service/log"
+	opmetrics "github.com/cpchain-network/cp-chain/op-service/metrics"
+	"github.com/cpchain-network/cp-chain/op-service/oppprof"
+	oprpc "github.com/cpchain-network/cp-chain/op-service/rpc"
+	"github.com/cpchain-network/cp-chain/op-service/testlog"
+	"github.com/cpchain-network/cp-chain/op-supervisor/config"
+	"github.com/cpchain-network/cp-chain/op-supervisor/supervisor/backend/depset"
+	"github.com/cpchain-network/cp-chain/op-supervisor/supervisor/types"
 )
 
 func TestSupervisorService(t *testing.T) {

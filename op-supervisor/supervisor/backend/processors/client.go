@@ -7,9 +7,9 @@ import (
 
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/ethereum-optimism/optimism/op-service/client"
-	"github.com/ethereum-optimism/optimism/op-service/sources"
-	"github.com/ethereum-optimism/optimism/op-service/sources/caching"
+	"github.com/cpchain-network/cp-chain/op-service/client"
+	"github.com/cpchain-network/cp-chain/op-service/sources"
+	"github.com/cpchain-network/cp-chain/op-service/sources/caching"
 )
 
 // NewEthClient creates an Eth RPC client for event-log fetching.

@@ -30,9 +30,9 @@ import (
 
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/ethereum-optimism/optimism/op-node/p2p/gating"
-	"github.com/ethereum-optimism/optimism/op-node/p2p/store"
-	"github.com/ethereum-optimism/optimism/op-service/clock"
+	"github.com/cpchain-network/cp-chain/op-node/p2p/gating"
+	"github.com/cpchain-network/cp-chain/op-node/p2p/store"
+	"github.com/cpchain-network/cp-chain/op-service/clock"
 )
 
 const (

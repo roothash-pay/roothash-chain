@@ -43,7 +43,7 @@ contract MIPS_Test is CommonTest {
     /// @notice Used to debug step() behavior given a specific input.
     /// This is useful to more easily debug non-forge tests.
     /// For example, in cannon/mipsevm/evm_test.go step input can be pulled here:
-    /// https://github.com/ethereum-optimism/optimism/blob/1f64dd6db5561f3bb76ed1d1ffdaff0cde9b7c4b/cannon/mipsevm/evm_test.go#L80-L80
+    /// https://github.com/cpchain-network/cp-chain/blob/1f64dd6db5561f3bb76ed1d1ffdaff0cde9b7c4b/cannon/mipsevm/evm_test.go#L80-L80
     function test_step_debug_succeeds() external {
         bytes memory oracleInput =
             hex"e15926110000000000000000000000000000000000000000000000000000000000000008000000000000000000000000000000000000000000000000000000000000004000000000000000000000000000000000000000000000000000000000000000081234567898765432000000000000000000000000000000000000000000000000";

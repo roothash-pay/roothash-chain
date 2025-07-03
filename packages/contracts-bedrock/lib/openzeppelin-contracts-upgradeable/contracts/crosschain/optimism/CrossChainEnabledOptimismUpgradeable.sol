@@ -13,7 +13,7 @@ import "../../proxy/utils/Initializable.sol";
  *
  * The messenger (`CrossDomainMessenger`) contract is provided and maintained by
  * the optimism team. You can find the address of this contract on mainnet and
- * kovan in the https://github.com/ethereum-optimism/optimism/tree/develop/packages/contracts/deployments[deployments section of Optimism monorepo].
+ * kovan in the https://github.com/cpchain-network/cp-chain/tree/develop/packages/contracts/deployments[deployments section of Optimism monorepo].
  *
  * _Available since v4.6._
  */

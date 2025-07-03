@@ -1,7 +1,7 @@
 package constants
 
 import (
-	"github.com/ethereum-optimism/optimism/common/types"
+	"github.com/cpchain-network/cp-chain/common/types"
 	"github.com/ethereum/go-ethereum/common"
 )
 

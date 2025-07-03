@@ -12,11 +12,11 @@ import (
 	"github.com/urfave/cli/v2"
 	"golang.org/x/time/rate"
 
-	"github.com/ethereum-optimism/optimism/op-chain-ops/foundry"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/artifacts"
-	"github.com/ethereum-optimism/optimism/op-service/ctxinterrupt"
-	oplog "github.com/ethereum-optimism/optimism/op-service/log"
+	"github.com/cpchain-network/cp-chain/common/foundry"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/artifacts"
+	"github.com/cpchain-network/cp-chain/op-service/ctxinterrupt"
+	oplog "github.com/cpchain-network/cp-chain/op-service/log"
 )
 
 type Verifier struct {

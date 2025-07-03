@@ -6,10 +6,10 @@ import (
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 
-	"github.com/ethereum-optimism/optimism/op-chain-ops/foundry"
-	"github.com/ethereum-optimism/optimism/op-chain-ops/genesis"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/state"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
+	"github.com/cpchain-network/cp-chain/common/foundry"
+	"github.com/cpchain-network/cp-chain/common/genesis"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/state"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
 )
 
 func SealL1DevGenesis(env *Env, intent *state.Intent, st *state.State) error {

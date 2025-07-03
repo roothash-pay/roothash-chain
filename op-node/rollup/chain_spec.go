@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/ethereum-optimism/optimism/op-node/params"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-node/params"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
 	"github.com/ethereum/go-ethereum/log"
 )
 

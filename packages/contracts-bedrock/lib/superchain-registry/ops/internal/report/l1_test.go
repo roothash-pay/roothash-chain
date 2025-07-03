@@ -10,8 +10,8 @@ import (
 	"path"
 	"testing"
 
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/artifacts"
-	"github.com/ethereum-optimism/optimism/op-service/testlog"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/artifacts"
+	"github.com/cpchain-network/cp-chain/op-service/testlog"
 	"github.com/ethereum-optimism/superchain-registry/ops/internal/testutil/mockrpc"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"

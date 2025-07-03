@@ -5,14 +5,14 @@ import (
 
 	"github.com/urfave/cli/v2"
 
-	opservice "github.com/ethereum-optimism/optimism/op-service"
-	oplog "github.com/ethereum-optimism/optimism/op-service/log"
-	opmetrics "github.com/ethereum-optimism/optimism/op-service/metrics"
-	"github.com/ethereum-optimism/optimism/op-service/oppprof"
-	oprpc "github.com/ethereum-optimism/optimism/op-service/rpc"
-	"github.com/ethereum-optimism/optimism/op-supervisor/config"
-	"github.com/ethereum-optimism/optimism/op-supervisor/supervisor/backend/depset"
-	"github.com/ethereum-optimism/optimism/op-supervisor/supervisor/backend/syncnode"
+	opservice "github.com/cpchain-network/cp-chain/op-service"
+	oplog "github.com/cpchain-network/cp-chain/op-service/log"
+	opmetrics "github.com/cpchain-network/cp-chain/op-service/metrics"
+	"github.com/cpchain-network/cp-chain/op-service/oppprof"
+	oprpc "github.com/cpchain-network/cp-chain/op-service/rpc"
+	"github.com/cpchain-network/cp-chain/op-supervisor/config"
+	"github.com/cpchain-network/cp-chain/op-supervisor/supervisor/backend/depset"
+	"github.com/cpchain-network/cp-chain/op-supervisor/supervisor/backend/syncnode"
 )
 
 const EnvVarPrefix = "OP_SUPERVISOR"

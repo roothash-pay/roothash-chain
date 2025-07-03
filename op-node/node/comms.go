@@ -5,7 +5,7 @@ import (
 
 	"github.com/libp2p/go-libp2p/core/peer"
 
-	"github.com/ethereum-optimism/optimism/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
 )
 
 // Tracer configures the OpNode to share events

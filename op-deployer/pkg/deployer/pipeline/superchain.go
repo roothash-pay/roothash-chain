@@ -3,10 +3,10 @@ package pipeline
 import (
 	"fmt"
 
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/opcm"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/state"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/opcm"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/state"
 
-	"github.com/ethereum-optimism/optimism/op-node/rollup"
+	"github.com/cpchain-network/cp-chain/op-node/rollup"
 )
 
 func DeploySuperchain(env *Env, intent *state.Intent, st *state.State) error {

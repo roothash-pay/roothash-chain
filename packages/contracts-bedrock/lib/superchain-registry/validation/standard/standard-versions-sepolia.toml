@@ -3,7 +3,7 @@
 #   * proxied             : specify a standard "implementation_address"
 #   * neither             : specify neither a standard "address" nor "implementation_address"
 
-# Upgrade 14 https://github.com/ethereum-optimism/optimism/releases/tag/op-contracts%2Fv3.0.0-rc.1
+# Upgrade 14 https://github.com/cpchain-network/cp-chain/releases/tag/op-contracts%2Fv3.0.0-rc.1
 ["op-contracts/v3.0.0-rc.1"]
 system_config = { version = "2.5.0", implementation_address = "0x340f923e5c7cbb2171146f64169ec9d5a9ffe647" }
 fault_dispute_game = { version = "1.4.1" }
@@ -22,7 +22,7 @@ op_contracts_manager = { version = "1.6.0", address = "0xfbceed4de885645fbded164
 superchain_config = { version = "1.2.0", implementation_address = "0x4da82a327773965b8d4D85Fa3dB8249b387458E7" }
 protocol_versions = { version = "1.1.0", implementation_address = "0x37E15e4d6DFFa9e5E320Ee1eC036922E563CB76C" }
 
-# OPCM https://github.com/ethereum-optimism/optimism/releases/tag/op-contracts%2Fv2.0.0-rc.1
+# OPCM https://github.com/cpchain-network/cp-chain/releases/tag/op-contracts%2Fv2.0.0-rc.1
 ["op-contracts/v2.0.0-rc.1"]
 system_config = { version = "2.4.0", implementation_address = "0x760C48C62A85045A6B69f07F4a9f22868659CbCc" }
 fault_dispute_game = { version = "1.4.1" }
@@ -41,7 +41,7 @@ op_contracts_manager = { version = "1.6.0", address = "0x1b25f566336f47bc5e0036d
 superchain_config = { version = "1.2.0", implementation_address = "0x4da82a327773965b8d4D85Fa3dB8249b387458E7" }
 protocol_versions = { version = "1.1.0", implementation_address = "0x37E15e4d6DFFa9e5E320Ee1eC036922E563CB76C" }
 
-# Holocene https://github.com/ethereum-optimism/optimism/releases/tag/op-contracts%2Fv1.8.0
+# Holocene https://github.com/cpchain-network/cp-chain/releases/tag/op-contracts%2Fv1.8.0
 ["op-contracts/v1.8.0"]
 # Updated in this release
 system_config = { version = "2.3.0", implementation_address = "0x33b83E4C305c908B2Fc181dDa36e230213058d7d" } # UPDATED IN THIS RELEASE
@@ -61,7 +61,7 @@ l1_standard_bridge = { version = "2.1.0", implementation_address = "0x64b5a5ed26
 optimism_mintable_erc20_factory = { version = "1.9.0", implementation_address = "0xe01efbeb1089d1d1db9c6c8b135c934c0734c846" }
 op_contracts_manager = { version = "1.0.0-beta.21", address = "0xefb0779120d9cc3582747e5eb787d859e3a53a5c" }
 
-# Holocene https://github.com/ethereum-optimism/optimism/releases/tag/op-contracts%2Fv1.8.0-rc.4
+# Holocene https://github.com/cpchain-network/cp-chain/releases/tag/op-contracts%2Fv1.8.0-rc.4
 ["op-contracts/v1.8.0-rc.4"]
 # Updated in this release
 system_config = { version = "2.3.0", implementation_address = "0x33b83E4C305c908B2Fc181dDa36e230213058d7d" } # UPDATED IN THIS RELEASE
@@ -81,7 +81,7 @@ l1_standard_bridge = { version = "2.1.0", implementation_address = "0x64b5a5ed26
 optimism_mintable_erc20_factory = { version = "1.9.0", implementation_address = "0xe01efbeb1089d1d1db9c6c8b135c934c0734c846" }
 op_contracts_manager = { version = "1.0.0-beta.21", implementation_address = "0xefb0779120d9cc3582747e5eb787d859e3a53a5c" }
 
-# Fault Proofs https://github.com/ethereum-optimism/optimism/releases/tag/op-contracts%2Fv1.6.0
+# Fault Proofs https://github.com/cpchain-network/cp-chain/releases/tag/op-contracts%2Fv1.6.0
 ["op-contracts/v1.6.0"]
 optimism_portal = { version = "3.10.0", implementation_address = "0x35028bae87d71cbc192d545d38f960ba30b4b233" }
 system_config = { version = "2.2.0", implementation_address = "0xCcdd86d581e40fb5a1C77582247BC493b6c8B169" }

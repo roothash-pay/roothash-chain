@@ -6,8 +6,8 @@ import (
 
 	"github.com/urfave/cli/v2"
 
-	"github.com/ethereum-optimism/optimism/op-node/p2p"
-	opsigner "github.com/ethereum-optimism/optimism/op-service/signer"
+	"github.com/cpchain-network/cp-chain/op-node/p2p"
+	opsigner "github.com/cpchain-network/cp-chain/op-service/signer"
 )
 
 func p2pEnv(envprefix, v string) []string {

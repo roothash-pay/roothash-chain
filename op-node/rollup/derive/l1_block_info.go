@@ -11,10 +11,10 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/ethereum-optimism/optimism/op-node/rollup"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
-	"github.com/ethereum-optimism/optimism/op-service/predeploys"
-	"github.com/ethereum-optimism/optimism/op-service/solabi"
+	"github.com/cpchain-network/cp-chain/op-node/rollup"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-service/predeploys"
+	"github.com/cpchain-network/cp-chain/op-service/solabi"
 )
 
 const (

@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/ethereum-optimism/optimism/op-node/rollup"
+	"github.com/cpchain-network/cp-chain/op-node/rollup"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
@@ -13,11 +13,11 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/log"
 
-	hosttypes "github.com/ethereum-optimism/optimism/op-program/host/types"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
-	"github.com/ethereum-optimism/optimism/op-service/retry"
-	"github.com/ethereum-optimism/optimism/op-service/testlog"
-	"github.com/ethereum-optimism/optimism/op-service/testutils"
+	hosttypes "github.com/cpchain-network/cp-chain/op-program/host/types"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-service/retry"
+	"github.com/cpchain-network/cp-chain/op-service/testlog"
+	"github.com/cpchain-network/cp-chain/op-service/testutils"
 )
 
 func TestRetryingL1Source(t *testing.T) {

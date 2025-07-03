@@ -3,11 +3,11 @@ package interop
 import (
 	"fmt"
 
-	interopTypes "github.com/ethereum-optimism/optimism/op-program/client/interop/types"
-	"github.com/ethereum-optimism/optimism/op-program/client/l2"
-	l2Types "github.com/ethereum-optimism/optimism/op-program/client/l2/types"
-	"github.com/ethereum-optimism/optimism/op-program/client/mpt"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
+	interopTypes "github.com/cpchain-network/cp-chain/op-program/client/interop/types"
+	"github.com/cpchain-network/cp-chain/op-program/client/l2"
+	l2Types "github.com/cpchain-network/cp-chain/op-program/client/l2/types"
+	"github.com/cpchain-network/cp-chain/op-program/client/mpt"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethdb/memorydb"

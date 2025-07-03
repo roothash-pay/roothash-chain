@@ -9,12 +9,12 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/ethereum-optimism/optimism/op-node/node/safedb"
-	"github.com/ethereum-optimism/optimism/op-node/rollup"
-	"github.com/ethereum-optimism/optimism/op-node/version"
-	"github.com/ethereum-optimism/optimism/op-service/apis"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
-	"github.com/ethereum-optimism/optimism/op-service/rpc"
+	"github.com/cpchain-network/cp-chain/op-node/node/safedb"
+	"github.com/cpchain-network/cp-chain/op-node/rollup"
+	"github.com/cpchain-network/cp-chain/op-node/version"
+	"github.com/cpchain-network/cp-chain/op-service/apis"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-service/rpc"
 )
 
 type l2EthClient interface {

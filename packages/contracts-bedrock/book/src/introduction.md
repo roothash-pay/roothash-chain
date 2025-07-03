@@ -15,7 +15,7 @@ to OP Stack smart contract development, read on in this book.
 Contributions to the OP Stack are always welcome. Please refer to the [CONTRIBUTING.md][contrib] for general information
 about how to contribute to the OP Stack monorepo.
 
-[contrib]: https://github.com/ethereum-optimism/optimism/blob/develop/CONTRIBUTING.md
+[contrib]: https://github.com/cpchain-network/cp-chain/blob/develop/CONTRIBUTING.md
 
 When contributing to the `contracts-bedrock` package there are some additional steps you should follow. These have been
 conveniently packaged into a just command which you should run before pushing your changes.

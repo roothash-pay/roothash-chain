@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/ethereum-optimism/optimism/op-program/host/types"
+	"github.com/cpchain-network/cp-chain/op-program/host/types"
 	"github.com/urfave/cli/v2"
 
-	"github.com/ethereum-optimism/optimism/op-node/chaincfg"
-	service "github.com/ethereum-optimism/optimism/op-service"
-	openum "github.com/ethereum-optimism/optimism/op-service/enum"
-	oplog "github.com/ethereum-optimism/optimism/op-service/log"
-	"github.com/ethereum-optimism/optimism/op-service/sources"
+	"github.com/cpchain-network/cp-chain/op-node/chaincfg"
+	service "github.com/cpchain-network/cp-chain/op-service"
+	openum "github.com/cpchain-network/cp-chain/op-service/enum"
+	oplog "github.com/cpchain-network/cp-chain/op-service/log"
+	"github.com/cpchain-network/cp-chain/op-service/sources"
 )
 
 const EnvVarPrefix = "OP_PROGRAM"

@@ -12,7 +12,7 @@ import (
 
 	rpc "github.com/ethereum/go-ethereum/rpc"
 
-	txmgr "github.com/ethereum-optimism/optimism/op-service/txmgr"
+	txmgr "github.com/cpchain-network/cp-chain/op-service/txmgr"
 
 	types "github.com/ethereum/go-ethereum/core/types"
 )

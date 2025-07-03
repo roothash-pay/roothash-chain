@@ -11,10 +11,10 @@ import (
 
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/ethereum-optimism/optimism/op-service/cliapp"
-	"github.com/ethereum-optimism/optimism/op-supervisor/config"
-	"github.com/ethereum-optimism/optimism/op-supervisor/supervisor/backend/depset"
-	"github.com/ethereum-optimism/optimism/op-supervisor/supervisor/backend/syncnode"
+	"github.com/cpchain-network/cp-chain/op-service/cliapp"
+	"github.com/cpchain-network/cp-chain/op-supervisor/config"
+	"github.com/cpchain-network/cp-chain/op-supervisor/supervisor/backend/depset"
+	"github.com/cpchain-network/cp-chain/op-supervisor/supervisor/backend/syncnode"
 )
 
 var (

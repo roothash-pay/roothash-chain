@@ -10,9 +10,9 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/ethereum-optimism/optimism/op-service/client"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
-	"github.com/ethereum-optimism/optimism/op-service/retry"
+	"github.com/cpchain-network/cp-chain/op-service/client"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-service/retry"
 )
 
 var (

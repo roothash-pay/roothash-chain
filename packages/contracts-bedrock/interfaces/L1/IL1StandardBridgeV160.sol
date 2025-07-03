@@ -8,7 +8,7 @@ import { ISystemConfig } from "interfaces/L1/ISystemConfig.sol";
 
 /// @notice This interface corresponds to the op-contracts/v1.6.0 release of the L1StandardBridge
 /// contract, which has a semver of 2.1.0 as specified in
-/// https://github.com/ethereum-optimism/optimism/releases/tag/op-contracts%2Fv1.6.0
+/// https://github.com/cpchain-network/cp-chain/releases/tag/op-contracts%2Fv1.6.0
 interface IL1StandardBridgeV160 is IStandardBridge {
     event ERC20DepositInitiated(
         address indexed l1Token,

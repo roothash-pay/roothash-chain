@@ -3,9 +3,9 @@ package engine
 import (
 	"fmt"
 
-	"github.com/ethereum-optimism/optimism/op-node/rollup"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/derive"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-node/rollup"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/derive"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
 )
 
 // BuildInvalidEvent is an internal engine event, to post-process upon invalid attributes.

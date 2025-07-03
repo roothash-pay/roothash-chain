@@ -1,11 +1,11 @@
 package backend
 
 import (
-	"github.com/ethereum-optimism/optimism/op-node/rollup/event"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
-	opmetrics "github.com/ethereum-optimism/optimism/op-service/metrics"
-	"github.com/ethereum-optimism/optimism/op-service/sources/caching"
-	"github.com/ethereum-optimism/optimism/op-supervisor/supervisor/backend/db/logs"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/event"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
+	opmetrics "github.com/cpchain-network/cp-chain/op-service/metrics"
+	"github.com/cpchain-network/cp-chain/op-service/sources/caching"
+	"github.com/cpchain-network/cp-chain/op-supervisor/supervisor/backend/db/logs"
 )
 
 type Metrics interface {

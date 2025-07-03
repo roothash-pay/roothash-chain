@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/ethereum-optimism/optimism/op-node/rollup/derive/params"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/derive/params"
 )
 
 // Frames cannot be larger than 1 MB.

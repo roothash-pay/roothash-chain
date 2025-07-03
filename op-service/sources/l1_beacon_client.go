@@ -15,9 +15,9 @@ import (
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/crypto/kzg4844"
 
-	"github.com/ethereum-optimism/optimism/op-service/apis"
-	"github.com/ethereum-optimism/optimism/op-service/client"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-service/apis"
+	"github.com/cpchain-network/cp-chain/op-service/client"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
 )
 
 const (

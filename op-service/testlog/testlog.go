@@ -31,7 +31,7 @@ import (
 	"strings"
 	"sync"
 
-	oplog "github.com/ethereum-optimism/optimism/op-service/log"
+	oplog "github.com/cpchain-network/cp-chain/op-service/log"
 	"github.com/ethereum/go-ethereum/log"
 )
 

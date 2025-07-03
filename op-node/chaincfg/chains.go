@@ -7,7 +7,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/superchain"
 
-	"github.com/ethereum-optimism/optimism/op-node/rollup"
+	"github.com/cpchain-network/cp-chain/op-node/rollup"
 )
 
 // OPSepolia loads the op-sepolia rollup config. This is intended for tests that need an arbitrary, valid rollup config.

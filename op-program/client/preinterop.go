@@ -1,12 +1,12 @@
 package client
 
 import (
-	"github.com/ethereum-optimism/optimism/op-program/client/boot"
-	"github.com/ethereum-optimism/optimism/op-program/client/claim"
-	"github.com/ethereum-optimism/optimism/op-program/client/l1"
-	"github.com/ethereum-optimism/optimism/op-program/client/l2"
-	"github.com/ethereum-optimism/optimism/op-program/client/tasks"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-program/client/boot"
+	"github.com/cpchain-network/cp-chain/op-program/client/claim"
+	"github.com/cpchain-network/cp-chain/op-program/client/l1"
+	"github.com/cpchain-network/cp-chain/op-program/client/l2"
+	"github.com/cpchain-network/cp-chain/op-program/client/tasks"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
 	"github.com/ethereum/go-ethereum/log"
 )
 

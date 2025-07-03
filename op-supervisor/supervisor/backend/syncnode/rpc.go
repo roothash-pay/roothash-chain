@@ -5,16 +5,16 @@ import (
 	"errors"
 	"io"
 
-	"github.com/ethereum-optimism/optimism/op-service/rpc"
+	"github.com/cpchain-network/cp-chain/op-service/rpc"
 
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	gethrpc "github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/ethereum-optimism/optimism/op-service/client"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
-	"github.com/ethereum-optimism/optimism/op-supervisor/supervisor/types"
+	"github.com/cpchain-network/cp-chain/op-service/client"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-supervisor/supervisor/types"
 )
 
 type RPCSyncNode struct {

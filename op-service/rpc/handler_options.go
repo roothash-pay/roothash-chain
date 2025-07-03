@@ -6,7 +6,7 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	gethrpc "github.com/ethereum/go-ethereum/rpc"
 
-	opmetrics "github.com/ethereum-optimism/optimism/op-service/metrics"
+	opmetrics "github.com/cpchain-network/cp-chain/op-service/metrics"
 )
 
 type Option func(b *Handler)

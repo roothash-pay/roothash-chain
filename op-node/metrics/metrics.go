@@ -7,10 +7,10 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/ethereum-optimism/optimism/op-node/p2p/store"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/event"
-	ophttp "github.com/ethereum-optimism/optimism/op-service/httputil"
-	"github.com/ethereum-optimism/optimism/op-service/metrics"
+	"github.com/cpchain-network/cp-chain/op-node/p2p/store"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/event"
+	ophttp "github.com/cpchain-network/cp-chain/op-service/httputil"
+	"github.com/cpchain-network/cp-chain/op-service/metrics"
 	"github.com/ethereum/go-ethereum/params"
 
 	pb "github.com/libp2p/go-libp2p-pubsub/pb"
@@ -21,7 +21,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/ethereum-optimism/optimism/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
 )
 
 const Namespace = "op_node"

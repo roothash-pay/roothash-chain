@@ -5,11 +5,11 @@ import (
 
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/ethereum-optimism/optimism/op-node/rollup"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/event"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/interop/managed"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/interop/standard"
-	opmetrics "github.com/ethereum-optimism/optimism/op-service/metrics"
+	"github.com/cpchain-network/cp-chain/op-node/rollup"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/event"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/interop/managed"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/interop/standard"
+	opmetrics "github.com/cpchain-network/cp-chain/op-service/metrics"
 )
 
 type SubSystem interface {

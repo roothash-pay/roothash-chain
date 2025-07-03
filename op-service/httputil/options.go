@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"net/http"
 
-	optls "github.com/ethereum-optimism/optimism/op-service/tls"
+	optls "github.com/cpchain-network/cp-chain/op-service/tls"
 )
 
 type config struct {

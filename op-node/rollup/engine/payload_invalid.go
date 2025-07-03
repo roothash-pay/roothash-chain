@@ -1,6 +1,6 @@
 package engine
 
-import "github.com/ethereum-optimism/optimism/op-service/eth"
+import "github.com/cpchain-network/cp-chain/op-service/eth"
 
 type PayloadInvalidEvent struct {
 	Envelope *eth.ExecutionPayloadEnvelope

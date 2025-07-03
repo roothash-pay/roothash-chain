@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/standard"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/standard"
 
-	op_service "github.com/ethereum-optimism/optimism/op-service"
+	op_service "github.com/cpchain-network/cp-chain/op-service"
 
-	"github.com/ethereum-optimism/optimism/op-service/jsonutil"
+	"github.com/cpchain-network/cp-chain/op-service/jsonutil"
 
 	"github.com/ethereum/go-ethereum/rpc"
 
@@ -17,7 +17,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/ethereum-optimism/optimism/op-chain-ops/genesis"
+	"github.com/cpchain-network/cp-chain/common/genesis"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 )
 

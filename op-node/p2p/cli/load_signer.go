@@ -8,9 +8,9 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/urfave/cli/v2"
 
-	"github.com/ethereum-optimism/optimism/op-node/flags"
-	"github.com/ethereum-optimism/optimism/op-node/p2p"
-	opsigner "github.com/ethereum-optimism/optimism/op-service/signer"
+	"github.com/cpchain-network/cp-chain/op-node/flags"
+	"github.com/cpchain-network/cp-chain/op-node/p2p"
+	opsigner "github.com/cpchain-network/cp-chain/op-service/signer"
 )
 
 // LoadSignerSetup loads a configuration for a Signer to be set up later

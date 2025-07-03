@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ethereum-optimism/optimism/op-service/clock"
+	"github.com/cpchain-network/cp-chain/op-service/clock"
 	"github.com/ethereum/go-ethereum/log"
 )
 

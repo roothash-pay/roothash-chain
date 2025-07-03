@@ -4,19 +4,19 @@ import (
 	"context"
 	"os"
 
-	"github.com/ethereum-optimism/optimism/op-supervisor/config"
+	"github.com/cpchain-network/cp-chain/op-supervisor/config"
 	"github.com/urfave/cli/v2"
 
 	"github.com/ethereum/go-ethereum/log"
 
-	opservice "github.com/ethereum-optimism/optimism/op-service"
-	"github.com/ethereum-optimism/optimism/op-service/cliapp"
-	"github.com/ethereum-optimism/optimism/op-service/ctxinterrupt"
-	oplog "github.com/ethereum-optimism/optimism/op-service/log"
-	"github.com/ethereum-optimism/optimism/op-service/metrics/doc"
-	"github.com/ethereum-optimism/optimism/op-supervisor/flags"
-	"github.com/ethereum-optimism/optimism/op-supervisor/metrics"
-	"github.com/ethereum-optimism/optimism/op-supervisor/supervisor"
+	opservice "github.com/cpchain-network/cp-chain/op-service"
+	"github.com/cpchain-network/cp-chain/op-service/cliapp"
+	"github.com/cpchain-network/cp-chain/op-service/ctxinterrupt"
+	oplog "github.com/cpchain-network/cp-chain/op-service/log"
+	"github.com/cpchain-network/cp-chain/op-service/metrics/doc"
+	"github.com/cpchain-network/cp-chain/op-supervisor/flags"
+	"github.com/cpchain-network/cp-chain/op-supervisor/metrics"
+	"github.com/cpchain-network/cp-chain/op-supervisor/supervisor"
 )
 
 var (

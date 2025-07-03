@@ -9,15 +9,14 @@ import (
 	"slices"
 	"strings"
 
-	preimage "github.com/ethereum-optimism/optimism/op-preimage"
-	clientTypes "github.com/ethereum-optimism/optimism/op-program/client/interop/types"
-	"github.com/ethereum-optimism/optimism/op-program/client/l1"
-	"github.com/ethereum-optimism/optimism/op-program/client/l2"
-	"github.com/ethereum-optimism/optimism/op-program/client/mpt"
-	hostcommon "github.com/ethereum-optimism/optimism/op-program/host/common"
-	"github.com/ethereum-optimism/optimism/op-program/host/kvstore"
-	hosttypes "github.com/ethereum-optimism/optimism/op-program/host/types"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
+	clientTypes "github.com/cpchain-network/cp-chain/op-program/client/interop/types"
+	"github.com/cpchain-network/cp-chain/op-program/client/l1"
+	"github.com/cpchain-network/cp-chain/op-program/client/l2"
+	"github.com/cpchain-network/cp-chain/op-program/client/mpt"
+	hostcommon "github.com/cpchain-network/cp-chain/op-program/host/common"
+	"github.com/cpchain-network/cp-chain/op-program/host/kvstore"
+	hosttypes "github.com/cpchain-network/cp-chain/op-program/host/types"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -255,7 +254,7 @@ func (p *Prefetcher) prefetchState(ctx context.Context, hint string) error {
 		if err != nil {
 			return fmt.Errorf("failed to fetch L2 state node %s: %w", hash, err)
 		}
-		return p.kvStore.Put(preimage.Keccak256Key(hash).PreimageKey(), node)
+		return p.kvStore.Put(common.Hash{}, node)
 	case l2.HintL2Code:
 		hash, chainID, err := p.parseHashAndChainID("L2 code", hintBytes)
 		if err != nil {
@@ -269,7 +268,7 @@ func (p *Prefetcher) prefetchState(ctx context.Context, hint string) error {
 		if err != nil {
 			return fmt.Errorf("failed to fetch L2 contract code %s: %w", hash, err)
 		}
-		return p.kvStore.Put(preimage.Keccak256Key(hash).PreimageKey(), code)
+		return p.kvStore.Put(common.Hash{}, code)
 	}
 	return fmt.Errorf("unknown state hint type: %v", hintType)
 }
@@ -295,7 +294,7 @@ func (p *Prefetcher) prefetch(ctx context.Context, hint string) error {
 		if err != nil {
 			return fmt.Errorf("marshall header: %w", err)
 		}
-		return p.kvStore.Put(preimage.Keccak256Key(hash).PreimageKey(), data)
+		return p.kvStore.Put(common.Hash{}, data)
 	case l1.HintL1Transactions:
 		if len(hintBytes) != 32 {
 			return fmt.Errorf("invalid L1 transactions hint: %x", hint)
@@ -338,7 +337,7 @@ func (p *Prefetcher) prefetch(ctx context.Context, hint string) error {
 		sidecar := sidecars[0]
 
 		// Put the preimage for the versioned hash into the kv store
-		if err = p.kvStore.Put(preimage.Sha256Key(blobVersionHash).PreimageKey(), sidecar.KZGCommitment[:]); err != nil {
+		if err = p.kvStore.Put(common.Hash{}, sidecar.KZGCommitment[:]); err != nil {
 			return err
 		}
 
@@ -349,11 +348,7 @@ func (p *Prefetcher) prefetch(ctx context.Context, hint string) error {
 		for i := 0; i < params.BlobTxFieldElementsPerBlob; i++ {
 			rootOfUnity := l1.RootsOfUnity[i].Bytes()
 			copy(blobKey[48:], rootOfUnity[:])
-			blobKeyHash := crypto.Keccak256Hash(blobKey)
-			if err := p.kvStore.Put(preimage.Keccak256Key(blobKeyHash).PreimageKey(), blobKey); err != nil {
-				return err
-			}
-			if err = p.kvStore.Put(preimage.BlobKey(blobKeyHash).PreimageKey(), sidecar.Blob[i<<5:(i+1)<<5]); err != nil {
+			if err = p.kvStore.Put(common.Hash{}, sidecar.Blob[i<<5:(i+1)<<5]); err != nil {
 				return err
 			}
 		}
@@ -379,12 +374,7 @@ func (p *Prefetcher) prefetch(ctx context.Context, hint string) error {
 		} else {
 			result = append(precompileFailure[:], result...)
 		}
-		inputHash := crypto.Keccak256Hash(hintBytes)
-		// Put the input preimage so it can be loaded later
-		if err := p.kvStore.Put(preimage.Keccak256Key(inputHash).PreimageKey(), hintBytes); err != nil {
-			return err
-		}
-		return p.kvStore.Put(preimage.PrecompileKey(inputHash).PreimageKey(), result)
+		return p.kvStore.Put(common.Hash{}, result)
 	case l1.HintL1PrecompileV2:
 		if len(hintBytes) < 28 {
 			return fmt.Errorf("invalid precompile hint: %x", hint)
@@ -409,12 +399,7 @@ func (p *Prefetcher) prefetch(ctx context.Context, hint string) error {
 		} else {
 			result = append(precompileFailure[:], result...)
 		}
-		inputHash := crypto.Keccak256Hash(hintBytes)
-		// Put the input preimage so it can be loaded later
-		if err := p.kvStore.Put(preimage.Keccak256Key(inputHash).PreimageKey(), hintBytes); err != nil {
-			return err
-		}
-		return p.kvStore.Put(preimage.PrecompileKey(inputHash).PreimageKey(), result)
+		return p.kvStore.Put(common.Hash{}, result)
 	case l2.HintL2BlockHeader, l2.HintL2Transactions:
 		hash, chainID, err := p.parseHashAndChainID("L2 header/tx", hintBytes)
 		if err != nil {
@@ -432,7 +417,7 @@ func (p *Prefetcher) prefetch(ctx context.Context, hint string) error {
 		if err != nil {
 			return fmt.Errorf("failed to encode header to RLP: %w", err)
 		}
-		err = p.kvStore.Put(preimage.Keccak256Key(hash).PreimageKey(), data)
+		err = p.kvStore.Put(common.Hash{}, data)
 		if err != nil {
 			return err
 		}
@@ -469,7 +454,7 @@ func (p *Prefetcher) prefetch(ctx context.Context, hint string) error {
 			if requestedHash != hash {
 				return fmt.Errorf("output root %v from block %v does not match requested root: %v", hash, p.l2Head, requestedHash)
 			}
-			return p.kvStore.Put(preimage.Keccak256Key(hash).PreimageKey(), output.Marshal())
+			return p.kvStore.Put(common.Hash{}, output.Marshal())
 		} else {
 			prestate, err := clientTypes.UnmarshalTransitionState(p.agreedPrestate)
 			if err != nil {
@@ -491,7 +476,7 @@ func (p *Prefetcher) prefetch(ctx context.Context, hint string) error {
 			if err != nil {
 				return fmt.Errorf("failed to fetch L2 output root for block %v: %w", blockNum, err)
 			}
-			return p.kvStore.Put(preimage.Keccak256Key(eth.OutputRoot(output)).PreimageKey(), output.Marshal())
+			return p.kvStore.Put(common.Hash{}, output.Marshal())
 		}
 	case l2.HintL2BlockData:
 		if p.executor == nil {
@@ -515,8 +500,7 @@ func (p *Prefetcher) prefetch(ctx context.Context, hint string) error {
 		if len(p.agreedPrestate) == 0 {
 			return ErrAgreedPrestateUnavailable
 		}
-		hash := crypto.Keccak256Hash(p.agreedPrestate)
-		return p.kvStore.Put(preimage.Keccak256Key(hash).PreimageKey(), p.agreedPrestate)
+		return p.kvStore.Put(common.Hash{}, p.agreedPrestate)
 	case l2.HintL2StateNode, l2.HintL2Code:
 		// handle state access hints separately to allow for bulk fetching
 		return p.prefetchState(ctx, hint)
@@ -564,7 +548,7 @@ func (p *Prefetcher) storeTrieNodes(values []hexutil.Bytes) error {
 
 func (p *Prefetcher) storeNodes(nodes []hexutil.Bytes) error {
 	for _, node := range nodes {
-		key := preimage.Keccak256Key(crypto.Keccak256Hash(node)).PreimageKey()
+		key := common.Hash{}
 		if err := p.kvStore.Put(key, node); err != nil {
 			return fmt.Errorf("failed to store node: %w", err)
 		}

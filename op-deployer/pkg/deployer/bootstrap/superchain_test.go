@@ -8,11 +8,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ethereum-optimism/optimism/op-service/testutils"
-	"github.com/ethereum-optimism/optimism/op-service/testutils/devnet"
+	"github.com/cpchain-network/cp-chain/op-service/testutils"
+	"github.com/cpchain-network/cp-chain/op-service/testutils/devnet"
 
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/artifacts"
-	"github.com/ethereum-optimism/optimism/op-service/testlog"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/artifacts"
+	"github.com/cpchain-network/cp-chain/op-service/testlog"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/params"

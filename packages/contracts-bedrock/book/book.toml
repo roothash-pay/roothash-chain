@@ -7,8 +7,8 @@ title = "OP Stack Smart Contracts"
 
 [output.html]
 site-url = "/contracts-bedrock/"
-git-repository-url = "https://github.com/ethereum-optimism/optimism/tree/develop/packages/contracts-bedrock/book"
-edit-url-template = "https://github.com/ethereum-optimism/optimism/tree/develop/packages/contracts-bedrock/book/{path}"
+git-repository-url = "https://github.com/cpchain-network/cp-chain/tree/develop/packages/contracts-bedrock/book"
+edit-url-template = "https://github.com/cpchain-network/cp-chain/tree/develop/packages/contracts-bedrock/book/{path}"
 additional-css = ["custom.css"]
 additional-js = ["mermaid.min.js", "mermaid-init.js"]
 

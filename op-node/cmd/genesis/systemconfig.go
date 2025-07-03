@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/ethereum-optimism/optimism/op-service/sources/batching"
-	"github.com/ethereum-optimism/optimism/op-service/sources/batching/rpcblock"
-	"github.com/ethereum-optimism/optimism/packages/contracts-bedrock/snapshots"
+	"github.com/cpchain-network/cp-chain/op-service/sources/batching"
+	"github.com/cpchain-network/cp-chain/op-service/sources/batching/rpcblock"
+	"github.com/cpchain-network/cp-chain/packages/contracts-bedrock/snapshots"
 	"github.com/ethereum/go-ethereum/common"
 )
 

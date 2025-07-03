@@ -8,7 +8,7 @@ import (
 
 	"github.com/BurntSushi/toml"
 
-	"github.com/ethereum-optimism/optimism/op-service/ioutil"
+	"github.com/cpchain-network/cp-chain/op-service/ioutil"
 )
 
 type Decoder interface {

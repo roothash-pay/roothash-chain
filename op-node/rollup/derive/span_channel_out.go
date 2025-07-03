@@ -10,7 +10,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/rlp"
 
-	"github.com/ethereum-optimism/optimism/op-node/rollup"
+	"github.com/cpchain-network/cp-chain/op-node/rollup"
 )
 
 type SpanChannelOut struct {

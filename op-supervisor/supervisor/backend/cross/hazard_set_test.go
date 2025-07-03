@@ -9,10 +9,10 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/stretchr/testify/require"
 
-	"github.com/ethereum-optimism/optimism/op-service/eth"
-	"github.com/ethereum-optimism/optimism/op-service/testlog"
-	"github.com/ethereum-optimism/optimism/op-supervisor/supervisor/backend/depset"
-	"github.com/ethereum-optimism/optimism/op-supervisor/supervisor/types"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-service/testlog"
+	"github.com/cpchain-network/cp-chain/op-supervisor/supervisor/backend/depset"
+	"github.com/cpchain-network/cp-chain/op-supervisor/supervisor/types"
 )
 
 func TestHazardSet_Build(t *testing.T) {

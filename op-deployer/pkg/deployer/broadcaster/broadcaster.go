@@ -3,7 +3,7 @@ package broadcaster
 import (
 	"context"
 
-	"github.com/ethereum-optimism/optimism/op-chain-ops/script"
+	"github.com/cpchain-network/cp-chain/common/script"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 )

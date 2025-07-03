@@ -12,11 +12,11 @@ import (
 	gn "github.com/ethereum/go-ethereum/node"
 	"github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/ethereum-optimism/optimism/op-node/rollup"
-	"github.com/ethereum-optimism/optimism/op-service/apis"
-	"github.com/ethereum-optimism/optimism/op-service/client"
-	opmetrics "github.com/ethereum-optimism/optimism/op-service/metrics"
-	"github.com/ethereum-optimism/optimism/op-service/sources"
+	"github.com/cpchain-network/cp-chain/op-node/rollup"
+	"github.com/cpchain-network/cp-chain/op-service/apis"
+	"github.com/cpchain-network/cp-chain/op-service/client"
+	opmetrics "github.com/cpchain-network/cp-chain/op-service/metrics"
+	"github.com/cpchain-network/cp-chain/op-service/sources"
 )
 
 type L2EndpointSetup interface {

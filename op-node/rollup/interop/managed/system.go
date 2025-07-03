@@ -11,14 +11,14 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	gethrpc "github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/ethereum-optimism/optimism/op-node/rollup"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/derive"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/engine"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/event"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
-	opmetrics "github.com/ethereum-optimism/optimism/op-service/metrics"
-	"github.com/ethereum-optimism/optimism/op-service/rpc"
-	supervisortypes "github.com/ethereum-optimism/optimism/op-supervisor/supervisor/types"
+	"github.com/cpchain-network/cp-chain/op-node/rollup"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/derive"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/engine"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/event"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
+	opmetrics "github.com/cpchain-network/cp-chain/op-service/metrics"
+	"github.com/cpchain-network/cp-chain/op-service/rpc"
+	supervisortypes "github.com/cpchain-network/cp-chain/op-supervisor/supervisor/types"
 )
 
 type L2Source interface {

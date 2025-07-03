@@ -1,9 +1,9 @@
 package metrics
 
 import (
-	"github.com/ethereum-optimism/optimism/op-node/rollup/event"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
-	opmetrics "github.com/ethereum-optimism/optimism/op-service/metrics"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/event"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
+	opmetrics "github.com/cpchain-network/cp-chain/op-service/metrics"
 )
 
 type noopMetrics struct {

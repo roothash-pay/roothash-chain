@@ -12,8 +12,8 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/ethereum/go-ethereum/rlp"
 
-	"github.com/ethereum-optimism/optimism/op-program/client/mpt"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-program/client/mpt"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
 )
 
 type Oracle interface {

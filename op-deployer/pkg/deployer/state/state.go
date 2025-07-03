@@ -5,13 +5,13 @@ import (
 
 	"github.com/ethereum/go-ethereum/core"
 
-	"github.com/ethereum-optimism/optimism/common/proofs/prestate"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/broadcaster"
+	"github.com/cpchain-network/cp-chain/common/proofs/prestate"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/broadcaster"
 
-	"github.com/ethereum-optimism/optimism/op-chain-ops/foundry"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
-	"github.com/ethereum-optimism/optimism/op-service/ioutil"
-	"github.com/ethereum-optimism/optimism/op-service/jsonutil"
+	"github.com/cpchain-network/cp-chain/common/foundry"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-service/ioutil"
+	"github.com/cpchain-network/cp-chain/op-service/jsonutil"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/types"

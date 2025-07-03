@@ -7,9 +7,9 @@ import (
 	"slices"
 	"sort"
 
-	"github.com/ethereum-optimism/optimism/op-node/params"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
-	"github.com/ethereum-optimism/optimism/op-supervisor/supervisor/types"
+	"github.com/cpchain-network/cp-chain/op-node/params"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-supervisor/supervisor/types"
 )
 
 type StaticConfigDependency struct {

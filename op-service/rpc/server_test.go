@@ -16,7 +16,7 @@ import (
 	"github.com/ethereum/go-ethereum/node"
 	"github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/ethereum-optimism/optimism/op-service/testlog"
+	"github.com/cpchain-network/cp-chain/op-service/testlog"
 )
 
 type testAPI struct{}

@@ -6,8 +6,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/artifacts"
-	"github.com/ethereum-optimism/optimism/op-service/jsonutil"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/artifacts"
+	"github.com/cpchain-network/cp-chain/op-service/jsonutil"
 	"github.com/ethereum/go-ethereum/common"
 )
 

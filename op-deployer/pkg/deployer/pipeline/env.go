@@ -5,16 +5,16 @@ import (
 	"fmt"
 	"path"
 
-	"github.com/ethereum-optimism/optimism/op-chain-ops/genesis"
-	"github.com/ethereum-optimism/optimism/op-chain-ops/script"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/broadcaster"
-	"github.com/ethereum-optimism/optimism/op-node/rollup"
+	"github.com/cpchain-network/cp-chain/common/genesis"
+	"github.com/cpchain-network/cp-chain/common/script"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/broadcaster"
+	"github.com/cpchain-network/cp-chain/op-node/rollup"
 
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/state"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/state"
 
-	"github.com/ethereum-optimism/optimism/op-chain-ops/foundry"
+	"github.com/cpchain-network/cp-chain/common/foundry"
 
-	"github.com/ethereum-optimism/optimism/op-service/jsonutil"
+	"github.com/cpchain-network/cp-chain/op-service/jsonutil"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/ethclient"

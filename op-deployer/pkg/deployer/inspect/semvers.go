@@ -8,22 +8,22 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/ethereum-optimism/optimism/op-chain-ops/foundry"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/state"
+	"github.com/cpchain-network/cp-chain/common/foundry"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/state"
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/artifacts"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/artifacts"
 
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/env"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/env"
 
-	"github.com/ethereum-optimism/optimism/op-chain-ops/script"
+	"github.com/cpchain-network/cp-chain/common/script"
 
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/broadcaster"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/pipeline"
-	"github.com/ethereum-optimism/optimism/op-service/ioutil"
-	"github.com/ethereum-optimism/optimism/op-service/jsonutil"
-	oplog "github.com/ethereum-optimism/optimism/op-service/log"
-	"github.com/ethereum-optimism/optimism/op-service/predeploys"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/broadcaster"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/pipeline"
+	"github.com/cpchain-network/cp-chain/op-service/ioutil"
+	"github.com/cpchain-network/cp-chain/op-service/jsonutil"
+	oplog "github.com/cpchain-network/cp-chain/op-service/log"
+	"github.com/cpchain-network/cp-chain/op-service/predeploys"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/holiman/uint256"
 	"github.com/urfave/cli/v2"

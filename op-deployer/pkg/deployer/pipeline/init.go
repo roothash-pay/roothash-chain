@@ -5,8 +5,8 @@ import (
 	"crypto/rand"
 	"fmt"
 
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/standard"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/state"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/standard"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/state"
 
 	"github.com/ethereum/go-ethereum/common"
 )

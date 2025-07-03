@@ -14,7 +14,7 @@ import (
 
 	"github.com/minio/sha256-simd"
 
-	"github.com/ethereum-optimism/optimism/op-service/testutils"
+	"github.com/cpchain-network/cp-chain/op-service/testutils"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/require"
 )

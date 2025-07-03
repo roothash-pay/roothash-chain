@@ -1,8 +1,8 @@
 # `op-service`
 
-Issues: [monorepo](https://github.com/ethereum-optimism/optimism/issues?q=is%3Aissue%20state%3Aopen%20label%3AA-op-service)
+Issues: [monorepo](https://github.com/cpchain-network/cp-chain/issues?q=is%3Aissue%20state%3Aopen%20label%3AA-op-service)
 
-Pull requests: [monorepo](https://github.com/ethereum-optimism/optimism/pulls?q=is%3Aopen+is%3Apr+label%3AA-op-service)
+Pull requests: [monorepo](https://github.com/cpchain-network/cp-chain/pulls?q=is%3Aopen+is%3Apr+label%3AA-op-service)
 
 `op-service` is a collection of Go utilities to build OP-Stack services with.
 

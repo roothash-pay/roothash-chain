@@ -16,21 +16,21 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/ethereum-optimism/optimism/op-node/metrics"
-	"github.com/ethereum-optimism/optimism/op-node/node/safedb"
-	"github.com/ethereum-optimism/optimism/op-node/p2p"
-	"github.com/ethereum-optimism/optimism/op-node/rollup"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/driver"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/event"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/interop"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/interop/managed"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/sequencing"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/sync"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
-	"github.com/ethereum-optimism/optimism/op-service/httputil"
-	"github.com/ethereum-optimism/optimism/op-service/oppprof"
-	oprpc "github.com/ethereum-optimism/optimism/op-service/rpc"
-	"github.com/ethereum-optimism/optimism/op-service/sources"
+	"github.com/cpchain-network/cp-chain/op-node/metrics"
+	"github.com/cpchain-network/cp-chain/op-node/node/safedb"
+	"github.com/cpchain-network/cp-chain/op-node/p2p"
+	"github.com/cpchain-network/cp-chain/op-node/rollup"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/driver"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/event"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/interop"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/interop/managed"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/sequencing"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/sync"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-service/httputil"
+	"github.com/cpchain-network/cp-chain/op-service/oppprof"
+	oprpc "github.com/cpchain-network/cp-chain/op-service/rpc"
+	"github.com/cpchain-network/cp-chain/op-service/sources"
 )
 
 var ErrAlreadyClosed = errors.New("node is already closed")
@@ -224,7 +224,7 @@ func (n *OpNode) initL2(ctx context.Context, cfg *Config) error {
 	}
 
 	if cfg.Rollup.ChainOpConfig == nil {
-		return fmt.Errorf("cfg.Rollup.ChainOpConfig is nil. Please see https://github.com/ethereum-optimism/optimism/releases/tag/op-node/v1.11.0: %w", err)
+		return fmt.Errorf("cfg.Rollup.ChainOpConfig is nil. Please see https://github.com/cpchain-network/cp-chain/releases/tag/op-node/v1.11.0: %w", err)
 	}
 
 	n.l2Driver = driver.NewDriver(n.eventSys, n.eventDrain, &cfg.Driver, &cfg.Rollup, n.l2Source, n, n, n.log, n.metrics, cfg.ConfigPersistence, n.safeDB, &cfg.Sync, managedMode)

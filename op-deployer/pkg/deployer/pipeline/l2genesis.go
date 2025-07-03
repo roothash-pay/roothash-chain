@@ -3,14 +3,14 @@ package pipeline
 import (
 	"fmt"
 
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/standard"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/standard"
 
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/env"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/env"
 
-	"github.com/ethereum-optimism/optimism/op-chain-ops/foundry"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/broadcaster"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/opcm"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/state"
+	"github.com/cpchain-network/cp-chain/common/foundry"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/broadcaster"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/opcm"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/state"
 
 	"github.com/ethereum/go-ethereum/common"
 )

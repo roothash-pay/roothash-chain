@@ -8,13 +8,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ethereum-optimism/optimism/op-service/testutils"
-	"github.com/ethereum-optimism/optimism/op-service/testutils/devnet"
+	"github.com/cpchain-network/cp-chain/op-service/testutils"
+	"github.com/cpchain-network/cp-chain/op-service/testutils/devnet"
 
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/opcm"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/standard"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/testutil"
-	"github.com/ethereum-optimism/optimism/op-service/testlog"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/opcm"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/standard"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/testutil"
+	"github.com/cpchain-network/cp-chain/op-service/testlog"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/stretchr/testify/require"
 )

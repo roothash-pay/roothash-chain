@@ -7,7 +7,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/ethereum-optimism/optimism/op-service/plan"
+	"github.com/cpchain-network/cp-chain/op-service/plan"
 )
 
 func TestNode(t *testing.T) {

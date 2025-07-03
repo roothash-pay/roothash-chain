@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/ethereum-optimism/optimism/op-chain-ops/genesis"
-	"github.com/ethereum-optimism/optimism/op-chain-ops/script"
+	"github.com/cpchain-network/cp-chain/common/genesis"
+	"github.com/cpchain-network/cp-chain/common/script"
 	"github.com/ethereum/go-ethereum/common"
 )
 

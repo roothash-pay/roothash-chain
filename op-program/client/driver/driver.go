@@ -4,16 +4,15 @@ import (
 	"context"
 	"errors"
 
-	"github.com/ethereum-optimism/optimism/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
 	"github.com/ethereum/go-ethereum/log"
 
-	altda "github.com/ethereum-optimism/optimism/op-alt-da"
-	"github.com/ethereum-optimism/optimism/op-node/metrics"
-	"github.com/ethereum-optimism/optimism/op-node/rollup"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/derive"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/engine"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/event"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/sync"
+	"github.com/cpchain-network/cp-chain/op-node/metrics"
+	"github.com/cpchain-network/cp-chain/op-node/rollup"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/derive"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/engine"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/event"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/sync"
 )
 
 var errTooManyEvents = errors.New("way too many events queued up, something is wrong")
@@ -39,7 +38,7 @@ func NewDriver(logger log.Logger, cfg *rollup.Config, l1Source derive.L1Fetcher,
 		logger: logger,
 	}
 
-	pipeline := derive.NewDerivationPipeline(logger, cfg, altda.Disabled, l2Source, metrics.NoopMetrics, false)
+	pipeline := derive.NewDerivationPipeline(logger, cfg, l2Source, metrics.NoopMetrics, false)
 	pipelineDeriver := derive.NewPipelineDeriver(context.Background(), pipeline)
 	pipelineDeriver.AttachEmitter(d)
 

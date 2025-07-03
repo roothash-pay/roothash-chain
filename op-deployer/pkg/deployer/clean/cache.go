@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer"
-	oplog "github.com/ethereum-optimism/optimism/op-service/log"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer"
+	oplog "github.com/cpchain-network/cp-chain/op-service/log"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/urfave/cli/v2"
 )

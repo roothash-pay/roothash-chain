@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/ethereum-optimism/optimism/op-service/jsonutil"
+	"github.com/cpchain-network/cp-chain/op-service/jsonutil"
 
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/opcm"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/standard"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/state"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/opcm"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/standard"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/state"
 )
 
 func DeployImplementations(env *Env, intent *state.Intent, st *state.State) error {

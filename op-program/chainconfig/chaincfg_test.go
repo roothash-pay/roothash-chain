@@ -3,8 +3,8 @@ package chainconfig
 import (
 	"testing"
 
-	"github.com/ethereum-optimism/optimism/op-program/chainconfig/test"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-program/chainconfig/test"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
 	"github.com/stretchr/testify/require"
 )
 

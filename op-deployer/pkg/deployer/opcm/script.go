@@ -3,7 +3,7 @@ package opcm
 import (
 	"fmt"
 
-	"github.com/ethereum-optimism/optimism/op-chain-ops/script"
+	"github.com/cpchain-network/cp-chain/common/script"
 	"github.com/ethereum/go-ethereum/common"
 )
 

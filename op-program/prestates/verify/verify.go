@@ -7,7 +7,7 @@ import (
 	"os"
 	"slices"
 
-	"github.com/ethereum-optimism/optimism/op-program/prestates"
+	"github.com/cpchain-network/cp-chain/op-program/prestates"
 )
 
 func main() {

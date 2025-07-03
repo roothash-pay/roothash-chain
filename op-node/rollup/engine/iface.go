@@ -1,8 +1,8 @@
 package engine
 
 import (
-	"github.com/ethereum-optimism/optimism/op-node/rollup/derive"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/derive"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
 )
 
 // EngineState provides a read-only interface of the forkchoice state properties of the L2 Engine.

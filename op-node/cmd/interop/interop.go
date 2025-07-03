@@ -11,14 +11,14 @@ import (
 
 	"github.com/urfave/cli/v2"
 
-	"github.com/ethereum-optimism/optimism/op-chain-ops/devkeys"
-	"github.com/ethereum-optimism/optimism/op-chain-ops/foundry"
-	"github.com/ethereum-optimism/optimism/op-chain-ops/interopgen"
-	op_service "github.com/ethereum-optimism/optimism/op-service"
-	"github.com/ethereum-optimism/optimism/op-service/cliapp"
-	"github.com/ethereum-optimism/optimism/op-service/ioutil"
-	"github.com/ethereum-optimism/optimism/op-service/jsonutil"
-	oplog "github.com/ethereum-optimism/optimism/op-service/log"
+	"github.com/cpchain-network/cp-chain/common/devkeys"
+	"github.com/cpchain-network/cp-chain/common/foundry"
+	"github.com/cpchain-network/cp-chain/common/interopgen"
+	op_service "github.com/cpchain-network/cp-chain/op-service"
+	"github.com/cpchain-network/cp-chain/op-service/cliapp"
+	"github.com/cpchain-network/cp-chain/op-service/ioutil"
+	"github.com/cpchain-network/cp-chain/op-service/jsonutil"
+	oplog "github.com/cpchain-network/cp-chain/op-service/log"
 	"github.com/ethereum/go-ethereum/crypto"
 )
 

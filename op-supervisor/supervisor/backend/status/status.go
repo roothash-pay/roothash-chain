@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/ethereum-optimism/optimism/op-node/rollup/event"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
-	"github.com/ethereum-optimism/optimism/op-supervisor/supervisor/backend/superevents"
-	"github.com/ethereum-optimism/optimism/op-supervisor/supervisor/types"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/event"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-supervisor/supervisor/backend/superevents"
+	"github.com/cpchain-network/cp-chain/op-supervisor/supervisor/types"
 )
 
 var ErrStatusTrackerNotReady = fmt.Errorf("supervisor status tracker not ready")

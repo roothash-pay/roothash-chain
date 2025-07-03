@@ -18,8 +18,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/ethereum-optimism/optimism/op-chain-ops/foundry"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/standard"
+	"github.com/cpchain-network/cp-chain/common/foundry"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/standard"
 )
 
 var ErrUnsupportedArtifactsScheme = errors.New("unsupported artifacts URL scheme")

@@ -1,7 +1,7 @@
 package testutils
 
 import (
-	"github.com/ethereum-optimism/optimism/op-node/rollup/event"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/event"
 	"github.com/stretchr/testify/mock"
 )
 

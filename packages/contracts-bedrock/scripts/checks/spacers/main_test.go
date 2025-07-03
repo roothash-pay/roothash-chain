@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-	"github.com/ethereum-optimism/optimism/op-chain-ops/solc"
+	"github.com/cpchain-network/cp-chain/common/solc"
 	"github.com/stretchr/testify/require"
 )
 

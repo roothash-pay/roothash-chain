@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ethereum-optimism/optimism/common/proofs/prestate"
+	"github.com/cpchain-network/cp-chain/common/proofs/prestate"
 )
 
 type chainConfig struct {

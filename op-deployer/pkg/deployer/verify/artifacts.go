@@ -6,7 +6,7 @@ import (
 	"path"
 	"strings"
 
-	"github.com/ethereum-optimism/optimism/op-chain-ops/foundry"
+	"github.com/cpchain-network/cp-chain/common/foundry"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 )
 

@@ -7,9 +7,9 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/ethereum-optimism/optimism/op-chain-ops/genesis"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/inspect"
-	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/state"
+	"github.com/cpchain-network/cp-chain/common/genesis"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/inspect"
+	"github.com/cpchain-network/cp-chain/op-deployer/pkg/deployer/state"
 	"github.com/ethereum-optimism/superchain-registry/ops/internal/config"
 	"github.com/ethereum-optimism/superchain-registry/ops/internal/paths"
 	"github.com/ethereum/go-ethereum/common"

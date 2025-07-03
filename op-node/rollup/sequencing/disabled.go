@@ -7,7 +7,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/ethereum-optimism/optimism/op-node/rollup/event"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/event"
 )
 
 var ErrSequencerNotEnabled = errors.New("sequencer is not enabled")

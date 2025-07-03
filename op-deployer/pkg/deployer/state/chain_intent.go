@@ -7,7 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 
-	"github.com/ethereum-optimism/optimism/op-chain-ops/genesis"
+	"github.com/cpchain-network/cp-chain/common/genesis"
 )
 
 type VMType string

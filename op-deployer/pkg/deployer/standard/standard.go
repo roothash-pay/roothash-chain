@@ -9,9 +9,9 @@ import (
 
 	"github.com/ethereum/go-ethereum/superchain"
 
-	"github.com/ethereum-optimism/optimism/op-chain-ops/genesis"
-	"github.com/ethereum-optimism/optimism/op-node/rollup"
-	op_service "github.com/ethereum-optimism/optimism/op-service"
+	"github.com/cpchain-network/cp-chain/common/genesis"
+	"github.com/cpchain-network/cp-chain/op-node/rollup"
+	op_service "github.com/cpchain-network/cp-chain/op-service"
 
 	"github.com/ethereum/go-ethereum/common"
 )

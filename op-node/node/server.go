@@ -4,9 +4,9 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/ethereum-optimism/optimism/op-node/rollup"
-	opmetrics "github.com/ethereum-optimism/optimism/op-service/metrics"
-	oprpc "github.com/ethereum-optimism/optimism/op-service/rpc"
+	"github.com/cpchain-network/cp-chain/op-node/rollup"
+	opmetrics "github.com/cpchain-network/cp-chain/op-service/metrics"
+	oprpc "github.com/cpchain-network/cp-chain/op-service/rpc"
 )
 
 func newRPCServer(rpcCfg *RPCConfig, rollupCfg *rollup.Config, l2Client l2EthClient, dr driverClient,

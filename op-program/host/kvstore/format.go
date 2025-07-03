@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"slices"
 
-	"github.com/ethereum-optimism/optimism/op-program/host/types"
+	"github.com/cpchain-network/cp-chain/op-program/host/types"
 	"github.com/ethereum/go-ethereum/log"
 )
 

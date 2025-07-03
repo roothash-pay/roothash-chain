@@ -7,8 +7,8 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/ethereum-optimism/optimism/op-service/sources/batching/rpcblock"
-	"github.com/ethereum-optimism/optimism/op-service/txmgr"
+	"github.com/cpchain-network/cp-chain/op-service/sources/batching/rpcblock"
+	"github.com/cpchain-network/cp-chain/op-service/txmgr"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"

@@ -7,8 +7,8 @@ import (
 	"path"
 	"testing"
 
-	"github.com/ethereum-optimism/optimism/op-node/params"
-	"github.com/ethereum-optimism/optimism/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-node/params"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
 	"github.com/stretchr/testify/require"
 )
 

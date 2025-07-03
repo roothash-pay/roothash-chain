@@ -4,8 +4,8 @@ import (
 	"context"
 	"sync"
 
-	"github.com/ethereum-optimism/optimism/op-chain-ops/script"
-	"github.com/ethereum-optimism/optimism/op-service/txmgr"
+	"github.com/cpchain-network/cp-chain/common/script"
+	"github.com/cpchain-network/cp-chain/op-service/txmgr"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 )

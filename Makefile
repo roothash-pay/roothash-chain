@@ -194,7 +194,7 @@ test-unit: ## Runs unit tests for all components
 # Remove the baseline-commit to generate a base reading & show all issues
 semgrep: ## Runs Semgrep checks
 	$(eval DEV_REF := $(shell git rev-parse develop))
-	SEMGREP_REPO_NAME=ethereum-optimism/optimism semgrep ci --baseline-commit=$(DEV_REF)
+	SEMGREP_REPO_NAME=/cpchain-network/cp-chain semgrep ci --baseline-commit=$(DEV_REF)
 .PHONY: semgrep
 
 update-op-geth: ## Updates the Geth version used in the project

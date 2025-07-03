@@ -7,13 +7,13 @@ import (
 
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/ethereum-optimism/optimism/op-node/rollup"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/interop/managed"
-	"github.com/ethereum-optimism/optimism/op-node/rollup/interop/standard"
-	"github.com/ethereum-optimism/optimism/op-service/client"
-	opmetrics "github.com/ethereum-optimism/optimism/op-service/metrics"
-	"github.com/ethereum-optimism/optimism/op-service/rpc"
-	"github.com/ethereum-optimism/optimism/op-service/sources"
+	"github.com/cpchain-network/cp-chain/op-node/rollup"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/interop/managed"
+	"github.com/cpchain-network/cp-chain/op-node/rollup/interop/standard"
+	"github.com/cpchain-network/cp-chain/op-service/client"
+	opmetrics "github.com/cpchain-network/cp-chain/op-service/metrics"
+	"github.com/cpchain-network/cp-chain/op-service/rpc"
+	"github.com/cpchain-network/cp-chain/op-service/sources"
 )
 
 type Config struct {

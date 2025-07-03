@@ -3,7 +3,7 @@ package manage
 import (
 	"testing"
 
-	"github.com/ethereum-optimism/optimism/op-chain-ops/genesis"
+	"github.com/cpchain-network/cp-chain/common/genesis"
 	"github.com/ethereum-optimism/superchain-registry/ops/internal/config"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/stretchr/testify/require"

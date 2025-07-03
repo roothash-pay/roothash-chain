@@ -4,13 +4,13 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/ethereum-optimism/optimism/op-service/eth"
-	"github.com/ethereum-optimism/optimism/op-service/plan"
+	"github.com/cpchain-network/cp-chain/op-service/eth"
+	"github.com/cpchain-network/cp-chain/op-service/plan"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	suptypes "github.com/ethereum-optimism/optimism/op-supervisor/supervisor/types"
+	suptypes "github.com/cpchain-network/cp-chain/op-supervisor/supervisor/types"
 )
 
 var _ Result = (*InteropOutput)(nil)

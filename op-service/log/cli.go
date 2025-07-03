@@ -12,8 +12,8 @@ import (
 
 	"github.com/ethereum/go-ethereum/log"
 
-	opservice "github.com/ethereum-optimism/optimism/op-service"
-	"github.com/ethereum-optimism/optimism/op-service/cliapp"
+	opservice "github.com/cpchain-network/cp-chain/op-service"
+	"github.com/cpchain-network/cp-chain/op-service/cliapp"
 )
 
 const (
