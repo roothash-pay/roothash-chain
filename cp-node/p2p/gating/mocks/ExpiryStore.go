@@ -231,7 +231,7 @@ func (_c *ExpiryStore_SetPeerBanExpiration_Call) RunAndReturn(run func(peer.ID, 
 	return _c
 }
 
-// NewExpiryStore creates a new instance of ExpiryStore. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// NewExpiryStore creates a new instance of ExpiryStore. It also registers a testing interfaces on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewExpiryStore(t interface {
 	mock.TestingT

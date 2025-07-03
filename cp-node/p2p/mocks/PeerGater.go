@@ -37,7 +37,7 @@ type mockConstructorTestingTNewPeerGater interface {
 	Cleanup(func())
 }
 
-// NewPeerGater creates a new instance of PeerGater. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// NewPeerGater creates a new instance of PeerGater. It also registers a testing interfaces on the mock and a cleanup function to assert the mocks expectations.
 func NewPeerGater(t mockConstructorTestingTNewPeerGater) *PeerGater {
 	mock := &PeerGater{}
 	mock.Mock.Test(t)

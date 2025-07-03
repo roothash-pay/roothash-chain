@@ -52,7 +52,7 @@ func NewRunner(l1RpcUrl string, l1RpcKind string, l1BeaconUrl string, l2RpcUrl s
 
 	l2RawRpc, err := dial.DialRPCClientWithTimeout(ctx, dial.DefaultDialTimeout, setupLog, l2RpcUrl)
 	if err != nil {
-		return nil, fmt.Errorf("dial L2 client: %w", err)
+		return nil, fmt.Errorf("dial core client: %w", err)
 	}
 
 	rollupCfg, err := chainconfig.RollupConfigByChainID(chainID)
@@ -69,7 +69,7 @@ func NewRunner(l1RpcUrl string, l1RpcKind string, l1BeaconUrl string, l2RpcUrl s
 	l2RPC := client.NewBaseRPCClient(l2RawRpc)
 	l2Client, err := sources.NewL2Client(l2RPC, setupLog, nil, l2ClientCfg)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create L2 client: %w", err)
+		return nil, fmt.Errorf("failed to create core client: %w", err)
 	}
 
 	return &Runner{
@@ -114,13 +114,13 @@ func (r *Runner) RunBetweenBlocks(ctx context.Context, l1Head common.Hash, start
 func (r *Runner) createL2Client(ctx context.Context) (*sources.L2Client, error) {
 	l2RawRpc, err := dial.DialRPCClientWithTimeout(ctx, dial.DefaultDialTimeout, r.setupLog, r.l2RpcUrl)
 	if err != nil {
-		return nil, fmt.Errorf("dial L2 client: %w", err)
+		return nil, fmt.Errorf("dial core client: %w", err)
 	}
 	l2ClientCfg := sources.L2ClientDefaultConfig(r.rollupCfg, false)
 	l2RPC := client.NewBaseRPCClient(l2RawRpc)
 	l2Client, err := sources.NewL2Client(l2RPC, r.setupLog, nil, l2ClientCfg)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create L2 client: %w", err)
+		return nil, fmt.Errorf("failed to create core client: %w", err)
 	}
 	return l2Client, nil
 }
@@ -141,10 +141,10 @@ func (r *Runner) RunToFinalized(ctx context.Context) error {
 		return l2Client.InfoByLabel(ctx, eth.Finalized)
 	})
 	if err != nil {
-		return fmt.Errorf("failed to retrieve finalized L2 block: %w", err)
+		return fmt.Errorf("failed to retrieve finalized core block: %w", err)
 	}
 
-	// Retrieve finalized L1 block after finalized L2 block to ensure it is
+	// Retrieve finalized L1 block after finalized core block to ensure it is
 	l1Head, err := retryOp(ctx, func() (*types.Header, error) {
 		return l1Client.HeaderByNumber(ctx, big.NewInt(rpc.FinalizedBlockNumber.Int64()))
 	})

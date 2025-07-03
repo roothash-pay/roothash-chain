@@ -63,7 +63,7 @@ type NoopDeriver struct{}
 
 func (d NoopDeriver) OnEvent(ev Event) {}
 
-// DeriverFunc implements the Deriver interface as a function,
+// DeriverFunc implements the Deriver interfaces as a function,
 // similar to how the std-lib http HandlerFunc implements a Handler.
 // This can be used for small in-place derivers, test helpers, etc.
 type DeriverFunc func(ev Event) bool

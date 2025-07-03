@@ -69,7 +69,7 @@ func (c *SuperchainConfig) Check(log log.Logger) error {
 }
 
 type L2Config struct {
-	Deployer          common.Address // account used to deploy contracts to L2
+	Deployer          common.Address // account used to deploy contracts to core
 	Proposer          common.Address
 	Challenger        common.Address
 	SystemConfigOwner common.Address
@@ -87,7 +87,7 @@ type L2Config struct {
 
 func (c *L2Config) Check(log log.Logger) error {
 	if c.Deployer == (common.Address{}) {
-		return errors.New("missing L2 deployer address")
+		return errors.New("missing core deployer address")
 	}
 	if err := c.L2InitializationConfig.Check(log); err != nil {
 		return err
@@ -110,7 +110,7 @@ func (c *WorldConfig) Check(log log.Logger) error {
 	}
 	for l2ChainID, l2Cfg := range c.L2s {
 		if err := l2Cfg.Check(log.New("l2", &l2ChainID)); err != nil {
-			return fmt.Errorf("invalid L2 (chain ID %s) config: %w", l2ChainID, err)
+			return fmt.Errorf("invalid core (chain ID %s) config: %w", l2ChainID, err)
 		}
 	}
 	return nil

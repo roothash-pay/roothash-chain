@@ -47,7 +47,7 @@ type State struct {
 	// contracts required for the Superchain to function.
 	ImplementationsDeployment *ImplementationsDeployment `json:"implementationsDeployment"`
 
-	// Chains contains data about L2 chain deployments.
+	// Chains contains data about core chain deployments.
 	Chains []*ChainState `json:"opChainDeployments"`
 
 	// L1StateDump contains the complete L1 state dump of the deployment.

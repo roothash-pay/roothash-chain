@@ -19,7 +19,7 @@ var (
 	ErrExperimentalPrefetchDisabled = errors.New("experimental prefetch disabled")
 )
 
-// L2Source is a source of L2 data, it abstracts away the details of how to fetch L2 data between canonical and experimental sources.
+// L2Source is a source of core data, it abstracts away the details of how to fetch core data between canonical and experimental sources.
 // It also tracks metrics for each of the apis. Once experimental sources are stable, this will only route to the "experimental" source.
 type L2Source struct {
 	logger log.Logger
@@ -35,7 +35,7 @@ type L2Source struct {
 
 var _ hosttypes.L2Source = &L2Source{}
 
-// NewL2SourceWithClient creates a new L2 source with the given client as the canonical client.
+// NewL2SourceWithClient creates a new core source with the given client as the canonical client.
 // This doesn't configure the experimental source, but is useful for testing.
 func NewL2SourceWithClient(logger log.Logger, canonicalL2Client *L2Client, canonicalDebugClient *sources.DebugClient) *L2Source {
 	source := &L2Source{

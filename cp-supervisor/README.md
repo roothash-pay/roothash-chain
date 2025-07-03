@@ -28,7 +28,7 @@ make cp-supervisor
 # Key configurables:
 # datadir: where to store indexed interop data
 # dependency-set: where to find chain dependencies (this format is changing, and may be fully onchain in a later iteration)
-# l2-rpcs: L2 RPC endpoints to fetch data from (optional, can also be added using the `admin_addL2RPC in the admin-RPC)
+# l2-rpcs: core RPC endpoints to fetch data from (optional, can also be added using the `admin_addL2RPC in the admin-RPC)
 ./bin/cp-supervisor \
   --datadir="./cp-supervisor-data" \
   --dependency-set="./my-network-configs/dependency-set.json" \

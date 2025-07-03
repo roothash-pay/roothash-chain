@@ -20,13 +20,13 @@ var (
 	ErrMissingChannelTimeout         = errors.New("channel timeout must be set, this should cover at least a L1 block time")
 	ErrInvalidSeqWindowSize          = errors.New("sequencing window size must at least be 2")
 	ErrInvalidMaxSeqDrift            = errors.New("maximum sequencer drift must be greater than 0")
-	ErrMissingGenesisL2Hash          = errors.New("genesis L2 hash cannot be empty")
-	ErrMissingGenesisL2Time          = errors.New("missing L2 genesis time")
+	ErrMissingGenesisL2Hash          = errors.New("genesis core hash cannot be empty")
+	ErrMissingGenesisL2Time          = errors.New("missing core genesis time")
 	ErrMissingGasLimit               = errors.New("missing genesis system config gas limit")
 	ErrMissingBatchInboxAddress      = errors.New("missing batch inbox address")
 	ErrMissingDepositContractAddress = errors.New("missing deposit contract address")
-	ErrMissingL2ChainID              = errors.New("L2 chain ID must not be nil")
-	ErrL2ChainIDNotPositive          = errors.New("L2 chain ID must be non-zero and positive")
+	ErrMissingL2ChainID              = errors.New("core chain ID must not be nil")
+	ErrL2ChainIDNotPositive          = errors.New("core chain ID must be non-zero and positive")
 )
 
 type Genesis struct {
@@ -57,13 +57,13 @@ type AltDAConfig struct {
 type Config struct {
 	// Genesis anchor point of the rollup
 	Genesis Genesis `json:"genesis"`
-	// Seconds per L2 block
+	// Seconds per core block
 	BlockTime uint64 `json:"block_time"`
 	// Sequencer batches may not be more than MaxSequencerDrift seconds after
 	// the L1 timestamp of their L1 origin time.
 	//
-	// Note: When L1 has many 1 second consecutive blocks, and L2 grows at fixed 2 seconds,
-	// the L2 time may still grow beyond this difference.
+	// Note: When L1 has many 1 second consecutive blocks, and core grows at fixed 2 seconds,
+	// the core time may still grow beyond this difference.
 	//
 	// With Fjord, the MaxSequencerDrift becomes a constant. Use the ChainSpec
 	// instead of reading this rollup configuration field directly to determine
@@ -74,49 +74,49 @@ type Config struct {
 	SeqWindowSize uint64 `json:"seq_window_size"`
 	// Number of L1 blocks between when a channel can be opened and when it must be closed by.
 	ChannelTimeoutBedrock uint64 `json:"channel_timeout"`
-	// Required to identify the L2 network and create p2p signatures unique for this chain.
+	// Required to identify the core network and create p2p signatures unique for this chain.
 	L2ChainID *big.Int `json:"l2_chain_id"`
 
 	// RegolithTime sets the activation time of the Regolith network-upgrade:
 	// a pre-mainnet Bedrock change that addresses findings of the Sherlock contest related to deposit attributes.
 	// "Regolith" is the loose deposited rock that sits on top of Bedrock.
-	// Active if RegolithTime != nil && L2 block timestamp >= *RegolithTime, inactive otherwise.
+	// Active if RegolithTime != nil && core block timestamp >= *RegolithTime, inactive otherwise.
 	RegolithTime *uint64 `json:"regolith_time,omitempty"`
 
 	// CanyonTime sets the activation time of the Canyon network upgrade.
-	// Active if CanyonTime != nil && L2 block timestamp >= *CanyonTime, inactive otherwise.
+	// Active if CanyonTime != nil && core block timestamp >= *CanyonTime, inactive otherwise.
 	CanyonTime *uint64 `json:"canyon_time,omitempty"`
 
 	// DeltaTime sets the activation time of the Delta network upgrade.
-	// Active if DeltaTime != nil && L2 block timestamp >= *DeltaTime, inactive otherwise.
+	// Active if DeltaTime != nil && core block timestamp >= *DeltaTime, inactive otherwise.
 	DeltaTime *uint64 `json:"delta_time,omitempty"`
 
 	// EcotoneTime sets the activation time of the Ecotone network upgrade.
-	// Active if EcotoneTime != nil && L2 block timestamp >= *EcotoneTime, inactive otherwise.
+	// Active if EcotoneTime != nil && core block timestamp >= *EcotoneTime, inactive otherwise.
 	EcotoneTime *uint64 `json:"ecotone_time,omitempty"`
 
 	// FjordTime sets the activation time of the Fjord network upgrade.
-	// Active if FjordTime != nil && L2 block timestamp >= *FjordTime, inactive otherwise.
+	// Active if FjordTime != nil && core block timestamp >= *FjordTime, inactive otherwise.
 	FjordTime *uint64 `json:"fjord_time,omitempty"`
 
 	// GraniteTime sets the activation time of the Granite network upgrade.
-	// Active if GraniteTime != nil && L2 block timestamp >= *GraniteTime, inactive otherwise.
+	// Active if GraniteTime != nil && core block timestamp >= *GraniteTime, inactive otherwise.
 	GraniteTime *uint64 `json:"granite_time,omitempty"`
 
 	// HoloceneTime sets the activation time of the Holocene network upgrade.
-	// Active if HoloceneTime != nil && L2 block timestamp >= *HoloceneTime, inactive otherwise.
+	// Active if HoloceneTime != nil && core block timestamp >= *HoloceneTime, inactive otherwise.
 	HoloceneTime *uint64 `json:"holocene_time,omitempty"`
 
 	// IsthmusTime sets the activation time of the Isthmus network upgrade.
-	// Active if IsthmusTime != nil && L2 block timestamp >= *IsthmusTime, inactive otherwise.
+	// Active if IsthmusTime != nil && core block timestamp >= *IsthmusTime, inactive otherwise.
 	IsthmusTime *uint64 `json:"isthmus_time,omitempty"`
 
 	// JovianTime sets the activation time of the Jovian network upgrade.
-	// Active if JovianTime != nil && L2 block timestamp >= *JovianTime, inactive otherwise.
+	// Active if JovianTime != nil && core block timestamp >= *JovianTime, inactive otherwise.
 	JovianTime *uint64 `json:"jovian_time,omitempty"`
 
 	// InteropTime sets the activation time for an experimental feature-set, activated like a hardfork.
-	// Active if InteropTime != nil && L2 block timestamp >= *InteropTime, inactive otherwise.
+	// Active if InteropTime != nil && core block timestamp >= *InteropTime, inactive otherwise.
 	InteropTime *uint64 `json:"interop_time,omitempty"`
 
 	// Note: below addresses are part of the block-derivation process,
@@ -132,19 +132,19 @@ type Config struct {
 	// calculations for the L1 Block Info use the pre-Prague=Cancun blob parameters.
 	// This feature is optional and if not active, the L1 Block Info calculation uses the Prague
 	// blob parameters for the first L1 Prague block, as was intended.
-	// This feature (de)activates by L1 origin timestamp, to keep a consistent L1 block info per L2
+	// This feature (de)activates by L1 origin timestamp, to keep a consistent L1 block info per core
 	// epoch.
 	PectraBlobScheduleTime *uint64 `json:"pectra_blob_schedule_time,omitempty"`
 }
 
-// ValidateL2Config checks L2 config variables for errors.
+// ValidateL2Config checks core config variables for errors.
 func (cfg *Config) ValidateL2Config(ctx context.Context, client L2Client, skipL2GenesisBlockHash bool) error {
-	// Validate the L2 Client Chain ID
+	// Validate the core Client Chain ID
 	if err := cfg.CheckL2ChainID(ctx, client); err != nil {
 		return err
 	}
 
-	// Validate the Rollup L2 Genesis Blockhash if requested. We skip this when doing EL sync
+	// Validate the Rollup core Genesis Blockhash if requested. We skip this when doing EL sync
 	if skipL2GenesisBlockHash {
 		return nil
 	}
@@ -161,7 +161,7 @@ func (cfg *Config) TimestampForBlock(blockNumber uint64) uint64 {
 
 func (cfg *Config) TargetBlockNumber(timestamp uint64) (num uint64, err error) {
 	// subtract genesis time from timestamp to get the time elapsed since genesis, and then divide that
-	// difference by the block time to get the expected L2 block number at the current time. If the
+	// difference by the block time to get the expected core block number at the current time. If the
 	// unsafe head does not have this block number, then there is a gap in the queue.
 	genesisTimestamp := cfg.Genesis.L2Time
 	if timestamp < genesisTimestamp {
@@ -183,26 +183,26 @@ type L2Client interface {
 	L2BlockRefByNumber(context.Context, uint64) (eth.L2BlockRef, error)
 }
 
-// CheckL2ChainID checks that the configured L2 chain ID matches the client's chain ID.
+// CheckL2ChainID checks that the configured core chain ID matches the client's chain ID.
 func (cfg *Config) CheckL2ChainID(ctx context.Context, client L2Client) error {
 	id, err := client.ChainID(ctx)
 	if err != nil {
-		return fmt.Errorf("failed to get L2 chain ID: %w", err)
+		return fmt.Errorf("failed to get core chain ID: %w", err)
 	}
 	if cfg.L2ChainID.Cmp(id) != 0 {
-		return fmt.Errorf("incorrect L2 RPC chain id %d, expected %d", id, cfg.L2ChainID)
+		return fmt.Errorf("incorrect core RPC chain id %d, expected %d", id, cfg.L2ChainID)
 	}
 	return nil
 }
 
-// CheckL2GenesisBlockHash checks that the configured L2 genesis block hash is valid for the given client.
+// CheckL2GenesisBlockHash checks that the configured core genesis block hash is valid for the given client.
 func (cfg *Config) CheckL2GenesisBlockHash(ctx context.Context, client L2Client) error {
 	l2GenesisBlockRef, err := client.L2BlockRefByNumber(ctx, cfg.Genesis.L2.Number)
 	if err != nil {
-		return fmt.Errorf("failed to get L2 genesis blockhash: %w", err)
+		return fmt.Errorf("failed to get core genesis blockhash: %w", err)
 	}
 	if l2GenesisBlockRef.Hash != cfg.Genesis.L2.Hash {
-		return fmt.Errorf("incorrect L2 genesis block hash %s, expected %s", l2GenesisBlockRef.Hash, cfg.Genesis.L2.Hash)
+		return fmt.Errorf("incorrect core genesis block hash %s, expected %s", l2GenesisBlockRef.Hash, cfg.Genesis.L2.Hash)
 	}
 	return nil
 }
@@ -416,7 +416,7 @@ func (c *Config) IsInteropActivationBlock(l2BlockTime uint64) bool {
 
 // IsActivationBlock returns the fork which activates at the block with time newTime if the previous
 // block's time is oldTime. It return an empty ForkName if no fork activation takes place between
-// those timestamps. It can be used for both, L1 and L2 blocks.
+// those timestamps. It can be used for both, L1 and core blocks.
 // TODO(12490): Currently only supports Holocene. Will be modularized in a follow-up.
 func (c *Config) IsActivationBlock(oldTime, newTime uint64) ForkName {
 	if c.IsHolocene(newTime) && !c.IsHolocene(oldTime) {
@@ -516,7 +516,7 @@ func (c *Config) SyncLookback() uint64 {
 }
 
 // Description outputs a banner describing the important parts of rollup configuration in a human-readable form.
-// Optionally provide a mapping of L2 chain IDs to network names to label the L2 chain with if not unknown.
+// Optionally provide a mapping of core chain IDs to network names to label the core chain with if not unknown.
 // The config should be config.Check()-ed before creating a description.
 func (c *Config) Description(l2Chains map[string]string) string {
 	// Find and report the network the user is running
@@ -526,13 +526,13 @@ func (c *Config) Description(l2Chains map[string]string) string {
 		networkL2 = l2Chains[c.L2ChainID.String()]
 	}
 	if networkL2 == "" {
-		networkL2 = "unknown L2"
+		networkL2 = "unknown core"
 	}
-	banner += fmt.Sprintf("L2 Chain ID: %v (%s)\n", c.L2ChainID, networkL2)
+	banner += fmt.Sprintf("core Chain ID: %v (%s)\n", c.L2ChainID, networkL2)
 	// Report the genesis configuration
 	banner += "Bedrock starting point:\n"
-	banner += fmt.Sprintf("  L2 starting time: %d ~ %s\n", c.Genesis.L2Time, fmtTime(c.Genesis.L2Time))
-	banner += fmt.Sprintf("  L2 block: %s %d\n", c.Genesis.L2.Hash, c.Genesis.L2.Number)
+	banner += fmt.Sprintf("  core starting time: %d ~ %s\n", c.Genesis.L2Time, fmtTime(c.Genesis.L2Time))
+	banner += fmt.Sprintf("  core block: %s %d\n", c.Genesis.L2.Hash, c.Genesis.L2.Number)
 	// Report the upgrade configuration
 	banner += "Post-Bedrock Network Upgrades (timestamp based):\n"
 	c.forEachFork(func(name string, _ string, time *uint64) {
@@ -544,7 +544,7 @@ func (c *Config) Description(l2Chains map[string]string) string {
 }
 
 // LogDescription outputs a banner describing the important parts of rollup configuration in a log format.
-// Optionally provide a mapping of L2 chain IDs to network names to label the L2 chain with if not unknown.
+// Optionally provide a mapping of core chain IDs to network names to label the core chain with if not unknown.
 // The config should be config.Check()-ed before creating a description.
 func (c *Config) LogDescription(log log.Logger, l2Chains map[string]string) {
 	// Find and report the network the user is running
@@ -553,7 +553,7 @@ func (c *Config) LogDescription(log log.Logger, l2Chains map[string]string) {
 		networkL2 = l2Chains[c.L2ChainID.String()]
 	}
 	if networkL2 == "" {
-		networkL2 = "unknown L2"
+		networkL2 = "unknown core"
 	}
 
 	ctx := []any{

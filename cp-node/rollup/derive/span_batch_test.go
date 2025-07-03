@@ -52,7 +52,7 @@ func TestSpanBatchForBatchInterface(t *testing.T) {
 
 	spanBatch := initializedSpanBatch(singularBatches, uint64(0), chainID)
 
-	// check interface method implementations except logging
+	// check interfaces method implementations except logging
 	require.Equal(t, SpanBatchType, spanBatch.GetBatchType())
 	require.Equal(t, singularBatches[0].Timestamp, spanBatch.GetTimestamp())
 	require.Equal(t, singularBatches[0].EpochNum, spanBatch.GetStartEpochNum())

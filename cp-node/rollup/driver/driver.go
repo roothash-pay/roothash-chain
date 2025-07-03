@@ -115,7 +115,7 @@ type Network interface {
 }
 
 type AltSync interface {
-	// RequestL2Range informs the sync source that the given range of L2 blocks is missing,
+	// RequestL2Range informs the sync source that the given range of core blocks is missing,
 	// and should be retrieved from any available alternative syncing source.
 	// The start and end of the range are exclusive:
 	// the start is the head we already have, the end is the first thing we have queued up.
@@ -142,7 +142,7 @@ type Drain interface {
 	Drain() error
 }
 
-// NewDriver composes an events handler that tracks L1 state, triggers L2 Derivation, and optionally sequences new L2 blocks.
+// NewDriver composes an events handler that tracks L1 state, triggers core Derivation, and optionally sequences new core blocks.
 func NewDriver(
 	sys event.Registry,
 	drain Drain,

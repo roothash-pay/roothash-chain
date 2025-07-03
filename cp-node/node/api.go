@@ -72,7 +72,7 @@ func (n *adminAPI) SequencerActive(ctx context.Context) (bool, error) {
 	return n.dr.SequencerActive(ctx)
 }
 
-// PostUnsafePayload is a special API that allows posting an unsafe payload to the L2 derivation pipeline.
+// PostUnsafePayload is a special API that allows posting an unsafe payload to the core derivation pipeline.
 // It should only be used by op-conductor for sequencer failover scenarios.
 func (n *adminAPI) PostUnsafePayload(ctx context.Context, envelope *eth.ExecutionPayloadEnvelope) error {
 	payload := envelope.ExecutionPayload
@@ -121,14 +121,14 @@ func NewNodeAPI(config *rollup.Config, l2Client l2EthClient, dr driverClient, sa
 func (n *nodeAPI) OutputAtBlock(ctx context.Context, number hexutil.Uint64) (*eth.OutputResponse, error) {
 	ref, status, err := n.dr.BlockRefWithStatus(ctx, uint64(number))
 	if err != nil {
-		return nil, fmt.Errorf("failed to get L2 block ref with sync status: %w", err)
+		return nil, fmt.Errorf("failed to get core block ref with sync status: %w", err)
 	}
 
 	// OutputV0AtBlock uses the WithdrawalsRoot in the block header as the value for the
 	// output MessagePasserStorageRoot, if Isthmus hard fork has activated.
 	output, err := n.client.OutputV0AtBlock(ctx, ref.Hash)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get L2 output at block %s: %w", ref, err)
+		return nil, fmt.Errorf("failed to get core output at block %s: %w", ref, err)
 	}
 	return &eth.OutputResponse{
 		Version:               output.Version(),

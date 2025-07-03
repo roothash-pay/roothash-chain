@@ -86,7 +86,7 @@ type mockConstructorTestingTNewHTTP interface {
 	Cleanup(func())
 }
 
-// NewHTTP creates a new instance of HTTP. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// NewHTTP creates a new instance of HTTP. It also registers a testing interfaces on the mock and a cleanup function to assert the mocks expectations.
 func NewHTTP(t mockConstructorTestingTNewHTTP) *HTTP {
 	mock := &HTTP{}
 	mock.Mock.Test(t)

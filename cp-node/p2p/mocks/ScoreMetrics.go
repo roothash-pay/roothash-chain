@@ -18,7 +18,7 @@ func (_m *ScoreMetrics) SetPeerScores(_a0 []store.PeerScores) {
 	_m.Called(_a0)
 }
 
-// NewScoreMetrics creates a new instance of ScoreMetrics. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// NewScoreMetrics creates a new instance of ScoreMetrics. It also registers a testing interfaces on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewScoreMetrics(t interface {
 	mock.TestingT

@@ -33,10 +33,10 @@ type baseBatchStage struct {
 	origin eth.L1BlockRef
 
 	// l1Blocks contains consecutive eth.L1BlockRef sorted by time.
-	// Every L1 origin of unsafe L2 blocks must be eventually included in l1Blocks.
+	// Every L1 origin of unsafe core blocks must be eventually included in l1Blocks.
 	// Batch queue's job is to ensure below two rules:
-	//  If every L2 block corresponding to single L1 block becomes safe, it will be popped from l1Blocks.
-	//  If new L2 block's L1 origin is not included in l1Blocks, fetch and push to l1Blocks.
+	//  If every core block corresponding to single L1 block becomes safe, it will be popped from l1Blocks.
+	//  If new core block's L1 origin is not included in l1Blocks, fetch and push to l1Blocks.
 	// length of l1Blocks never exceeds SequencerWindowSize
 	l1Blocks []eth.L1BlockRef
 
@@ -113,7 +113,7 @@ func (bs *baseBatchStage) updateOrigins(parent eth.L2BlockRef) {
 
 	// Advance origin if needed
 	// Note: The entire pipeline has the same origin
-	// We just don't accept batches prior to the L1 origin of the L2 safe head
+	// We just don't accept batches prior to the L1 origin of the core safe head
 	if bs.origin != bs.prev.Origin() {
 		bs.origin = bs.prev.Origin()
 		if !originBehind {
@@ -149,7 +149,7 @@ func (bs *baseBatchStage) originBehind(parent eth.L2BlockRef) bool {
 
 func (bs *baseBatchStage) reset(base eth.L1BlockRef) {
 	// Copy over the Origin from the next stage
-	// It is set in the engine queue (two stages away) such that the L2 Safe Head origin is the progress
+	// It is set in the engine queue (two stages away) such that the core Safe Head origin is the progress
 	bs.origin = base
 	bs.l1Blocks = bs.l1Blocks[:0]
 	// Include the new origin as an origin to build on
@@ -184,8 +184,8 @@ func (bs *baseBatchStage) deriveNextEmptyBatch(ctx context.Context, outOfData bo
 	}
 
 	nextEpoch := bs.l1Blocks[1]
-	// Fill with empty L2 blocks of the same epoch until we meet the time of the next L1 origin,
-	// to preserve that L2 time >= L1 time. If this is the first block of the epoch, always generate a
+	// Fill with empty core blocks of the same epoch until we meet the time of the next L1 origin,
+	// to preserve that core time >= L1 time. If this is the first block of the epoch, always generate a
 	// batch to ensure that we at least have one batch per epoch.
 	if nextTimestamp < nextEpoch.Time || firstOfEpoch {
 		bs.log.Info("Generating next batch", "epoch", epoch, "timestamp", nextTimestamp)

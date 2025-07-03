@@ -28,7 +28,7 @@ var rollupCfg = rollup.Config{
 	L1ChainID: big.NewInt(161),
 }
 
-// basic implementation of the Compressor interface that does no compression
+// basic implementation of the Compressor interfaces that does no compression
 type nonCompressor struct {
 	bytes.Buffer
 }

@@ -33,7 +33,7 @@ func InitLiveStrategy(ctx context.Context, env *Env, intent *state.Intent, st *s
 	}
 
 	if isL2Tag && !standard.IsSupportedL2Version(intent.L2ContractsLocator.Tag) {
-		return fmt.Errorf("unsupported L2 version: %s", intent.L2ContractsLocator.Tag)
+		return fmt.Errorf("unsupported core version: %s", intent.L2ContractsLocator.Tag)
 	}
 
 	isStandardIntent := intent.ConfigType == state.IntentTypeStandard ||

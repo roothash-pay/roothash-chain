@@ -59,7 +59,7 @@ func (p DB) Close() error {
 	return nil
 }
 
-// We implement the full ethdb.Database bloat because the StateDB takes this full interface,
+// We implement the full ethdb.Database bloat because the StateDB takes this full interfaces,
 // even though it only uses the KeyValue subset.
 
 func (p *DB) HasAncient(kind string, number uint64) (bool, error) {

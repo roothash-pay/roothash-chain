@@ -40,7 +40,7 @@ type rewinderDB interface {
 }
 
 // Rewinder is responsible for handling the rewinding of databases to the latest common ancestor between
-// the local databases and L2 node.
+// the local databases and core node.
 type Rewinder struct {
 	log     log.Logger
 	emitter event.Emitter

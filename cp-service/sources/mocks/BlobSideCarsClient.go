@@ -81,7 +81,7 @@ func (_c *BlobSideCarsClient_BeaconBlobSideCars_Call) RunAndReturn(run func(cont
 	return _c
 }
 
-// NewBlobSideCarsClient creates a new instance of BlobSideCarsClient. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// NewBlobSideCarsClient creates a new instance of BlobSideCarsClient. It also registers a testing interfaces on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewBlobSideCarsClient(t interface {
 	mock.TestingT

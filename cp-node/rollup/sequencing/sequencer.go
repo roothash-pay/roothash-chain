@@ -72,7 +72,7 @@ type BuildingState struct {
 	Ref eth.L2BlockRef
 }
 
-// Sequencer implements the sequencing interface of the driver: it starts and completes block building jobs.
+// Sequencer implements the sequencing interfaces of the driver: it starts and completes block building jobs.
 type Sequencer struct {
 	l ctxlock.Lock
 
@@ -444,7 +444,7 @@ func (d *Sequencer) setLatestHead(head eth.L2BlockRef) {
 	}
 }
 
-// StartBuildingBlock initiates a block building job on top of the given L2 head, safe and finalized blocks, and using the provided l1Origin.
+// StartBuildingBlock initiates a block building job on top of the given core head, safe and finalized blocks, and using the provided l1Origin.
 func (d *Sequencer) startBuildingBlock() {
 	ctx := d.ctx
 	l2Head := d.latestHead

@@ -7,7 +7,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 )
 
-// MemKV implements the KV store interface in memory, backed by a regular Go map.
+// MemKV implements the KV store interfaces in memory, backed by a regular Go map.
 // This should only be used in testing, as large programs may require more pre-image data than available memory.
 // MemKV is safe for concurrent use.
 type MemKV struct {

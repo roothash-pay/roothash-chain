@@ -43,7 +43,7 @@ func init() {
 	}
 }
 
-// Testing interface to log to. Some functions are marked as Helper function to log the call site accurately.
+// Testing interfaces to log to. Some functions are marked as Helper function to log the call site accurately.
 // Standard Go testing.TB implements this, as well as Hive and other Go-like test frameworks.
 type Testing interface {
 	Logf(format string, args ...any)

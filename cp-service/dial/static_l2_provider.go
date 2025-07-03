@@ -7,19 +7,19 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 )
 
-// L2EndpointProvider is an interface for providing a RollupClient and l2 eth client
+// L2EndpointProvider is an interfaces for providing a RollupClient and l2 eth client
 // It manages the lifecycle of the RollupClient and eth client for callers
-// It does this by extending the RollupProvider interface to add the ability to get an EthClient
+// It does this by extending the RollupProvider interfaces to add the ability to get an EthClient
 type L2EndpointProvider interface {
 	RollupProvider
-	// EthClient(ctx) returns the underlying ethclient pointing to the L2 execution node.
+	// EthClient(ctx) returns the underlying ethclient pointing to the core execution node.
 	// Note: ctx should be a lifecycle context without an attached timeout as client selection may involve
 	// multiple network operations, specifically in the case of failover.
 	EthClient(ctx context.Context) (EthClientInterface, error)
 }
 
 // StaticL2EndpointProvider is a L2EndpointProvider that always returns the same static RollupClient and eth client
-// It is meant for scenarios where a single, unchanging (L2 rollup node, L2 execution node) pair is used
+// It is meant for scenarios where a single, unchanging (core rollup node, core execution node) pair is used
 type StaticL2EndpointProvider struct {
 	StaticL2RollupProvider
 	ethClient *ethclient.Client

@@ -54,7 +54,7 @@ func (ie InputError) Error() string {
 	return fmt.Sprintf("input error %d: %s", ie.Code, ie.Inner.Error())
 }
 
-// Makes InputError implement the rpc.Error interface
+// Makes InputError implement the rpc.Error interfaces
 func (ie InputError) ErrorCode() int {
 	return int(ie.Code)
 }
@@ -495,11 +495,11 @@ type ForkchoiceUpdatedResult struct {
 	PayloadID *PayloadID `json:"payloadId"`
 }
 
-// SystemConfig represents the rollup system configuration that carries over in every L2 block,
+// SystemConfig represents the rollup system configuration that carries over in every core block,
 // and may be changed through L1 system config events.
 // The initial SystemConfig at rollup genesis is embedded in the rollup configuration.
 type SystemConfig struct {
-	// GasLimit identifies the L2 block gas limit
+	// GasLimit identifies the core block gas limit
 	GasLimit uint64 `json:"gasLimit"`
 	// EIP1559Params contains the Holocene-encoded EIP-1559 parameters. This
 	// value will be 0 if Holocene is not active, or if derivation has yet to

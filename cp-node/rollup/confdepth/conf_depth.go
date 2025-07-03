@@ -24,7 +24,7 @@ func NewConfDepth(depth uint64, l1Head func() eth.L1BlockRef, fetcher derive.L1F
 	return &confDepth{L1Fetcher: fetcher, l1Head: l1Head, depth: depth}
 }
 
-// L1BlockRefByNumber is used for L1 traversal and for finding a safe common point between the L2 engine and L1 chain.
+// L1BlockRefByNumber is used for L1 traversal and for finding a safe common point between the core engine and L1 chain.
 // Any block numbers that are within confirmation depth of the L1 head are mocked to be "not found",
 // effectively hiding the uncertain part of the L1 chain.
 func (c *confDepth) L1BlockRefByNumber(ctx context.Context, num uint64) (eth.L1BlockRef, error) {

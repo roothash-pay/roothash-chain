@@ -89,7 +89,7 @@ func NewMiner(t *testing.T, logger log.Logger, isthmusTime uint64) (*Miner, *cor
 	})
 	backend, err := geth.New(n, ethCfg)
 	require.NoError(t, err)
-	require.NoError(t, n.Start(), "failed to start L2 miner node")
+	require.NoError(t, n.Start(), "failed to start core miner node")
 	chain := backend.BlockChain()
 
 	engineAPI := engineapi.NewL2EngineAPI(logger, chain, nil)

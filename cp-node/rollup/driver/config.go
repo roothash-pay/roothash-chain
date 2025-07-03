@@ -1,10 +1,10 @@
 package driver
 
 type Config struct {
-	// VerifierConfDepth is the distance to keep from the L1 head when reading L1 data for L2 derivation.
+	// VerifierConfDepth is the distance to keep from the L1 head when reading L1 data for core derivation.
 	VerifierConfDepth uint64 `json:"verifier_conf_depth"`
 
-	// SequencerConfDepth is the distance to keep from the L1 head as origin when sequencing new L2 blocks.
+	// SequencerConfDepth is the distance to keep from the L1 head as origin when sequencing new core blocks.
 	// If this distance is too large, the sequencer may:
 	// - not adopt a L1 origin within the allowed time (rollup.Config.MaxSequencerDrift)
 	// - not adopt a L1 origin that can be included on L1 within the allowed range (rollup.Config.SeqWindowSize)
@@ -17,7 +17,7 @@ type Config struct {
 	// SequencerStopped is false when the driver should sequence new blocks.
 	SequencerStopped bool `json:"sequencer_stopped"`
 
-	// SequencerMaxSafeLag is the maximum number of L2 blocks for restricting the distance between L2 safe and unsafe.
+	// SequencerMaxSafeLag is the maximum number of core blocks for restricting the distance between core safe and unsafe.
 	// Disabled if 0.
 	SequencerMaxSafeLag uint64 `json:"sequencer_max_safe_lag"`
 

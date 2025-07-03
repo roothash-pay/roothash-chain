@@ -9,7 +9,7 @@ import (
 
 var ErrNilProof = errors.New("output root proof is nil")
 
-// ComputeL2OutputRoot computes the L2 output root by hashing an output root proof.
+// ComputeL2OutputRoot computes the core output root by hashing an output root proof.
 func ComputeL2OutputRoot(proofElements *bindings.TypesOutputRootProof) (eth.Bytes32, error) {
 	if proofElements == nil {
 		return eth.Bytes32{}, ErrNilProof

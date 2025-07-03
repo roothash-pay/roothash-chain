@@ -55,10 +55,10 @@ type Driver struct {
 	l1SafeSig      chan eth.L1BlockRef
 	l1FinalizedSig chan eth.L1BlockRef
 
-	// Interface to signal the L2 block range to sync.
+	// Interface to signal the core block range to sync.
 	altSync AltSync
 
-	// L2 Signals:
+	// core Signals:
 
 	unsafeL2Payloads chan *eth.ExecutionPayloadEnvelope
 
@@ -145,7 +145,7 @@ func (s *Driver) OnUnsafeL2Payload(ctx context.Context, envelope *eth.ExecutionP
 	}
 }
 
-// the eventLoop responds to L1 changes and internal timers to produce L2 blocks.
+// the eventLoop responds to L1 changes and internal timers to produce core blocks.
 func (s *Driver) eventLoop() {
 	defer s.wg.Done()
 	s.log.Info("State loop started")
@@ -217,15 +217,15 @@ func (s *Driver) eventLoop() {
 
 		planSequencerAction()
 
-		// If the engine is not ready, or if the L2 head is actively changing, then reset the alt-sync:
-		// there is no need to request L2 blocks when we are syncing already.
+		// If the engine is not ready, or if the core head is actively changing, then reset the alt-sync:
+		// there is no need to request core blocks when we are syncing already.
 		if head := s.Engine.UnsafeL2Head(); head != lastUnsafeL2 || !s.Derivation.DerivationReady() {
 			lastUnsafeL2 = head
 			altSyncTicker.Reset(syncCheckInterval)
 		}
 
 		s.emitter.Emit(finality.FinalizeL1Event{}) // todo: if all node vote change block to finalized
-		reqStep()                                  // we may be able to mark more L2 data as finalized now
+		reqStep()                                  // we may be able to mark more core data as finalized now
 
 		select {
 		case <-sequencerCh:
@@ -236,12 +236,12 @@ func (s *Driver) eventLoop() {
 			err := s.checkForGapInUnsafeQueue(ctx)
 			cancel()
 			if err != nil {
-				s.log.Warn("failed to check for unsafe L2 blocks to sync", "err", err)
+				s.log.Warn("failed to check for unsafe core blocks to sync", "err", err)
 			}
 		case envelope := <-s.unsafeL2Payloads:
 			// If we are doing CL sync or done with engine syncing, fallback to the unsafe payload queue & CL P2P sync.
 			if s.SyncCfg.SyncMode == sync.CLSync || !s.Engine.IsEngineSyncing() {
-				s.log.Info("Optimistically queueing unsafe L2 execution payload", "id", envelope.ExecutionPayload.ID())
+				s.log.Info("Optimistically queueing unsafe core execution payload", "id", envelope.ExecutionPayload.ID())
 				s.Emitter.Emit(clsync.ReceivedUnsafePayloadEvent{Envelope: envelope})
 				s.metrics.RecordReceivedUnsafePayload(envelope)
 				reqStep()
@@ -254,7 +254,7 @@ func (s *Driver) eventLoop() {
 				if ref.Number <= s.Engine.UnsafeL2Head().Number {
 					continue
 				}
-				s.log.Info("Optimistically inserting unsafe L2 execution payload to drive EL sync", "id", envelope.ExecutionPayload.ID())
+				s.log.Info("Optimistically inserting unsafe core execution payload to drive EL sync", "id", envelope.ExecutionPayload.ID())
 				if err := s.Engine.InsertUnsafePayload(s.driverCtx, envelope, ref); err != nil {
 					s.log.Warn("Failed to insert unsafe payload for EL sync", "id", envelope.ExecutionPayload.ID(), "err", err)
 				}
@@ -373,7 +373,7 @@ func (s *SyncDeriver) onEngineConfirmedReset(x engine.EngineResetConfirmedEvent)
 		if s.SafeHeadNotifs.Enabled() && x.CrossSafe.ID() == s.Config.Genesis.L2 {
 			// The rollup genesis block is always safe by definition. So if the pipeline resets this far back we know
 			// we will process all safe head updates and can record genesis as always safe from L1 genesis.
-			// Note that it is not safe to use cfg.Genesis.L1 here as it is the block immediately before the L2 genesis
+			// Note that it is not safe to use cfg.Genesis.L1 here as it is the block immediately before the core genesis
 			// but the contracts may have been deployed earlier than that, allowing creating a dispute game
 			// with a L1 head prior to cfg.Genesis.L1
 			if err := s.SafeHeadNotifs.SafeHeadUpdated(x.CrossSafe); err != nil {
@@ -449,7 +449,7 @@ func (s *SyncDeriver) SyncStep() {
 	s.Emitter.Emit(engine.PendingSafeRequestEvent{})
 
 	// If interop is configured, we have to run the engine events,
-	// to ensure cross-L2 safety is continuously verified against the interop-backend.
+	// to ensure cross-core safety is continuously verified against the interop-backend.
 	if s.Config.InteropTime != nil && !s.ManagedMode {
 		s.Emitter.Emit(engine.CrossUpdateRequestEvent{})
 	}
@@ -504,7 +504,7 @@ func (s *Driver) SyncStatus(ctx context.Context) (*eth.SyncStatus, error) {
 }
 
 // BlockRefWithStatus blocks the driver event loop and captures the syncing status,
-// along with an L2 block reference by number consistent with that same status.
+// along with an core block reference by number consistent with that same status.
 // If the event loop is too busy and the context expires, a context error is returned.
 func (s *Driver) BlockRefWithStatus(ctx context.Context, num uint64) (eth.L2BlockRef, *eth.SyncStatus, error) {
 	resp := s.statusTracker.SyncStatus()
@@ -535,7 +535,7 @@ func (s *Driver) checkForGapInUnsafeQueue(ctx context.Context) error {
 		s.log.Debug("requesting sync with open-end range", "start", start)
 		return s.altSync.RequestL2Range(ctx, start, eth.L2BlockRef{})
 	} else if end.Number > start.Number+1 {
-		s.log.Debug("requesting missing unsafe L2 block range", "start", start, "end", end, "size", end.Number-start.Number)
+		s.log.Debug("requesting missing unsafe core block range", "start", start, "end", end, "size", end.Number-start.Number)
 		return s.altSync.RequestL2Range(ctx, start, end)
 	}
 	return nil

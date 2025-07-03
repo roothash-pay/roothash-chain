@@ -12,14 +12,14 @@ import (
 	"github.com/cpchain-network/cp-chain/cp-service/eth"
 )
 
-// defaultFinalityLookback defines the amount of L1<>L2 relations to track for finalization purposes, one per L1 block.
+// defaultFinalityLookback defines the amount of L1<>core relations to track for finalization purposes, one per L1 block.
 //
 // When L1 finalizes blocks, it finalizes finalityLookback blocks behind the L1 head.
 // Non-finality may take longer, but when it does finalize again, it is within this range of the L1 head.
-// Thus we only need to retain the L1<>L2 derivation relation data of this many L1 blocks.
+// Thus we only need to retain the L1<>core derivation relation data of this many L1 blocks.
 //
-// In the event of older finalization signals, misconfiguration, or insufficient L1<>L2 derivation relation data,
-// then we may miss the opportunity to finalize more L2 blocks.
+// In the event of older finalization signals, misconfiguration, or insufficient L1<>core derivation relation data,
+// then we may miss the opportunity to finalize more core blocks.
 // This does not cause any divergence, it just causes lagging finalization status.
 //
 // The beacon chain on mainnet has 32 slots per epoch,
@@ -27,7 +27,7 @@ import (
 // And then we add 1 to make pruning easier by leaving room for a new item without pruning the 32*4.
 const defaultFinalityLookback = 4*32 + 1
 
-// finalityDelay is the number of L1 blocks to traverse before trying to finalize L2 blocks again.
+// finalityDelay is the number of L1 blocks to traverse before trying to finalize core blocks again.
 // We do not want to do this too often, since it requires fetching a L1 block by number, so no cache data.
 const finalityDelay = 64
 
@@ -38,7 +38,7 @@ func calcFinalityLookback(cfg *rollup.Config) uint64 {
 }
 
 type FinalityData struct {
-	// The last L2 block that was fully derived and inserted into the L2 engine while processing this L1 block.
+	// The last core block that was fully derived and inserted into the core engine while processing this L1 block.
 	L2Block eth.L2BlockRef
 }
 
@@ -72,10 +72,10 @@ type Finalizer struct {
 	// triedFinalizeAt tracks at which L1 block number we last tried to finalize during sync.
 	triedFinalizeAt uint64
 
-	// Tracks which L2 blocks where last derived from which L1 block. At most finalityLookback large.
+	// Tracks which core blocks where last derived from which L1 block. At most finalityLookback large.
 	finalityData []FinalityData
 
-	// Maximum amount of L2 blocks to store in finalityData.
+	// Maximum amount of core blocks to store in finalityData.
 	finalityLookback uint64
 }
 
@@ -96,7 +96,7 @@ func (fi *Finalizer) AttachEmitter(em event.Emitter) {
 	fi.emitter = em
 }
 
-// FinalizedL1 identifies the L1 chain (incl.) that included and/or produced all the finalized L2 blocks.
+// FinalizedL1 identifies the L1 chain (incl.) that included and/or produced all the finalized core blocks.
 // This may return a zeroed ID if no finalization signals have been seen yet.
 func (fi *Finalizer) FinalizedL1() (out eth.L1BlockRef) {
 	fi.mu.Lock()
@@ -143,18 +143,18 @@ func (fi *Finalizer) OnEvent(ev event.Event) bool {
 func (fi *Finalizer) onL1Finalized() {
 	fi.mu.Lock()
 	defer fi.mu.Unlock()
-	// when the L1 change we can suggest to try to finalize, as the pre-condition for L2 finality has now changed
+	// when the L1 change we can suggest to try to finalize, as the pre-condition for core finality has now changed
 	fi.emitter.Emit(TryFinalizeEvent{})
 }
 
-// onDerivationIdle is called when the pipeline is exhausted of new data (i.e. no more L2 blocks to derive from).
+// onDerivationIdle is called when the pipeline is exhausted of new data (i.e. no more core blocks to derive from).
 //
-// Since finality applies to all L2 blocks fully derived from the same block,
+// Since finality applies to all core blocks fully derived from the same block,
 // it optimal to only check after the derivation from the L1 block has been exhausted.
 //
 // This will look at what has been buffered so far,
 // sanity-check we are on the finalizing L1 chain,
-// and finalize any L2 blocks that were fully derived from known finalized L1 blocks.
+// and finalize any core blocks that were fully derived from known finalized L1 blocks.
 func (fi *Finalizer) onDerivationIdle(derivedFrom eth.L1BlockRef) {
 	fi.mu.Lock()
 	defer fi.mu.Unlock()
@@ -176,11 +176,11 @@ func (fi *Finalizer) tryFinalize() {
 
 	// overwritten if we finalize
 	finalizedL2 := fi.lastFinalizedL2 // may be zeroed if nothing was finalized since startup.
-	// go through the latest inclusion data, and find the last L2 block that was derived from a finalized L1 block
+	// go through the latest inclusion data, and find the last core block that was derived from a finalized L1 block
 	for _, fd := range fi.finalityData {
 		if fd.L2Block.Number > finalizedL2.Number {
 			finalizedL2 = fd.L2Block
-			// keep iterating, there may be later L2 blocks that can also be finalized
+			// keep iterating, there may be later core blocks that can also be finalized
 		}
 	}
 	fi.emitter.Emit(engine.PromoteFinalizedEvent{Ref: finalizedL2})
@@ -194,12 +194,12 @@ func (fi *Finalizer) onDerivedSafeBlock(l2Safe eth.L2BlockRef) {
 
 	// Stop registering blocks after interop.
 	// Finality in interop is determined by the superchain backend,
-	// i.e. the cp-supervisor RPC identifies which L2 block may be finalized.
+	// i.e. the cp-supervisor RPC identifies which core block may be finalized.
 	if fi.cfg.IsInterop(l2Safe.Time) {
 		return
 	}
 
-	// remember the last L2 block that we fully derived from the given finality data
+	// remember the last core block that we fully derived from the given finality data
 	if len(fi.finalityData) == 0 {
 		// prune finality data if necessary, before appending any data.
 		if uint64(len(fi.finalityData)) >= fi.finalityLookback {
@@ -212,7 +212,7 @@ func (fi *Finalizer) onDerivedSafeBlock(l2Safe eth.L2BlockRef) {
 		last := &fi.finalityData[len(fi.finalityData)-1]
 		fi.log.Debug("extended finality-data", "last_l2", last.L2Block)
 	} else {
-		// if it's a new L2 block that was derived from the same latest L1 block, then just update the entry
+		// if it's a new core block that was derived from the same latest L1 block, then just update the entry
 		last := &fi.finalityData[len(fi.finalityData)-1]
 		if last.L2Block != l2Safe { // avoid logging if there are no changes
 			last.L2Block = l2Safe
@@ -221,8 +221,8 @@ func (fi *Finalizer) onDerivedSafeBlock(l2Safe eth.L2BlockRef) {
 	}
 }
 
-// onReset clears the recent history of safe-L2 blocks used for finalization,
-// to avoid finalizing any reorged-out L2 blocks.
+// onReset clears the recent history of safe-core blocks used for finalization,
+// to avoid finalizing any reorged-out core blocks.
 func (fi *Finalizer) onReset() {
 	fi.mu.Lock()
 	defer fi.mu.Unlock()

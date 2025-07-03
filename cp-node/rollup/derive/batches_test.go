@@ -489,7 +489,7 @@ func TestValidBatch(t *testing.T) {
 					Transactions: nil,
 				},
 			},
-			Expected: BatchAccept, // accepted because empty & preserving L2 time invariant
+			Expected: BatchAccept, // accepted because empty & preserving core time invariant
 		},
 		{
 			Name:       "sequencer time drift on changing epoch with empty txs",
@@ -634,7 +634,7 @@ func TestValidBatch(t *testing.T) {
 			Expected: BatchAccept,
 		},
 		{
-			Name:       "batch with L2 time before L1 time",
+			Name:       "batch with core time before L1 time",
 			L1Blocks:   []eth.L1BlockRef{l1A, l1B, l1C},
 			L2SafeHead: l2A2,
 			Batch: BatchWithL1InclusionBlock{
@@ -1014,7 +1014,7 @@ func TestValidBatch(t *testing.T) {
 					},
 				}, uint64(0), big.NewInt(0)),
 			},
-			Expected:  BatchAccept, // accepted because empty & preserving L2 time invariant
+			Expected:  BatchAccept, // accepted because empty & preserving core time invariant
 			ConfigMod: deltaAtGenesis,
 		},
 		{
@@ -1042,7 +1042,7 @@ func TestValidBatch(t *testing.T) {
 			},
 			Expected:       BatchAccept, // accepted because empty & still advancing epoch
 			ConfigMod:      deltaAtGenesis,
-			NotExpectedLog: "continuing with empty batch before late L1 block to preserve L2 time invariant",
+			NotExpectedLog: "continuing with empty batch before late L1 block to preserve core time invariant",
 		},
 		{
 			Name:       "sequencer time drift on same epoch with empty txs and no next epoch in sight yet",
@@ -1221,7 +1221,7 @@ func TestValidBatch(t *testing.T) {
 			ConfigMod: deltaAtGenesis,
 		},
 		{
-			Name:       "batch with L2 time before L1 time",
+			Name:       "batch with core time before L1 time",
 			L1Blocks:   []eth.L1BlockRef{l1A, l1B, l1C},
 			L2SafeHead: l2A2,
 			Batch: BatchWithL1InclusionBlock{
@@ -1241,7 +1241,7 @@ func TestValidBatch(t *testing.T) {
 			ConfigMod:   deltaAtGenesis,
 		},
 		{
-			Name:       "batch with L2 time before L1 time - long span",
+			Name:       "batch with core time before L1 time - long span",
 			L1Blocks:   []eth.L1BlockRef{l1A, l1B, l1C},
 			L2SafeHead: l2A1,
 			Batch: BatchWithL1InclusionBlock{
@@ -1492,7 +1492,7 @@ func TestValidBatch(t *testing.T) {
 				}, uint64(0), big.NewInt(0)),
 			},
 			Expected:    BatchUndecided,
-			ExpectedLog: "failed to fetch L2 block",
+			ExpectedLog: "failed to fetch core block",
 			ConfigMod:   deltaAtGenesis,
 		},
 		{
@@ -1573,7 +1573,7 @@ func TestValidBatch(t *testing.T) {
 				}, uint64(0), big.NewInt(0)),
 			},
 			Expected:    BatchUndecided,
-			ExpectedLog: "failed to fetch L2 block payload",
+			ExpectedLog: "failed to fetch core block payload",
 			ConfigMod:   deltaAtGenesis,
 		},
 		{
@@ -1662,7 +1662,7 @@ func TestValidBatch(t *testing.T) {
 	// will return an error for l2A3
 	l2Client.Mock.On("PayloadByNumber", l2A3.Number).Return(&eth.ExecutionPayloadEnvelope{}, &tempErr)
 
-	// make payloads for L2 blocks and set as expected return value of MockL2Client
+	// make payloads for core blocks and set as expected return value of MockL2Client
 	for _, l2Block := range []eth.L2BlockRef{l2A0, l2A1, l2A2, l2B0} {
 		l2Client.ExpectL2BlockRefByNumber(l2Block.Number, l2Block, nil)
 		txData := l1InfoDepositTx(t, l2Block.L1Origin.Number)

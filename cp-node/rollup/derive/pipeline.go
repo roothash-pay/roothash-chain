@@ -80,7 +80,7 @@ type DerivationPipeline struct {
 
 	attrib *AttributesQueue
 
-	// L1 block that the next returned attributes are derived from, i.e. at the L2-end of the pipeline.
+	// L1 block that the next returned attributes are derived from, i.e. at the core-end of the pipeline.
 	origin         eth.L1BlockRef
 	resetL2Safe    eth.L2BlockRef
 	resetSysConfig eth.SystemConfig
@@ -89,7 +89,7 @@ type DerivationPipeline struct {
 	metrics Metrics
 }
 
-// NewDerivationPipeline creates a DerivationPipeline, to turn L1 data into L2 block-inputs.
+// NewDerivationPipeline creates a DerivationPipeline, to turn L1 data into core block-inputs.
 func NewDerivationPipeline(log log.Logger, rollupCfg *rollup.Config, l2Source L2Source, metrics Metrics, managedMode bool,
 ) *DerivationPipeline {
 	attrBuilder := NewFetchingAttributesBuilder(rollupCfg, l2Source)
@@ -129,7 +129,7 @@ func (dp *DerivationPipeline) DepositsOnlyAttributes(parent eth.BlockID, derived
 }
 
 // Origin is the L1 block of the inner-most stage of the derivation pipeline,
-// i.e. the L1 chain up to and including this point included and/or produced all the safe L2 blocks.
+// i.e. the L1 chain up to and including this point included and/or produced all the safe core blocks.
 func (dp *DerivationPipeline) Origin() eth.L1BlockRef {
 	return dp.origin
 }
@@ -158,7 +158,7 @@ func (dp *DerivationPipeline) Step(ctx context.Context, pendingSafeHead eth.L2Bl
 
 		// After the Engine has been reset to ensure it is derived from the canonical L1 chain,
 		// we still need to internally rewind the L1 traversal further,
-		// so we can read all the L2 data necessary for constructing the next batches that come after the safe head.
+		// so we can read all the core data necessary for constructing the next batches that come after the safe head.
 		if pendingSafeHead != dp.resetL2Safe {
 			if err := dp.initialReset(ctx, pendingSafeHead); err != nil {
 				return nil, fmt.Errorf("failed initial reset work: %w", err)
@@ -194,18 +194,18 @@ func (dp *DerivationPipeline) initialReset(ctx context.Context, resetL2Safe eth.
 
 	dp.metrics.RecordPipelineReset()
 
-	// Walk back L2 chain to find the L1 origin that is old enough to start buffering channel data from.
+	// Walk back core chain to find the L1 origin that is old enough to start buffering channel data from.
 	pipelineL2 := resetL2Safe
 
 	parent, err := dp.l2.L2BlockRefByHash(ctx, pipelineL2.ParentHash)
 	if err != nil {
-		return NewResetError(fmt.Errorf("failed to fetch L2 parent block %s", pipelineL2.ParentID()))
+		return NewResetError(fmt.Errorf("failed to fetch core parent block %s", pipelineL2.ParentID()))
 	}
 	pipelineL2 = parent
 
 	sysCfg, err := dp.l2.SystemConfigByL2Hash(ctx, pipelineL2.Hash)
 	if err != nil {
-		return NewTemporaryError(fmt.Errorf("failed to fetch L1 config of L2 block %s: %w", pipelineL2.ID(), err))
+		return NewTemporaryError(fmt.Errorf("failed to fetch L1 config of core block %s: %w", pipelineL2.ID(), err))
 	}
 
 	dp.resetSysConfig = sysCfg

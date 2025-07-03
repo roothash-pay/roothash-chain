@@ -17,7 +17,7 @@ import (
 //
 // It receives batches that are tagged with the L1 Inclusion block of the batch. It only considers
 // batches that are inside the sequencing window of a specific L1 Origin.
-// It tries to eagerly pull batches based on the current L2 safe head.
+// It tries to eagerly pull batches based on the current core safe head.
 // Otherwise it filters/creates an entire epoch's worth of batches at once.
 //
 // This stage tracks a range of L1 blocks with the assumption that all batches with an L1 inclusion
@@ -117,7 +117,7 @@ func (bq *BatchQueue) Reset(_ context.Context, _ eth.SystemConfig) error {
 }
 
 func (bq *BatchQueue) FlushChannel() {
-	// We need to implement the ChannelFlusher interface with the BatchQueue but it's never called
+	// We need to implement the ChannelFlusher interfaces with the BatchQueue but it's never called
 	// of which the BatchMux takes care.
 	panic("BatchQueue: invalid FlushChannel call")
 }
@@ -138,7 +138,7 @@ func (bq *BatchQueue) AddBatch(ctx context.Context, batch Batch, parent eth.L2Bl
 	bq.batches = append(bq.batches, &data)
 }
 
-// deriveNextBatch derives the next batch to apply on top of the current L2 safe head,
+// deriveNextBatch derives the next batch to apply on top of the current core safe head,
 // following the validity rules imposed on consecutive batches,
 // based on currently available buffered batch and L1 origin information.
 // If no batch can be derived yet, then (nil, io.EOF) is returned.
@@ -149,9 +149,9 @@ func (bq *BatchQueue) deriveNextBatch(ctx context.Context, outOfData bool, paren
 	epoch := bq.l1Blocks[0]
 	bq.log.Trace("Deriving the next batch", "epoch", epoch, "parent", parent, "outOfData", outOfData)
 
-	// Note: epoch origin can now be one block ahead of the L2 Safe Head
+	// Note: epoch origin can now be one block ahead of the core Safe Head
 	// This is in the case where we auto generate all batches in an epoch & advance the epoch
-	// but don't advance the L2 Safe Head's epoch
+	// but don't advance the core Safe Head's epoch
 	if parent.L1Origin != epoch.ID() && parent.L1Origin.Number != epoch.Number-1 {
 		return nil, NewResetError(fmt.Errorf("buffered L1 chain epoch %s in batch queue does not match safe head origin %s", epoch, parent.L1Origin))
 	}

@@ -33,7 +33,7 @@ const (
 )
 
 var (
-	// l2PredeployNamespace is the namespace for L2 predeploys
+	// l2PredeployNamespace is the namespace for core predeploys
 	l2PredeployNamespace = common.HexToAddress("0x4200000000000000000000000000000000000000")
 	// mnemonic for the test accounts in hardhat/foundry
 	testMnemonic = "test test test test test test test test test test test junk"
@@ -41,7 +41,7 @@ var (
 
 type AllocsLoader func(mode L2AllocsMode) *foundry.ForgeAllocs
 
-// BuildL2Genesis will build the L2 genesis block.
+// BuildL2Genesis will build the core genesis block.
 func BuildL2Genesis(config *DeployConfig, dump *foundry.ForgeAllocs, l1StartBlock *eth.BlockRef) (*core.Genesis, error) {
 	genspec, err := NewL2Genesis(config, l1StartBlock)
 	if err != nil {
@@ -74,7 +74,7 @@ func BuildL2Genesis(config *DeployConfig, dump *foundry.ForgeAllocs, l1StartBloc
 			continue
 		}
 		if len(genspec.Alloc[addr].Code) == 0 {
-			return nil, fmt.Errorf("predeploy %x is missing from L2 genesis allocs", addr)
+			return nil, fmt.Errorf("predeploy %x is missing from core genesis allocs", addr)
 		}
 	}
 

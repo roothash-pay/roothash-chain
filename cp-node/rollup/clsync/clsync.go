@@ -46,7 +46,7 @@ func (eq *CLSync) AttachEmitter(em event.Emitter) {
 	eq.emitter = em
 }
 
-// LowestQueuedUnsafeBlock retrieves the first queued-up L2 unsafe payload, or a zeroed reference if there is none.
+// LowestQueuedUnsafeBlock retrieves the first queued-up core unsafe payload, or a zeroed reference if there is none.
 func (eq *CLSync) LowestQueuedUnsafeBlock() eth.L2BlockRef {
 	payload := eq.unsafePayloads.Peek()
 	if payload == nil {

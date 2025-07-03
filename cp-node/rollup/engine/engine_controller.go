@@ -61,7 +61,7 @@ type EngineController struct {
 	// Cross-verified unsafeHead, always equal to unsafeHead pre-interop
 	crossUnsafeHead eth.L2BlockRef
 	// Pending localSafeHead
-	// L2 block processed from the middle of a span batch,
+	// core block processed from the middle of a span batch,
 	// but not marked as the safe block yet.
 	pendingSafeHead eth.L2BlockRef
 	// Derived from L1, and known to be a completed span-batch,
@@ -455,7 +455,7 @@ func (e *EngineController) InsertUnsafePayload(ctx context.Context, envelope *et
 	}
 
 	totalTime := fcu2Finish.Sub(newPayloadStart)
-	e.log.Info("Inserted new L2 unsafe block (synchronous)",
+	e.log.Info("Inserted new core unsafe block (synchronous)",
 		"hash", envelope.ExecutionPayload.BlockHash,
 		"number", uint64(envelope.ExecutionPayload.BlockNumber),
 		"newpayload_time", common.PrettyDuration(newPayloadFinish.Sub(newPayloadStart)),

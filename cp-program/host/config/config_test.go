@@ -106,7 +106,7 @@ func TestL2OutputRootRequired(t *testing.T) {
 	require.ErrorIs(t, err, ErrInvalidL2OutputRoot)
 }
 
-// The L2 claim may be provided by a dishonest actor so we must treat 0x00...00 as a real value.
+// The core claim may be provided by a dishonest actor so we must treat 0x00...00 as a real value.
 func TestL2ClaimMayBeDefaultValue(t *testing.T) {
 	config := validConfig()
 	config.L2Claim = common.Hash{}
@@ -199,7 +199,7 @@ func TestFetchingEnabled(t *testing.T) {
 	t.Run("FetchingNotEnabledWhenNoL2UrlSpecified", func(t *testing.T) {
 		cfg := validConfig()
 		cfg.L1URL = "https://example.com:1234"
-		require.False(t, cfg.FetchingEnabled(), "Should not enable L2 fetching when L2 node URL not supplied")
+		require.False(t, cfg.FetchingEnabled(), "Should not enable core fetching when core node URL not supplied")
 	})
 
 	t.Run("FetchingEnabledWhenBothFetcherUrlsSpecified", func(t *testing.T) {

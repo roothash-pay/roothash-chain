@@ -226,7 +226,7 @@ func (conf *Config) Host(log log.Logger, reporter metrics.Reporter, metrics Host
 		libp2p.ListenAddrs(listenAddr),
 		libp2p.ConnectionGater(connGtr),
 		libp2p.ConnectionManager(connMngr),
-		//libp2p.ResourceManager(nil), // TODO use resource manager interface to manage resources per peer better.
+		//libp2p.ResourceManager(nil), // TODO use resource manager interfaces to manage resources per peer better.
 		libp2p.Peerstore(ps),
 		libp2p.BandwidthReporter(reporter), // may be nil if disabled
 		libp2p.MultiaddrResolver(madns.DefaultResolver),

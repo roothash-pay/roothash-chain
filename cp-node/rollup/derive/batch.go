@@ -24,14 +24,14 @@ var encodeBufferPool = sync.Pool{
 }
 
 const (
-	// SingularBatchType is the first version of Batch format, representing a single L2 block.
+	// SingularBatchType is the first version of Batch format, representing a single core block.
 	SingularBatchType = 0
-	// SpanBatchType is the Batch version used after Delta hard fork, representing a span of L2 blocks.
+	// SpanBatchType is the Batch version used after Delta hard fork, representing a span of core blocks.
 	SpanBatchType = 1
 )
 
-// Batch contains information to build one or multiple L2 blocks.
-// Batcher converts L2 blocks into Batch and writes encoded bytes to Channel.
+// Batch contains information to build one or multiple core blocks.
+// Batcher converts core blocks into Batch and writes encoded bytes to Channel.
 // Derivation pipeline decodes Batch from Channel, and converts to one or multiple payload attributes.
 type Batch interface {
 	GetBatchType() int
@@ -55,7 +55,7 @@ func (b batchWithMetadata) LogContext(l log.Logger) log.Logger {
 }
 
 // BatchData is used to represent the typed encoding & decoding.
-// and wraps around a single interface InnerBatchData.
+// and wraps around a single interfaces InnerBatchData.
 // Further fields such as cache can be added in the future, without embedding each type of InnerBatchData.
 // Similar design with op-geth's types.Transaction struct.
 type BatchData struct {

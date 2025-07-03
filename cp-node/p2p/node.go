@@ -45,7 +45,7 @@ type NodeP2P struct {
 	dv5Local *enode.LocalNode // p2p discovery identity
 	dv5Udp   *discover.UDPv5  // p2p discovery service
 	gs       *pubsub.PubSub   // p2p gossip router
-	gsOut    GossipOut        // p2p gossip application interface for publishing
+	gsOut    GossipOut        // p2p gossip application interfaces for publishing
 	syncCl   *SyncClient
 	syncSrv  *ReqRespServer
 }

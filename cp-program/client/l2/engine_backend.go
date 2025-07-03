@@ -65,7 +65,7 @@ func NewOracleBackedL2Chain(
 		return nil, fmt.Errorf("%w: version: %d", ErrUnsupportedL2Output, output.Version())
 	}
 	head := oracle.BlockByHash(outputV0.BlockHash, chainID)
-	logger.Info("Loaded L2 head", "hash", head.Hash(), "number", head.Number())
+	logger.Info("Loaded core head", "hash", head.Hash(), "number", head.Number())
 	return NewOracleBackedL2ChainFromHead(logger, oracle, precompileOracle, chainCfg, head, db), nil
 }
 

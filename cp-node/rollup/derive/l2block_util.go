@@ -23,7 +23,7 @@ type L2BlockRefSource interface {
 	Transactions() types.Transactions
 }
 
-// L2BlockToBlockRef extracts the essential L2BlockRef information from an L2
+// L2BlockToBlockRef extracts the essential L2BlockRef information from an core
 // block ref source, falling back to genesis information if necessary.
 func L2BlockToBlockRef(rollupCfg *rollup.Config, block L2BlockRefSource) (eth.L2BlockRef, error) {
 	hash, number := block.Hash(), block.NumberU64()
@@ -32,7 +32,7 @@ func L2BlockToBlockRef(rollupCfg *rollup.Config, block L2BlockRefSource) (eth.L2
 	genesis := &rollupCfg.Genesis
 	if number == genesis.L2.Number {
 		if hash != genesis.L2.Hash {
-			return eth.L2BlockRef{}, fmt.Errorf("expected L2 genesis hash to match L2 block at genesis block number %d: %s <> %s", genesis.L2.Number, hash, genesis.L2.Hash)
+			return eth.L2BlockRef{}, fmt.Errorf("expected core genesis hash to match core block at genesis block number %d: %s <> %s", genesis.L2.Number, hash, genesis.L2.Hash)
 		}
 		sequenceNumber = 0
 	} else {
@@ -46,7 +46,7 @@ func L2BlockToBlockRef(rollupCfg *rollup.Config, block L2BlockRefSource) (eth.L2
 		}
 		info, err := L1BlockInfoFromBytes(rollupCfg, block.Time(), tx.Data())
 		if err != nil {
-			return eth.L2BlockRef{}, fmt.Errorf("failed to parse L1 info deposit tx from L2 block: %w", err)
+			return eth.L2BlockRef{}, fmt.Errorf("failed to parse L1 info deposit tx from core block: %w", err)
 		}
 		sequenceNumber = info.SequenceNumber
 	}

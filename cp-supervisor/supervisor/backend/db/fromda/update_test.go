@@ -75,11 +75,11 @@ func TestBadUpdates(t *testing.T) {
 			setupFn: func(t *testing.T, db *DB, m *stubMetrics) {
 				require.NoError(t, dbAddDerivedAny(db,
 					toRef(eSource, dSource.Hash),   // new L1 block
-					toRef(dDerived, cDerived.Hash), // same L2 block
+					toRef(dDerived, cDerived.Hash), // same core block
 				))
 				require.ErrorIs(t, dbAddDerivedAny(db,
 					toRef(dSource, cSource.Hash),   // d is old, but was canonically linked like this before
-					toRef(dDerived, cDerived.Hash), // same L2 block
+					toRef(dDerived, cDerived.Hash), // same core block
 				), types.ErrIneffective)
 			},
 			assertFn: func(t *testing.T, db *DB, m *stubMetrics) {
@@ -94,11 +94,11 @@ func TestBadUpdates(t *testing.T) {
 			setupFn: func(t *testing.T, db *DB, m *stubMetrics) {
 				require.NoError(t, dbAddDerivedAny(db,
 					toRef(eSource, dSource.Hash),   // new L1 block
-					toRef(dDerived, cDerived.Hash), // same L2 block
+					toRef(dDerived, cDerived.Hash), // same core block
 				))
 				require.ErrorIs(t, dbAddDerivedAny(db,
 					toRef(dAltSource, cSource.Hash), // conflicting old block
-					toRef(dDerived, cDerived.Hash),  // same L2 block
+					toRef(dDerived, cDerived.Hash),  // same core block
 				), types.ErrConflict)
 			},
 			assertFn: func(t *testing.T, db *DB, m *stubMetrics) {
@@ -113,11 +113,11 @@ func TestBadUpdates(t *testing.T) {
 			setupFn: func(t *testing.T, db *DB, m *stubMetrics) {
 				require.NoError(t, dbAddDerivedAny(db,
 					toRef(eSource, dSource.Hash),   // new L1 block
-					toRef(dDerived, cDerived.Hash), // same L2 block
+					toRef(dDerived, cDerived.Hash), // same core block
 				))
 				require.ErrorIs(t, dbAddDerivedAny(db,
 					toRef(dSource, cSource.Hash),   // old L1 block
-					toRef(eDerived, dDerived.Hash), // new L2 block
+					toRef(eDerived, dDerived.Hash), // new core block
 				), types.ErrOutOfOrder)
 			},
 			assertFn: func(t *testing.T, db *DB, m *stubMetrics) {
@@ -141,7 +141,7 @@ func TestBadUpdates(t *testing.T) {
 			assertFn: noChange,
 		},
 		{
-			name: "CrossSource with conflicting parent root, same L1 height, new L2: accepted, L1 parent-hash is used only on L1 increments.",
+			name: "CrossSource with conflicting parent root, same L1 height, new core: accepted, L1 parent-hash is used only on L1 increments.",
 			setupFn: func(t *testing.T, db *DB, m *stubMetrics) {
 				require.NoError(t, dbAddDerivedAny(db,
 					toRef(dSource, common.Hash{0x42}),
@@ -155,7 +155,7 @@ func TestBadUpdates(t *testing.T) {
 			},
 		},
 		{
-			name: "Conflicting source parent root, new L1 height, same L2",
+			name: "Conflicting source parent root, new L1 height, same core",
 			setupFn: func(t *testing.T, db *DB, m *stubMetrics) {
 				require.ErrorIs(t,
 					dbAddDerivedAny(db,
@@ -192,7 +192,7 @@ func TestBadUpdates(t *testing.T) {
 			assertFn: noChange,
 		},
 		{
-			name: "add on conflicting derived, same L2 height, new L1 block",
+			name: "add on conflicting derived, same core height, new L1 block",
 			setupFn: func(t *testing.T, db *DB, m *stubMetrics) {
 				require.ErrorIs(t, dbAddDerivedAny(db,
 					toRef(eSource, dSource.Hash),
@@ -205,7 +205,7 @@ func TestBadUpdates(t *testing.T) {
 			assertFn: noChange,
 		},
 		{
-			name: "add derived with conflicting parent hash, new L1 height, same L2 height: accepted, L2 parent-hash is only checked on L2 increments.",
+			name: "add derived with conflicting parent hash, new L1 height, same core height: accepted, core parent-hash is only checked on core increments.",
 			setupFn: func(t *testing.T, db *DB, m *stubMetrics) {
 				require.NoError(t, dbAddDerivedAny(db,
 					toRef(eSource, dSource.Hash),
@@ -219,7 +219,7 @@ func TestBadUpdates(t *testing.T) {
 			},
 		},
 		{
-			name: "add derived with conflicting parent hash, same L1 height, new L2 height",
+			name: "add derived with conflicting parent hash, same L1 height, new core height",
 			setupFn: func(t *testing.T, db *DB, m *stubMetrics) {
 				require.ErrorIs(t, dbAddDerivedAny(db,
 					toRef(dSource, cSource.Hash),

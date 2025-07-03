@@ -138,7 +138,7 @@ func (st *StatusTracker) OnEvent(ev event.Event) bool {
 	return true
 }
 
-// SyncStatus is thread safe, and reads the latest view of L1 and L2 block labels
+// SyncStatus is thread safe, and reads the latest view of L1 and core block labels
 func (st *StatusTracker) SyncStatus() *eth.SyncStatus {
 	return st.published.Load()
 }

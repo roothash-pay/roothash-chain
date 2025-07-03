@@ -23,7 +23,7 @@ type SystemConfigL2Fetcher interface {
 	SystemConfigByL2Hash(ctx context.Context, hash common.Hash) (eth.SystemConfig, error)
 }
 
-// FetchingAttributesBuilder fetches inputs for the building of L2 payload attributes on the fly.
+// FetchingAttributesBuilder fetches inputs for the building of core payload attributes on the fly.
 type FetchingAttributesBuilder struct {
 	rollupCfg *rollup.Config
 	l2        SystemConfigL2Fetcher
@@ -44,7 +44,7 @@ func (ba *FetchingAttributesBuilder) TestSkipL1OriginCheck() {
 	ba.testSkipL1OriginCheck = true
 }
 
-// PreparePayloadAttributes prepares a PayloadAttributes template that is ready to build a L2 block with deposits only, on top of the given l2Parent, with the given epoch as L1 origin.
+// PreparePayloadAttributes prepares a PayloadAttributes template that is ready to build a core block with deposits only, on top of the given l2Parent, with the given epoch as L1 origin.
 // The template defaults to NoTxPool=true, and no sequencer transactions: the caller has to modify the template to add transactions,
 // by setting NoTxPool=false as sequencer, or by appending batch transactions as verifier.
 // The severity of the error is returned; a crit=false error means there was a temporary issue, like a failed RPC or time-out.
@@ -52,11 +52,11 @@ func (ba *FetchingAttributesBuilder) TestSkipL1OriginCheck() {
 func (ba *FetchingAttributesBuilder) PreparePayloadAttributes(ctx context.Context, l2Parent eth.L2BlockRef) (attrs *eth.PayloadAttributes, err error) {
 	sysConfig, err := ba.l2.SystemConfigByL2Hash(ctx, l2Parent.Hash)
 	if err != nil {
-		return nil, NewTemporaryError(fmt.Errorf("failed to retrieve L2 parent block: %w", err))
+		return nil, NewTemporaryError(fmt.Errorf("failed to retrieve core parent block: %w", err))
 	}
 
 	nextL2Time := l2Parent.Time + ba.rollupCfg.BlockTime
-	// Sanity check the L1 origin was correctly selected to maintain the time invariant between L1 and L2
+	// Sanity check the L1 origin was correctly selected to maintain the time invariant between L1 and core
 
 	var upgradeTxs []hexutil.Bytes
 	if ba.rollupCfg.IsEcotoneActivationBlock(nextL2Time) {

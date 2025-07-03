@@ -32,7 +32,7 @@ func ReadTrie(root common.Hash, getPreimage func(key common.Hash) []byte) []hexu
 	}}
 
 	// trie.New backed with a trie.NodeReader and trie.Reader seems really promising
-	// for a simple node-fetching backend, but the interface is half-private,
+	// for a simple node-fetching backend, but the interfaces is half-private,
 	// while we already have the full database code for doing the same thing.
 	// Maybe it's still worth a small diff in geth to expose it?
 	// Diff would be:

@@ -170,7 +170,7 @@ func (eq *AttributesHandler) consolidateNextSafeAttributes(attributes *derive.At
 		return
 	}
 	if err := AttributesMatchBlock(eq.cfg, attributes.Attributes, onto.Hash, envelope, eq.log); err != nil {
-		eq.log.Warn("L2 reorg: existing unsafe block does not match derived attributes from L1",
+		eq.log.Warn("core reorg: existing unsafe block does not match derived attributes from L1",
 			"err", err, "unsafe", envelope.ExecutionPayload.ID(), "pending_safe", onto)
 
 		eq.sentAttributes = true

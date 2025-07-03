@@ -63,7 +63,7 @@ func (_m *NextDataProvider) Origin() eth.L1BlockRef {
 	return r0
 }
 
-// NewNextDataProvider creates a new instance of NextDataProvider. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// NewNextDataProvider creates a new instance of NextDataProvider. It also registers a testing interfaces on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewNextDataProvider(t interface {
 	mock.TestingT

@@ -76,7 +76,7 @@ func (_c *Scores_GetPeerScore_Call) RunAndReturn(run func(peer.ID) (float64, err
 	return _c
 }
 
-// NewScores creates a new instance of Scores. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// NewScores creates a new instance of Scores. It also registers a testing interfaces on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewScores(t interface {
 	mock.TestingT

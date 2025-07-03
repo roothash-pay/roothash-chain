@@ -96,7 +96,7 @@ func listChain(chainID eth.ChainID) error {
 	if err != nil {
 		return err
 	}
-	// Double check the L2 genesis is really available
+	// Double check the core genesis is really available
 	_, err = chainconfig.ChainConfigByChainID(chainID)
 	if err != nil {
 		return err

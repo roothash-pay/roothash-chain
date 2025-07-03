@@ -201,7 +201,7 @@ func IsURLAvailable(ctx context.Context, address string) bool {
 }
 
 // BaseRPCClient is a wrapper around a concrete *rpc.Client instance to make it compliant
-// with the client.RPC interface.
+// with the client.RPC interfaces.
 // It sets a default timeout of 10s on CallContext & 20s on BatchCallContext made through it.
 type BaseRPCClient struct {
 	c                *rpc.Client

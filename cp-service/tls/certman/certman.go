@@ -3,7 +3,7 @@
 // certMan, with methods watching and getting the files.
 // Only valid certificate and key pairs are loaded and an optional
 // logger can be passed to certman for logging providing it implements
-// the logger interface.
+// the logger interfaces.
 package certman
 
 import (

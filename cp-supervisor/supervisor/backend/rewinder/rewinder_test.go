@@ -105,7 +105,7 @@ func TestRewindL1(t *testing.T) {
 	s.verifyHeads(chainID, block1.ID(), "should have rewound to block1")
 }
 
-// TestRewindL2 tests handling of L2 reorgs via LocalDerivedEvent by checking that:
+// TestRewindL2 tests handling of core reorgs via LocalDerivedEvent by checking that:
 // 1. Only unsafe data is rewound
 // 2. Safe data remains intact
 // 3. The rewind point is determined by the parent of the mismatched block
@@ -195,7 +195,7 @@ func TestRewindL2(t *testing.T) {
 
 // TestNoRewindNeeded tests that no rewind occurs when:
 // 1. L1 blocks match during L1 reorg check
-// 2. L2 blocks match during LocalDerived check
+// 2. core blocks match during LocalDerived check
 func TestNoRewindNeeded(t *testing.T) {
 	s := setupTestChain(t)
 	defer s.Close()
@@ -266,7 +266,7 @@ func TestNoRewindNeeded(t *testing.T) {
 	s.verifyLogsHead(chainID, block2A.ID(), "should still be on block2A")
 	s.verifyCrossSafe(chainID, block2A.ID(), "block2A should still be cross-safe")
 
-	// Trigger LocalDerived check with same L2 block - should not rewind
+	// Trigger LocalDerived check with same core block - should not rewind
 	i.OnEvent(superevents.LocalSafeUpdateEvent{
 		ChainID: chainID,
 		NewLocalSafe: types.DerivedBlockSealPair{
@@ -299,7 +299,7 @@ func TestRewindLongChain(t *testing.T) {
 	var blocks []eth.L2BlockRef
 	var l1Blocks []eth.BlockRef
 
-	// Create L1 blocks first (one per 10 L2 blocks)
+	// Create L1 blocks first (one per 10 core blocks)
 	for i := uint64(0); i <= 10; i++ {
 		l1Block := eth.BlockRef{
 			Hash:   common.HexToHash(fmt.Sprintf("0xaaa%d", i)),
@@ -313,7 +313,7 @@ func TestRewindLongChain(t *testing.T) {
 		chain.l1Node.blocks[i] = l1Block
 	}
 
-	// Create L2 blocks 0-100
+	// Create core blocks 0-100
 	for i := uint64(0); i <= 100; i++ {
 		l1Index := i / 10
 		block := eth.L2BlockRef{
@@ -464,7 +464,7 @@ func TestRewindMultiChain(t *testing.T) {
 	}
 }
 
-// TestRewindL2WalkBack tests that during an L2 reorg, we correctly walk back
+// TestRewindL2WalkBack tests that during an core reorg, we correctly walk back
 // parent-by-parent until finding a common ancestor when the first rewind attempt fails.
 func TestRewindL2WalkBack(t *testing.T) {
 	s := setupTestChain(t)
@@ -818,7 +818,7 @@ func TestRewindL1GenesisOnlyL2(t *testing.T) {
 	s.verifyHeads(chainID, genesis.ID(), "should still have genesis as head after LocalDerived event")
 }
 
-// TestRewindL1NoL2Impact tests L1 reorgs that don't affect L2 blocks.
+// TestRewindL1NoL2Impact tests L1 reorgs that don't affect core blocks.
 func TestRewindL1NoL2Impact(t *testing.T) {
 	s := setupTestChain(t)
 	defer s.Close()
@@ -849,7 +849,7 @@ func TestRewindL1NoL2Impact(t *testing.T) {
 	chain.l1Node.blocks[l1Block1.Number] = l1Block1
 	chain.l1Node.blocks[l1Block2A.Number] = l1Block2A
 
-	// Create L2 blocks, all derived from the same l1Block0
+	// Create core blocks, all derived from the same l1Block0
 	genesis := eth.L2BlockRef{
 		Hash:           common.HexToHash("0x1110"),
 		Number:         0,
@@ -907,11 +907,11 @@ func TestRewindL1NoL2Impact(t *testing.T) {
 		IncomingBlock: l1Block2B.ID(),
 	})
 
-	// Verify no rewind occurred since L2 blocks all derive from l1Block0
+	// Verify no rewind occurred since core blocks all derive from l1Block0
 	s.verifyHeads(chainID, block2.ID(), "should still have block2 as latest sealed block")
 }
 
-// TestRewindL1SingleBlockL2Impact tests L1 reorgs that affect a single L2 block.
+// TestRewindL1SingleBlockL2Impact tests L1 reorgs that affect a single core block.
 func TestRewindL1SingleBlockL2Impact(t *testing.T) {
 	s := setupTestChain(t)
 	defer s.Close()
@@ -942,7 +942,7 @@ func TestRewindL1SingleBlockL2Impact(t *testing.T) {
 	chain.l1Node.blocks[l1Block1.Number] = l1Block1
 	chain.l1Node.blocks[l1Block2A.Number] = l1Block2A
 
-	// Create L2 blocks with l1 origins
+	// Create core blocks with l1 origins
 	genesis := eth.L2BlockRef{
 		Hash:           common.HexToHash("0x1110"),
 		Number:         0,
@@ -1024,7 +1024,7 @@ func TestRewindL1SingleBlockL2Impact(t *testing.T) {
 	s.verifyHeads(chainID, block3.ID(), "should have rewound to block3")
 }
 
-// TestL1RewindDeepL2Impact tests L1 reorgs affecting multiple L2 blocks.
+// TestL1RewindDeepL2Impact tests L1 reorgs affecting multiple core blocks.
 func TestRewindL1DeepL2Impact(t *testing.T) {
 	s := setupTestChain(t)
 	defer s.Close()
@@ -1038,7 +1038,7 @@ func TestRewindL1DeepL2Impact(t *testing.T) {
 	var l1Blocks []eth.BlockRef
 	var l2Blocks []eth.L2BlockRef
 
-	// Create L1 blocks first (one per L2 block for simplicity)
+	// Create L1 blocks first (one per core block for simplicity)
 	for i := 0; i < numBlocks; i++ {
 		l1Block := eth.BlockRef{
 			Hash:   common.HexToHash(fmt.Sprintf("0xaaa%d", i)),
@@ -1052,7 +1052,7 @@ func TestRewindL1DeepL2Impact(t *testing.T) {
 		chain.l1Node.blocks[uint64(i)] = l1Block
 	}
 
-	// Create L2 blocks, each derived from corresponding L1 block
+	// Create core blocks, each derived from corresponding L1 block
 	for i := 0; i < numBlocks; i++ {
 		l2Block := eth.L2BlockRef{
 			Hash:           common.HexToHash(fmt.Sprintf("0x%d", i)),
@@ -1085,9 +1085,9 @@ func TestRewindL1DeepL2Impact(t *testing.T) {
 
 	// Make blocks up to 119 safe
 	for i := 1; i < numBlocks; i++ {
-		// First bump scope by linking the previous L2 block to the new L1 block
+		// First bump scope by linking the previous core block to the new L1 block
 		s.makeBlockSafe(chainID, l2Blocks[i-1], l1Blocks[i], true) // Bump scope
-		// Then add the new L2 block
+		// Then add the new core block
 		s.makeBlockSafe(chainID, l2Blocks[i], l1Blocks[i], true)
 	}
 
@@ -1095,8 +1095,8 @@ func TestRewindL1DeepL2Impact(t *testing.T) {
 	i := New(s.logger, s.chainsDB, chain.l1Node)
 	i.AttachEmitter(&mockEmitter{})
 
-	// Verify latest L2 block is at height 119
-	s.verifyHeads(chainID, l2Blocks[numBlocks-1].ID(), "should have latest L2 block at height 119")
+	// Verify latest core block is at height 119
+	s.verifyHeads(chainID, l2Blocks[numBlocks-1].ID(), "should have latest core block at height 119")
 
 	// Create a divergent L1 block at height 20
 	l1Block20B := eth.BlockRef{
@@ -1155,7 +1155,7 @@ func TestRewindL2LocalDerivationUnsafeMismatch(t *testing.T) {
 	chain.l1Node.blocks[l1Block2.Number] = l1Block2
 	chain.l1Node.blocks[l1Block3.Number] = l1Block3
 
-	// Create L2 blocks
+	// Create core blocks
 	genesis := eth.L2BlockRef{
 		Hash:           common.HexToHash("0x1110"),
 		Number:         0,
@@ -1284,7 +1284,7 @@ func TestRewindL2LocalDerivationSafeMismatch(t *testing.T) {
 	chain.l1Node.blocks[l1Block2.Number] = l1Block2
 	chain.l1Node.blocks[l1Block3A.Number] = l1Block3A
 
-	// Create L2 blocks
+	// Create core blocks
 	genesis := eth.L2BlockRef{
 		Hash:           common.HexToHash("0x1110"),
 		Number:         0,

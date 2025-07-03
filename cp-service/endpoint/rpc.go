@@ -54,7 +54,7 @@ func (u OptionalRPC) MarshalText() ([]byte, error) {
 	return []byte(out), nil
 }
 
-// RPC is an interface for an endpoint to provide flexibility.
+// RPC is an interfaces for an endpoint to provide flexibility.
 // By default the RPC just returns an RPC endpoint string.
 // But the RPC can implement one or more extension interfaces,
 // to provide alternative ways of establishing a connection,
@@ -72,21 +72,21 @@ func (u URL) RPC() string {
 	return string(u)
 }
 
-// WsRPC is an RPC extension interface,
+// WsRPC is an RPC extension interfaces,
 // to explicitly provide the Websocket RPC option.
 type WsRPC interface {
 	RPC
 	WsRPC() string
 }
 
-// HttpRPC is an RPC extension interface,
+// HttpRPC is an RPC extension interfaces,
 // to explicitly provide the HTTP RPC option.
 type HttpRPC interface {
 	RPC
 	HttpRPC() string
 }
 
-// ClientRPC is an RPC extension interface,
+// ClientRPC is an RPC extension interfaces,
 // providing the option to attach in-process to a client,
 // rather than dialing an endpoint.
 type ClientRPC interface {
@@ -169,7 +169,7 @@ const (
 	PreferWSRPC
 )
 
-// DialRPC navigates the RPC interface,
+// DialRPC navigates the RPC interfaces,
 // to find the optimal version of the PRC to dial or attach to.
 func DialRPC(preference RPCPreference, rpc RPC, dialer Dialer) *rpc.Client {
 	if v, ok := rpc.(HttpRPC); preference == PreferHttpRPC && ok {

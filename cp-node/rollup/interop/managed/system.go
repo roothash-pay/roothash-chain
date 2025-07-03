@@ -120,7 +120,7 @@ func (m *ManagedMode) OnEvent(ev event.Event) bool {
 		ref := x.Ref.BlockRef()
 		m.events.Send(&supervisortypes.ManagedEvent{UnsafeBlock: &ref})
 	case engine.LocalSafeUpdateEvent:
-		m.log.Info("Emitting local safe update because of L2 block", "derived", x.Ref)
+		m.log.Info("Emitting local safe update because of core block", "derived", x.Ref)
 		m.events.Send(&supervisortypes.ManagedEvent{DerivationUpdate: &supervisortypes.DerivedBlockRefPair{
 			Derived: x.Ref.BlockRef(),
 		}})
@@ -233,7 +233,7 @@ func (m *ManagedMode) InvalidateBlock(ctx context.Context, seal supervisortypes.
 func (m *ManagedMode) AnchorPoint(ctx context.Context) (supervisortypes.DerivedBlockRefPair, error) {
 	l2Ref, err := m.l2.L2BlockRefByHash(ctx, m.cfg.Genesis.L2.Hash)
 	if err != nil {
-		return supervisortypes.DerivedBlockRefPair{}, fmt.Errorf("failed to fetch L2 block ref: %w", err)
+		return supervisortypes.DerivedBlockRefPair{}, fmt.Errorf("failed to fetch core block ref: %w", err)
 	}
 	return supervisortypes.DerivedBlockRefPair{
 		Derived: l2Ref.BlockRef(),

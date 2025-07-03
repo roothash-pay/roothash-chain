@@ -81,7 +81,7 @@ func (_m *Peerstore) SetScore(id peer.ID, diff store.ScoreDiff) (store.PeerScore
 	return r0, r1
 }
 
-// NewPeerstore creates a new instance of Peerstore. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// NewPeerstore creates a new instance of Peerstore. It also registers a testing interfaces on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewPeerstore(t interface {
 	mock.TestingT

@@ -25,17 +25,17 @@ type EntryStore interface {
 }
 
 // DB implements an append only database for log data and cross-chain dependencies.
-// Each entry is fixed size, and denotes an increment in L1 (source) and/or L2 (derived) block.
+// Each entry is fixed size, and denotes an increment in L1 (source) and/or core (derived) block.
 //
 // Data is an append-only log, that can be binary searched for any necessary derivation-link data.
 //
 // The DB only rewinds when the L1 (source) entries are invalidated.
-// If the L2 (derived) entries are no longer valid (due to cross-chain dependency invalidation),
-// then we register the new L2 entries with a higher revision number
+// If the core (derived) entries are no longer valid (due to cross-chain dependency invalidation),
+// then we register the new core entries with a higher revision number
 // (matching the block-number of the block where it first invalidated and replaced).
 //
 // The key-space of the DB is thus as following, in order:
-// - source block number -> incremental, there may be adjacent repeat entries (for multiple L2 blocks derived from same L1 block)
+// - source block number -> incremental, there may be adjacent repeat entries (for multiple core blocks derived from same L1 block)
 // - revision number -> incremental, repeats until the chain invalidates something
 // - derived block number -> NOT incremental, but incremental within the scope of a single revision.
 //
@@ -83,7 +83,7 @@ func (db *DB) First() (pair types.DerivedBlockSealPair, err error) {
 
 // PreviousDerived returns the previous derived block.
 // Warning: only safe to use on cross-DB.
-// This will prioritize the last time the input L2 block number was seen, and consistency-checks it against the hash.
+// This will prioritize the last time the input core block number was seen, and consistency-checks it against the hash.
 func (db *DB) PreviousDerived(derived eth.BlockID, revision types.Revision) (prevDerived types.BlockSeal, err error) {
 	db.rwLock.RLock()
 	defer db.rwLock.RUnlock()
@@ -92,7 +92,7 @@ func (db *DB) PreviousDerived(derived eth.BlockID, revision types.Revision) (pre
 	if err != nil {
 		return types.BlockSeal{}, fmt.Errorf("failed to find last derived %d: %w", derived.Number, err)
 	}
-	// get the first time this L2 block was seen.
+	// get the first time this core block was seen.
 	selfIndex, self, err := db.derivedNumToFirstSource(derived.Number, revision)
 	if err != nil {
 		return types.BlockSeal{}, fmt.Errorf("failed to find first derived %d: %w", derived.Number, err)
@@ -113,8 +113,8 @@ func (db *DB) PreviousDerived(derived eth.BlockID, revision types.Revision) (pre
 }
 
 // Last returns the last known values:
-// source: the L1 block that the L2 block is safe for (not necessarily the first, multiple L2 blocks may be derived from the same L1 block).
-// derived: the L2 block that was derived (not necessarily the first, the L1 block may have been empty and repeated the last safe L2 block).
+// source: the L1 block that the core block is safe for (not necessarily the first, multiple core blocks may be derived from the same L1 block).
+// derived: the core block that was derived (not necessarily the first, the L1 block may have been empty and repeated the last safe core block).
 // If the last entry is invalidated, this returns a types.ErrAwaitReplacementBlock error.
 func (db *DB) Last() (pair types.DerivedBlockSealPair, err error) {
 	db.rwLock.RLock()
@@ -165,7 +165,7 @@ func (db *DB) Invalidated() (pair types.DerivedBlockSealPair, err error) {
 	}, nil
 }
 
-// SourceToLastDerived returns the last L2 block derived from the given L1 block.
+// SourceToLastDerived returns the last core block derived from the given L1 block.
 // This may return types.ErrAwaitReplacementBlock if the entry was invalidated and needs replacement.
 func (db *DB) SourceToLastDerived(source eth.BlockID) (derived types.BlockSeal, err error) {
 	db.rwLock.RLock()
@@ -184,14 +184,14 @@ func (db *DB) SourceToLastDerived(source eth.BlockID) (derived types.BlockSeal, 
 	return link.derived, nil
 }
 
-// NextDerived finds the next L2 block after derived, and what it was derived from.
+// NextDerived finds the next core block after derived, and what it was derived from.
 // This may return types.ErrAwaitReplacementBlock if the entry was invalidated and needs replacement.
-// This will prioritize the last time the input L2 block number was seen, and consistency-checks it against the hash.
+// This will prioritize the last time the input core block number was seen, and consistency-checks it against the hash.
 // Older occurrences of the same number with different hash cannot be iterated from, and are non-canonical.
 func (db *DB) NextDerived(derived eth.BlockID, revision types.Revision) (pair types.DerivedBlockSealPair, err error) {
 	db.rwLock.RLock()
 	defer db.rwLock.RUnlock()
-	// Get the last time this L2 block was seen. This is attached to the latest L1 view, and thus canonical.
+	// Get the last time this core block was seen. This is attached to the latest L1 view, and thus canonical.
 	selfIndex, self, err := db.derivedNumToLastSource(derived.Number, revision)
 	if err != nil {
 		return types.DerivedBlockSealPair{}, fmt.Errorf("failed to find derived %d: %w", derived.Number, err)
@@ -325,9 +325,9 @@ func (db *DB) ContainsDerived(derived eth.BlockID, revision types.Revision) erro
 	return nil
 }
 
-// DerivedToFirstSource determines where a L2 block was first derived from.
-//   - A L2 block may repeat if the following L1 blocks are empty and don't produce additional L2 blocks
-//   - A L2 block may reoccur later (with a gap) attached to a newer L1 block,
+// DerivedToFirstSource determines where a core block was first derived from.
+//   - A core block may repeat if the following L1 blocks are empty and don't produce additional core blocks
+//   - A core block may reoccur later (with a gap) attached to a newer L1 block,
 //     if the prior information was invalidated with new L1 information.
 func (db *DB) DerivedToFirstSource(derived eth.BlockID, revision types.Revision) (types.BlockSeal, error) {
 	db.rwLock.RLock()
@@ -462,7 +462,7 @@ func (db *DB) lookup(source, derived uint64) (entrydb.EntryIdx, LinkEntry, error
 		// and can thus safely be used for global search
 		res := cmp.Compare(source, link.source.Number)
 		if res == 0 {
-			// Derived (L2) blocks can re-occur in the DB, after invalidation of local-safe blocks.
+			// Derived (core) blocks can re-occur in the DB, after invalidation of local-safe blocks.
 			// Within the same source block it is strictly incremental however.
 			return cmp.Compare(derived, link.derived.Number)
 		}
@@ -484,7 +484,7 @@ func (db *DB) lookupOrAfter(source, derived uint64) (entrydb.EntryIdx, LinkEntry
 		// and can thus safely be used for global search
 		res := cmp.Compare(link.source.Number, source)
 		if res == 0 {
-			// Derived (L2) blocks can re-occur in the DB, after invalidation of local-safe blocks.
+			// Derived (core) blocks can re-occur in the DB, after invalidation of local-safe blocks.
 			// Within the same source block it is strictly incremental however.
 			return cmp.Compare(link.derived.Number, derived)
 		}

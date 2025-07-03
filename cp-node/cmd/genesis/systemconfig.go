@@ -7,7 +7,6 @@ import (
 
 	"github.com/cpchain-network/cp-chain/cp-service/sources/batching"
 	"github.com/cpchain-network/cp-chain/cp-service/sources/batching/rpcblock"
-	"github.com/cpchain-network/cp-chain/packages/contracts-bedrock/snapshots"
 	"github.com/ethereum/go-ethereum/common"
 )
 
@@ -23,7 +22,7 @@ type SystemConfigContract struct {
 func NewSystemConfigContract(caller *batching.MultiCaller, addr common.Address) *SystemConfigContract {
 	return &SystemConfigContract{
 		caller:   caller,
-		contract: batching.NewBoundContract(snapshots.LoadSystemConfigABI(), addr),
+		contract: nil,
 	}
 }
 

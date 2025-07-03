@@ -60,7 +60,7 @@ func L2Genesis(l2Host *script.Host, input *L2GenesisInput) error {
 	defer cleanupL2Genesis()
 
 	if err := l2GenesisScript.RunWithEnv(); err != nil {
-		return fmt.Errorf("failed to run L2 genesis script: %w", err)
+		return fmt.Errorf("failed to run core genesis script: %w", err)
 	}
 	return nil
 }

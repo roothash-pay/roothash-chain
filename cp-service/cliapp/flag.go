@@ -28,7 +28,7 @@ func ProtectFlags(flags []cli.Flag) []cli.Flag {
 func cloneFlag(f cli.Flag) (cli.Flag, error) {
 	switch typedFlag := f.(type) {
 	case *cli.GenericFlag:
-		// We have to clone Generic, since it's an interface,
+		// We have to clone Generic, since it's an interfaces,
 		// and setting it causes the next use of the flag to have a different default value.
 		if genValue, ok := typedFlag.Value.(CloneableGeneric); ok {
 			cpy := *typedFlag

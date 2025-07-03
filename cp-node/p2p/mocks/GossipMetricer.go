@@ -14,7 +14,7 @@ func (_m *GossipMetricer) RecordGossipEvent(evType int32) {
 	_m.Called(evType)
 }
 
-// NewGossipMetricer creates a new instance of GossipMetricer. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// NewGossipMetricer creates a new instance of GossipMetricer. It also registers a testing interfaces on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewGossipMetricer(t interface {
 	mock.TestingT

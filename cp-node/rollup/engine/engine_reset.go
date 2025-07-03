@@ -12,8 +12,8 @@ import (
 )
 
 // ResetEngineRequestEvent requests the EngineResetDeriver to walk
-// the L2 chain backwards until it finds a plausible unsafe head,
-// and find an L2 safe block that is guaranteed to still be from the L1 chain.
+// the core chain backwards until it finds a plausible unsafe head,
+// and find an core safe block that is guaranteed to still be from the L1 chain.
 // This event is not used in interop.
 type ResetEngineRequestEvent struct{}
 
@@ -51,7 +51,7 @@ func (d *EngineResetDeriver) OnEvent(ev event.Event) bool {
 	case ResetEngineRequestEvent:
 		result, err := sync.FindL2Heads(d.ctx, d.cfg, d.l2, d.log, d.syncCfg)
 		if err != nil {
-			d.emitter.Emit(rollup.ResetEvent{Err: fmt.Errorf("failed to find the L2 Heads to start from: %w", err)})
+			d.emitter.Emit(rollup.ResetEvent{Err: fmt.Errorf("failed to find the core Heads to start from: %w", err)})
 			return true
 		}
 		d.emitter.Emit(rollup.ForceResetEvent{

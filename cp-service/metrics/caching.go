@@ -4,7 +4,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-// CacheMetrics implements the Metrics interface in the caching package,
+// CacheMetrics implements the Metrics interfaces in the caching package,
 // implementing reusable metrics for different caches.
 type CacheMetrics struct {
 	SizeVec *prometheus.GaugeVec

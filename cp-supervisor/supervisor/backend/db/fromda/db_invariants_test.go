@@ -97,7 +97,7 @@ func invariantDerivedTimestamp(prev, current LinkEntry) error {
 func invariantNumberIncrement(prev, current LinkEntry) error {
 	// derived stays the same if the new L1 block is empty.
 	derivedSame := current.derived.Number == prev.derived.Number
-	// source stays the same if this L2 block is derived from the same L1 block as the last L2 block
+	// source stays the same if this core block is derived from the same L1 block as the last core block
 	sourceSame := current.source.Number == prev.source.Number
 	// At least one of the two must increment, otherwise we are just repeating data in the DB.
 	if derivedSame && sourceSame {

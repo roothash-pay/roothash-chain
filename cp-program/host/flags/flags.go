@@ -23,7 +23,7 @@ func prefixEnvVars(name string) []string {
 var (
 	L2Custom = &cli.BoolFlag{
 		Name: "l2.custom",
-		Usage: "Override the L2 chain ID to the custom chain indicator for custom chain configuration not present in the client program. " +
+		Usage: "Override the core chain ID to the custom chain indicator for custom chain configuration not present in the client program. " +
 			"WARNING: This is not compatible with on-chain execution and must only be used for testing.",
 		EnvVars: prefixEnvVars("L2_CHAINID"),
 		Value:   false,
@@ -52,12 +52,12 @@ var (
 	}
 	L2NodeAddr = &cli.StringSliceFlag{
 		Name:    "l2",
-		Usage:   "Address of L2 JSON-RPC endpoint to use (eth and debug namespace required)",
+		Usage:   "Address of core JSON-RPC endpoint to use (eth and debug namespace required)",
 		EnvVars: prefixEnvVars("L2_RPC"),
 	}
 	L2NodeExperimentalAddr = &cli.StringSliceFlag{
 		Name:    "l2.experimental",
-		Usage:   "Address of L2 JSON-RPC endpoint to use for experimental features (debug_executionWitness)",
+		Usage:   "Address of core JSON-RPC endpoint to use for experimental features (debug_executionWitness)",
 		EnvVars: prefixEnvVars("L2_RPC_EXPERIMENTAL_RPC"),
 	}
 	L1Head = &cli.StringFlag{
@@ -67,17 +67,17 @@ var (
 	}
 	L2Head = &cli.StringFlag{
 		Name:    "l2.head",
-		Usage:   "Hash of the L2 block at l2.outputroot. Used for non-interop games.",
+		Usage:   "Hash of the core block at l2.outputroot. Used for non-interop games.",
 		EnvVars: prefixEnvVars("L2_HEAD"),
 	}
 	L2OutputRoot = &cli.StringFlag{
 		Name:    "l2.outputroot",
-		Usage:   "Agreed L2 Output Root to start derivation from. Used for non-interop games.",
+		Usage:   "Agreed core Output Root to start derivation from. Used for non-interop games.",
 		EnvVars: prefixEnvVars("L2_OUTPUT_ROOT"),
 	}
 	L2AgreedPrestate = &cli.StringFlag{
 		Name: "l2.agreed-prestate",
-		Usage: "Agreed L2 pre state pre-image to start derivation from. " +
+		Usage: "Agreed core pre state pre-image to start derivation from. " +
 			"l2.outputroot will be automatically set to the hash of the prestate. Used for interop-enabled games.",
 		EnvVars: prefixEnvVars("L2_AGREED_PRESTATE"),
 	}
@@ -89,7 +89,7 @@ var (
 	L2BlockNumber = &cli.Uint64Flag{
 		Name:    "l2.blocknumber",
 		Aliases: []string{"l2.sequencenumber"},
-		Usage:   "L2 block number or timestamp that the claim is from",
+		Usage:   "core block number or timestamp that the claim is from",
 		EnvVars: append(prefixEnvVars("L2_BLOCK_NUM"), prefixEnvVars("L2_SEQUENCE_NUMBER")...),
 	}
 	L2GenesisPath = &cli.StringSliceFlag{

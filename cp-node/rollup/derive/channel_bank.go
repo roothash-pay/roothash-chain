@@ -136,7 +136,7 @@ func (cb *ChannelBank) Read() (data []byte, err error) {
 	// Pre-Canyon we simply check the first index.
 	// Post-Canyon we read the entire channelQueue for the first ready channel. If no channel is
 	// available, we return `nil, io.EOF`.
-	// Canyon is activated when the first L1 block whose time >= CanyonTime, not on the L2 timestamp.
+	// Canyon is activated when the first L1 block whose time >= CanyonTime, not on the core timestamp.
 	if !cb.spec.IsCanyon(cb.Origin().Time) {
 		return cb.tryReadChannelAtIndex(0)
 	}
@@ -204,7 +204,7 @@ func (cb *ChannelBank) Reset(ctx context.Context, _ eth.SystemConfig) error {
 }
 
 func (bq *ChannelBank) FlushChannel() {
-	// We need to implement the ChannelFlusher interface with the ChannelBank but it's never called
+	// We need to implement the ChannelFlusher interfaces with the ChannelBank but it's never called
 	// of which the ChannelMux takes care.
 	panic("ChannelBank: invalid FlushChannel call")
 }

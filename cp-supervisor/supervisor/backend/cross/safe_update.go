@@ -58,7 +58,7 @@ func CrossSafeUpdate(logger log.Logger, chainID eth.ChainID, d CrossSafeDeps) er
 		return fmt.Errorf("expected L1 scope to be defined with ErrOutOfScope: %w", err)
 	}
 	logger.Debug("Cross-safe updating ran out of L1 scope", "scope", candidate.Source, "err", err)
-	// bump the L1 scope up, and repeat the prev L2 block, not the candidate
+	// bump the L1 scope up, and repeat the prev core block, not the candidate
 	newScope, err := d.NextSource(chainID, candidate.Source.ID())
 	if err != nil {
 		return fmt.Errorf("failed to identify new L1 scope to expand to after %s: %w", candidate.Source, err)
@@ -75,13 +75,13 @@ func CrossSafeUpdate(logger log.Logger, chainID eth.ChainID, d CrossSafeDeps) er
 	crossSafeRef := currentCrossSafe.Derived.MustWithParent(parent.ID())
 	logger.Debug("Bumping cross-safe scope", "scope", newScope, "crossSafe", crossSafeRef)
 	if err := d.UpdateCrossSafe(chainID, newScope, crossSafeRef); err != nil {
-		return fmt.Errorf("failed to update cross-safe head with L1 scope increment to %s and repeat of L2 block %s: %w", candidate.Source, crossSafeRef, err)
+		return fmt.Errorf("failed to update cross-safe head with L1 scope increment to %s and repeat of core block %s: %w", candidate.Source, crossSafeRef, err)
 	}
 	return nil
 }
 
 // scopedCrossSafeUpdate runs through the cross-safe update checks.
-// If no L2 cross-safe progress can be made without additional L1 input data,
+// If no core cross-safe progress can be made without additional L1 input data,
 // then a types.ErrOutOfScope error is returned,
 // with the current scope that will need to be expanded for further progress.
 func scopedCrossSafeUpdate(logger log.Logger, chainID eth.ChainID, d CrossSafeDeps) (update types.DerivedBlockRefPair, err error) {

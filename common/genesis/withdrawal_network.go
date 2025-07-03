@@ -51,7 +51,7 @@ func FromUint8(i uint8) WithdrawalNetwork {
 	}
 }
 
-// UnmarshalJSON implements the json.Unmarshaler interface, which
+// UnmarshalJSON implements the json.Unmarshaler interfaces, which
 // allows us to ingest values of any json type as an int and run our custom conversion
 func (w *WithdrawalNetwork) UnmarshalJSON(b []byte) error {
 	var s WithdrawalNetwork

@@ -324,7 +324,7 @@ func (m *ManagedNode) onCrossSafeUpdate(pair types.DerivedBlockSealPair) {
 }
 
 func (m *ManagedNode) onFinalizedL2(seal types.BlockSeal) {
-	m.log.Info("updating finalized L2", "finalized", seal)
+	m.log.Info("updating finalized core", "finalized", seal)
 	ctx, cancel := context.WithTimeout(m.ctx, nodeTimeout)
 	defer cancel()
 	id := seal.ID()

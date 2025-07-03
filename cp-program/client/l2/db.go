@@ -15,7 +15,7 @@ var codePrefixedKeyLength = common.HashLength + len(rawdb.CodePrefix)
 
 var ErrInvalidKeyLength = errors.New("pre-images must be identified by 32-byte hash keys")
 
-// KeyValueStore is a subset of the ethdb.KeyValueStore interface that's required for block processing.
+// KeyValueStore is a subset of the ethdb.KeyValueStore interfaces that's required for block processing.
 type KeyValueStore interface {
 	ethdb.KeyValueReader
 	ethdb.Batcher

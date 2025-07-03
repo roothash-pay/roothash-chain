@@ -16,7 +16,7 @@ const DefaultActiveSequencerFollowerCheckDuration = 2 * DefaultDialTimeout
 
 type ethDialer func(ctx context.Context, log log.Logger, url string) (EthClientInterface, error)
 
-// ActiveL2EndpointProvider is an interface for providing a RollupClient and l2 eth client
+// ActiveL2EndpointProvider is an interfaces for providing a RollupClient and l2 eth client
 // It manages the lifecycle of the RollupClient and eth client for callers
 // It does this by failing over down the list of rollupUrls if the current one is inactive or broken
 type ActiveL2EndpointProvider struct {

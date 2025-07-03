@@ -66,7 +66,7 @@ type Prefetcher struct {
 	lastHint       string
 	lastBulkHint   string
 	kvStore        kvstore.KV
-	// l2Head is the L2 block hash to retrieve output root from if interop is disabled
+	// l2Head is the core block hash to retrieve output root from if interop is disabled
 	l2Head common.Hash
 
 	// Used to run the program for native block execution
@@ -149,7 +149,7 @@ func (p *Prefetcher) bulkPrefetch(ctx context.Context, hint string) error {
 	case l2.HintL2AccountProof:
 		// account proofs include the block hash and requested address in the hint
 		if len(hintBytes) != 32+20+8 {
-			return fmt.Errorf("invalid L2 account proof hint: %x", hintBytes)
+			return fmt.Errorf("invalid core account proof hint: %x", hintBytes)
 		}
 
 		blockHash := common.Hash(hintBytes[:32])
@@ -201,7 +201,7 @@ func (p *Prefetcher) bulkPrefetch(ctx context.Context, hint string) error {
 
 		result, err := cl.PayloadExecutionWitness(ctx, hint.ParentBlockHash, *hint.PayloadAttributes)
 		if err != nil {
-			return fmt.Errorf("failed to fetch L2 execution witness for block with parent %v: %w", hint.ParentBlockHash, err)
+			return fmt.Errorf("failed to fetch core execution witness for block with parent %v: %w", hint.ParentBlockHash, err)
 		}
 
 		// ignore keys because we want to rehash all of the values for safety
@@ -221,7 +221,7 @@ func (p *Prefetcher) prefetchState(ctx context.Context, hint string) error {
 		return err
 	}
 
-	_, chainID, err := p.parseHashAndChainID("L2 state/code", hintBytes)
+	_, chainID, err := p.parseHashAndChainID("core state/code", hintBytes)
 	if err != nil {
 		return err
 	}
@@ -231,7 +231,7 @@ func (p *Prefetcher) prefetchState(ctx context.Context, hint string) error {
 		return err
 	}
 
-	// some L2 state data can be fetched in bulk from block execution witnesses instead of direction from the MPT
+	// some core state data can be fetched in bulk from block execution witnesses instead of direction from the MPT
 	// if we have a bulk hint, we should use it instead of the last hint (will fallback to last hint after bulk hint is cleared and request is retried)
 	if p.lastBulkHint != "" && cl.ExperimentalEnabled() {
 		bulkHint := p.lastBulkHint
@@ -242,7 +242,7 @@ func (p *Prefetcher) prefetchState(ctx context.Context, hint string) error {
 	// if we don't have a bulk hint, we should just fetch state normally by MPT hash
 	switch hintType {
 	case l2.HintL2StateNode:
-		hash, chainID, err := p.parseHashAndChainID("L2 state node", hintBytes)
+		hash, chainID, err := p.parseHashAndChainID("core state node", hintBytes)
 		if err != nil {
 			return err
 		}
@@ -252,11 +252,11 @@ func (p *Prefetcher) prefetchState(ctx context.Context, hint string) error {
 		}
 		node, err := source.NodeByHash(ctx, hash)
 		if err != nil {
-			return fmt.Errorf("failed to fetch L2 state node %s: %w", hash, err)
+			return fmt.Errorf("failed to fetch core state node %s: %w", hash, err)
 		}
 		return p.kvStore.Put(common.Hash{}, node)
 	case l2.HintL2Code:
-		hash, chainID, err := p.parseHashAndChainID("L2 code", hintBytes)
+		hash, chainID, err := p.parseHashAndChainID("core code", hintBytes)
 		if err != nil {
 			return err
 		}
@@ -266,7 +266,7 @@ func (p *Prefetcher) prefetchState(ctx context.Context, hint string) error {
 		}
 		code, err := source.CodeByHash(ctx, hash)
 		if err != nil {
-			return fmt.Errorf("failed to fetch L2 contract code %s: %w", hash, err)
+			return fmt.Errorf("failed to fetch core contract code %s: %w", hash, err)
 		}
 		return p.kvStore.Put(common.Hash{}, code)
 	}
@@ -401,7 +401,7 @@ func (p *Prefetcher) prefetch(ctx context.Context, hint string) error {
 		}
 		return p.kvStore.Put(common.Hash{}, result)
 	case l2.HintL2BlockHeader, l2.HintL2Transactions:
-		hash, chainID, err := p.parseHashAndChainID("L2 header/tx", hintBytes)
+		hash, chainID, err := p.parseHashAndChainID("core header/tx", hintBytes)
 		if err != nil {
 			return err
 		}
@@ -411,7 +411,7 @@ func (p *Prefetcher) prefetch(ctx context.Context, hint string) error {
 		}
 		header, txs, err := source.InfoAndTxsByHash(ctx, hash)
 		if err != nil {
-			return fmt.Errorf("failed to fetch L2 block %s: %w", hash, err)
+			return fmt.Errorf("failed to fetch core block %s: %w", hash, err)
 		}
 		data, err := header.HeaderRLP()
 		if err != nil {
@@ -423,7 +423,7 @@ func (p *Prefetcher) prefetch(ctx context.Context, hint string) error {
 		}
 		return p.storeTransactions(txs)
 	case l2.HintL2Receipts:
-		hash, chainID, err := p.parseHashAndChainID("L2 receipts", hintBytes)
+		hash, chainID, err := p.parseHashAndChainID("core receipts", hintBytes)
 		if err != nil {
 			return err
 		}
@@ -437,7 +437,7 @@ func (p *Prefetcher) prefetch(ctx context.Context, hint string) error {
 		}
 		return p.storeReceipts(receipts)
 	case l2.HintL2Output:
-		requestedHash, chainID, err := p.parseHashAndChainID("L2 output", hintBytes)
+		requestedHash, chainID, err := p.parseHashAndChainID("core output", hintBytes)
 		if err != nil {
 			return err
 		}
@@ -448,7 +448,7 @@ func (p *Prefetcher) prefetch(ctx context.Context, hint string) error {
 		if len(p.agreedPrestate) == 0 {
 			output, err := source.OutputByRoot(ctx, p.l2Head)
 			if err != nil {
-				return fmt.Errorf("failed to fetch L2 output root for block %s: %w", p.l2Head, err)
+				return fmt.Errorf("failed to fetch core output root for block %s: %w", p.l2Head, err)
 			}
 			hash := common.Hash(eth.OutputRoot(output))
 			if requestedHash != hash {
@@ -474,7 +474,7 @@ func (p *Prefetcher) prefetch(ctx context.Context, hint string) error {
 			}
 			output, err := source.OutputByNumber(ctx, blockNum)
 			if err != nil {
-				return fmt.Errorf("failed to fetch L2 output root for block %v: %w", blockNum, err)
+				return fmt.Errorf("failed to fetch core output root for block %v: %w", blockNum, err)
 			}
 			return p.kvStore.Put(common.Hash{}, output.Marshal())
 		}
@@ -483,7 +483,7 @@ func (p *Prefetcher) prefetch(ctx context.Context, hint string) error {
 			return fmt.Errorf("this prefetcher does not support native block execution")
 		}
 		if len(hintBytes) != 32+32+8 {
-			return fmt.Errorf("invalid L2 block data hint: %x", hint)
+			return fmt.Errorf("invalid core block data hint: %x", hint)
 		}
 		agreedBlockHash := common.Hash(hintBytes[:32])
 		blockHash := common.Hash(hintBytes[32:64])

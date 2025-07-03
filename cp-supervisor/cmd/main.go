@@ -40,8 +40,8 @@ func run(ctx context.Context, args []string, fn supervisor.MainFn) error {
 	app.Flags = cliapp.ProtectFlags(flags.Flags)
 	app.Version = opservice.FormatVersion(Version, GitCommit, GitDate, "")
 	app.Name = "cp-supervisor"
-	app.Usage = "cp-supervisor monitors cross-L2 interop messaging"
-	app.Description = "The cp-supervisor monitors cross-L2 interop messaging by pre-fetching events and then resolving the cross-L2 dependencies to answer safety queries."
+	app.Usage = "cp-supervisor monitors cross-core interop messaging"
+	app.Description = "The cp-supervisor monitors cross-core interop messaging by pre-fetching events and then resolving the cross-core dependencies to answer safety queries."
 	app.Action = cliapp.LifecycleCmd(supervisor.Main(app.Version, fn))
 	app.Commands = []*cli.Command{
 		{

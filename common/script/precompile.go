@@ -93,7 +93,7 @@ func WithFieldSetter[E any](p *Precompile[E]) {
 }
 
 // NewPrecompile wraps a Go object into a Precompile.
-// All exported fields and methods will have a corresponding ABI interface.
+// All exported fields and methods will have a corresponding ABI interfaces.
 // Fields with a tag `evm:"-"` will be ignored, or can override their ABI name to x with this tag: `evm:"x"`.
 // Field names and method names are adjusted to start with a lowercase character in the ABI signature.
 // Method names may end with a `_X` where X must be the 4byte selector (this is sanity-checked),
@@ -607,12 +607,12 @@ func (p *Precompile[E]) setupFieldSetter() {
 	}
 }
 
-// RequiredGas is part of the vm.PrecompiledContract interface, and all system precompiles use 0 gas.
+// RequiredGas is part of the vm.PrecompiledContract interfaces, and all system precompiles use 0 gas.
 func (p *Precompile[E]) RequiredGas(input []byte) uint64 {
 	return 0
 }
 
-// Run implements the vm.PrecompiledContract interface.
+// Run implements the vm.PrecompiledContract interfaces.
 // This takes the ABI calldata, finds the applicable method by selector, and then runs that method with the data.
 func (p *Precompile[E]) Run(input []byte) ([]byte, error) {
 	if len(input) < 4 {

@@ -6,20 +6,20 @@ comment:
   behavior: default
   require_changes: true
   flags:
-    - contracts-bedrock-tests
+    - contracts-cpchain-tests
 
 ignore:
   - "op-e2e"
   - "**/*.t.sol"
-  - "packages/contracts-bedrock/test/**/*.sol"
-  - "packages/contracts-bedrock/scripts/**/*.sol"
-  - "packages/contracts-bedrock/src/vendor/**/*.sol"
-  - "packages/contracts-bedrock/src/interfaces/**/*.sol"
+  - "packages/contracts-cpchain/test/**/*.sol"
+  - "packages/contracts-cpchain/scripts/**/*.sol"
+  - "packages/contracts-cpchain/src/vendor/**/*.sol"
+  - "packages/contracts-cpchain/src/interfaces/**/*.sol"
   # TODO: add coverage for MIPS64 back once tests are merged in
-  - "packages/contracts-bedrock/src/cannon/MIPS64.sol"
-  - "packages/contracts-bedrock/src/cannon/libraries/MIPS64Instructions.sol"
-  - "packages/contracts-bedrock/src/cannon/libraries/MIPS64State.sol"
-  - "packages/contracts-bedrock/src/cannon/libraries/MIPS64Syscalls.sol"
+  - "packages/contracts-cpchain/src/cannon/MIPS64.sol"
+  - "packages/contracts-cpchain/src/cannon/libraries/MIPS64Instructions.sol"
+  - "packages/contracts-cpchain/src/cannon/libraries/MIPS64State.sol"
+  - "packages/contracts-cpchain/src/cannon/libraries/MIPS64Syscalls.sol"
 
 coverage:
   status:
@@ -33,10 +33,10 @@ coverage:
         threshold: 5%
         informational: false
         flags:
-          - contracts-bedrock-tests
+          - contracts-cpchain-tests
 
 flag_management:
   individual_flags:
-    - name: contracts-bedrock-tests
+    - name: contracts-cpchain-tests
       paths:
-        - packages/contracts-bedrock/src
+        - packages/contracts-cpchain/src

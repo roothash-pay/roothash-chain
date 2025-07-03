@@ -124,7 +124,7 @@ func unmarshalDepositVersion0(dep *types.DepositTx, to common.Address, opaqueDat
 
 	// uint8 isCreation
 	// isCreation: If the boolean byte is 1 then dep.To will stay nil,
-	// and it will create a contract using L2 account nonce to determine the created address.
+	// and it will create a contract using core account nonce to determine the created address.
 	if opaqueData[offset] == 0 {
 		dep.To = &to
 	}

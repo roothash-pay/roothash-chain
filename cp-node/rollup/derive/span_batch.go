@@ -39,9 +39,9 @@ type spanBatchPrefix struct {
 }
 
 type spanBatchPayload struct {
-	blockCount    uint64        // Number of L2 block in the span
-	originBits    *big.Int      // Standard span-batch bitlist of blockCount bits. Each bit indicates if the L1 origin is changed at the L2 block.
-	blockTxCounts []uint64      // List of transaction counts for each L2 block
+	blockCount    uint64        // Number of core block in the span
+	originBits    *big.Int      // Standard span-batch bitlist of blockCount bits. Each bit indicates if the L1 origin is changed at the core block.
+	blockTxCounts []uint64      // List of transaction counts for each core block
 	txs           *spanBatchTxs // Transactions encoded in SpanBatch specs
 }
 
@@ -130,7 +130,7 @@ func (bp *spanBatchPayload) decodeBlockCount(r *bytes.Reader) error {
 	if err != nil {
 		return fmt.Errorf("failed to read block count: %w", err)
 	}
-	// number of L2 block in span batch cannot be greater than MaxSpanBatchElementCount
+	// number of core block in span batch cannot be greater than MaxSpanBatchElementCount
 	if blockCount > MaxSpanBatchElementCount {
 		return ErrTooBigSpanBatchSize
 	}
@@ -150,7 +150,7 @@ func (bp *spanBatchPayload) decodeBlockTxCounts(r *bytes.Reader) error {
 		if err != nil {
 			return fmt.Errorf("failed to read block tx count: %w", err)
 		}
-		// number of txs in single L2 block cannot be greater than MaxSpanBatchElementCount
+		// number of txs in single core block cannot be greater than MaxSpanBatchElementCount
 		// every tx will take at least single byte
 		if blockTxCount > MaxSpanBatchElementCount {
 			return ErrTooBigSpanBatchSize
@@ -389,7 +389,7 @@ func (b *RawSpanBatch) ToSpanBatch(blockTime, genesisTimestamp uint64, chainID *
 	return spanBatch, nil
 }
 
-// SpanBatchElement is a derived form of input to build a L2 block.
+// SpanBatchElement is a derived form of input to build a core block.
 // similar to SingularBatch, but does not have ParentHash and EpochHash
 // because Span batch spec does not contain parent hash and epoch hash of every block in the span.
 type SpanBatchElement struct {
@@ -407,8 +407,8 @@ func singularBatchToElement(singularBatch *SingularBatch) *SpanBatchElement {
 	}
 }
 
-// SpanBatch is an implementation of Batch interface,
-// containing the input to build a span of L2 blocks in derived form (SpanBatchElement)
+// SpanBatch is an implementation of Batch interfaces,
+// containing the input to build a span of core blocks in derived form (SpanBatchElement)
 type SpanBatch struct {
 	ParentCheck      [20]byte // First 20 bytes of the first block's parent hash
 	L1OriginCheck    [20]byte // First 20 bytes of the last block's L1 origin hash
@@ -486,7 +486,7 @@ func (b *SpanBatch) CheckOriginHash(hash common.Hash) bool {
 	return bytes.Equal(b.L1OriginCheck[:], hash.Bytes()[:20])
 }
 
-// CheckParentHash checks if the parentCheck matches the first 20 bytes of given hash, probably the current L2 safe head.
+// CheckParentHash checks if the parentCheck matches the first 20 bytes of given hash, probably the current core safe head.
 func (b *SpanBatch) CheckParentHash(hash common.Hash) bool {
 	return bytes.Equal(b.ParentCheck[:], hash.Bytes()[:20])
 }
@@ -580,7 +580,7 @@ func (b *SpanBatch) ToRawSpanBatch() (*RawSpanBatch, error) {
 	}, nil
 }
 
-// GetSingularBatches converts SpanBatchElements after L2 safe head to SingularBatches.
+// GetSingularBatches converts SpanBatchElements after core safe head to SingularBatches.
 // Since SpanBatchElement does not contain EpochHash, set EpochHash from the given L1 blocks.
 // The result SingularBatches do not contain ParentHash yet. It must be set by BatchQueue.
 func (b *SpanBatch) GetSingularBatches(l1Origins []eth.L1BlockRef, l2SafeHead eth.L2BlockRef) ([]*SingularBatch, error) {

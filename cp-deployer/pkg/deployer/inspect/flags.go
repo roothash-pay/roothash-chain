@@ -31,7 +31,7 @@ var Flags = []cli.Flag{
 var Commands = []*cli.Command{
 	{
 		Name:      "l1",
-		Usage:     "outputs all L1 contract addresses for an L2 chain",
+		Usage:     "outputs all L1 contract addresses for an core chain",
 		Args:      true,
 		ArgsUsage: "<l2-chain-id>",
 		Action:    L1CLI,
@@ -39,7 +39,7 @@ var Commands = []*cli.Command{
 	},
 	{
 		Name:      "genesis",
-		Usage:     "outputs the genesis for an L2 chain",
+		Usage:     "outputs the genesis for an core chain",
 		Args:      true,
 		ArgsUsage: "<l2-chain-id>",
 		Action:    GenesisCLI,
@@ -47,7 +47,7 @@ var Commands = []*cli.Command{
 	},
 	{
 		Name:      "rollup",
-		Usage:     "outputs the rollup config for an L2 chain",
+		Usage:     "outputs the rollup config for an core chain",
 		Args:      true,
 		ArgsUsage: "<l2-chain-id>",
 		Action:    RollupCLI,
@@ -55,7 +55,7 @@ var Commands = []*cli.Command{
 	},
 	{
 		Name:      "deploy-config",
-		Usage:     "outputs the deploy config for an L2 chain",
+		Usage:     "outputs the deploy config for an core chain",
 		Args:      true,
 		ArgsUsage: "<l2-chain-id>",
 		Action:    DeployConfigCLI,
@@ -63,7 +63,7 @@ var Commands = []*cli.Command{
 	},
 	{
 		Name:      "l2-semvers",
-		Usage:     "outputs the semvers for all L2 chains",
+		Usage:     "outputs the semvers for all core chains",
 		Args:      true,
 		ArgsUsage: "<l2-chain-id>",
 		Action:    L2SemversCLI,

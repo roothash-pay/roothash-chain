@@ -13,7 +13,7 @@ import (
 )
 
 // ProgramDeriver expresses how engine and derivation events are
-// translated and monitored to execute the pure L1 to L2 state transition.
+// translated and monitored to execute the pure L1 to core state transition.
 //
 // The ProgramDeriver stops at the target block number or with an error result.
 type ProgramDeriver struct {
@@ -66,7 +66,7 @@ func (d *ProgramDeriver) OnEvent(ev event.Event) bool {
 		}
 		// Stop if we have reached the target block
 		if x.SafeL2Head.Number >= d.targetBlockNum {
-			d.logger.Info("Derivation complete: reached L2 block as safe", "head", x.SafeL2Head)
+			d.logger.Info("Derivation complete: reached core block as safe", "head", x.SafeL2Head)
 			d.closing = true
 		}
 	case engine.LocalSafeUpdateEvent:
@@ -76,7 +76,7 @@ func (d *ProgramDeriver) OnEvent(ev event.Event) bool {
 		}
 		// Stop if we have reached the target block
 		if x.Ref.Number >= d.targetBlockNum {
-			d.logger.Info("Derivation complete: reached L2 block as local safe", "head", x.Ref)
+			d.logger.Info("Derivation complete: reached core block as local safe", "head", x.Ref)
 			d.closing = true
 		}
 	case derive.DeriverIdleEvent:

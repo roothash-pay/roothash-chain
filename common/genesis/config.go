@@ -25,13 +25,13 @@ var (
 	ErrInvalidDeployConfig     = errors.New("invalid deploy config")
 	ErrInvalidImmutablesConfig = errors.New("invalid immutables config")
 	// MaximumBaseFee represents the max base fee for deposits, since
-	// there is an on chain EIP-1559 curve for deposits purchasing L2 gas.
+	// there is an on chain EIP-1559 curve for deposits purchasing core gas.
 	// It is type(uint128).max in solidity.
 	MaximumBaseFee, _ = new(big.Int).SetString("ffffffffffffffffffffffffffffffff", 16)
 )
 
 const (
-	// MaxResourceLimit represents the maximum amount of L2 gas that a single deposit can use.
+	// MaxResourceLimit represents the maximum amount of core gas that a single deposit can use.
 	MaxResourceLimit = 20_000_000
 	// ElasticityMultiplier represents the elasticity of the deposit EIP-1559 fee market.
 	ElasticityMultiplier = 10
@@ -92,9 +92,9 @@ type L2GenesisBlockDeployConfig struct {
 	L2GenesisBlockGasUsed       hexutil.Uint64 `json:"l2GenesisBlockGasUsed"`
 	L2GenesisBlockParentHash    common.Hash    `json:"l2GenesisBlockParentHash"`
 	L2GenesisBlockBaseFeePerGas *hexutil.Big   `json:"l2GenesisBlockBaseFeePerGas"`
-	// Note that there is no L2 genesis ExtraData, as it must default to a valid Holocene eip-1559
+	// Note that there is no core genesis ExtraData, as it must default to a valid Holocene eip-1559
 	// configuration. See constant 'HoloceneExtraData' for the specific value used.
-	// Note that there is no L2 genesis timestamp:
+	// Note that there is no core genesis timestamp:
 	// This is instead configured based on the timestamp of "l1StartingBlockTag".
 }
 
@@ -102,23 +102,23 @@ var _ ConfigChecker = (*L2GenesisBlockDeployConfig)(nil)
 
 func (d *L2GenesisBlockDeployConfig) Check(log log.Logger) error {
 	if d.L2GenesisBlockGasLimit == 0 {
-		return fmt.Errorf("%w: L2 genesis block gas limit cannot be 0", ErrInvalidDeployConfig)
+		return fmt.Errorf("%w: core genesis block gas limit cannot be 0", ErrInvalidDeployConfig)
 	}
 	// When the initial resource config is made to be configurable by the DeployConfig, ensure
 	// that this check is updated to use the values from the DeployConfig instead of the defaults.
 	if uint64(d.L2GenesisBlockGasLimit) < uint64(MaxResourceLimit+SystemTxMaxGas) {
-		return fmt.Errorf("%w: L2 genesis block gas limit is too small", ErrInvalidDeployConfig)
+		return fmt.Errorf("%w: core genesis block gas limit is too small", ErrInvalidDeployConfig)
 	}
 	if d.L2GenesisBlockBaseFeePerGas == nil {
-		return fmt.Errorf("%w: L2 genesis block base fee per gas cannot be nil", ErrInvalidDeployConfig)
+		return fmt.Errorf("%w: core genesis block base fee per gas cannot be nil", ErrInvalidDeployConfig)
 	}
 	return nil
 }
 
-// OwnershipDeployConfig defines the ownership of an L2 chain deployment.
+// OwnershipDeployConfig defines the ownership of an core chain deployment.
 // This excludes superchain-wide contracts.
 type OwnershipDeployConfig struct {
-	// ProxyAdminOwner represents the owner of the ProxyAdmin predeploy on L2.
+	// ProxyAdminOwner represents the owner of the ProxyAdmin predeploy on core.
 	ProxyAdminOwner common.Address `json:"proxyAdminOwner"`
 	// FinalSystemOwner is the owner of the system on L1. Any L1 contract that is ownable has
 	// this account set as its owner.
@@ -139,13 +139,13 @@ func (d *OwnershipDeployConfig) Check(log log.Logger) error {
 
 type L2VaultsDeployConfig struct {
 	// BaseFeeVaultRecipient represents the recipient of fees accumulated in the BaseFeeVault.
-	// Can be an account on L1 or L2, depending on the BaseFeeVaultWithdrawalNetwork value.
+	// Can be an account on L1 or core, depending on the BaseFeeVaultWithdrawalNetwork value.
 	BaseFeeVaultRecipient common.Address `json:"baseFeeVaultRecipient"`
 	// L1FeeVaultRecipient represents the recipient of fees accumulated in the L1FeeVault.
-	// Can be an account on L1 or L2, depending on the L1FeeVaultWithdrawalNetwork value.
+	// Can be an account on L1 or core, depending on the L1FeeVaultWithdrawalNetwork value.
 	L1FeeVaultRecipient common.Address `json:"l1FeeVaultRecipient"`
 	// SequencerFeeVaultRecipient represents the recipient of fees accumulated in the SequencerFeeVault.
-	// Can be an account on L1 or L2, depending on the SequencerFeeVaultWithdrawalNetwork value.
+	// Can be an account on L1 or core, depending on the SequencerFeeVaultWithdrawalNetwork value.
 	SequencerFeeVaultRecipient common.Address `json:"sequencerFeeVaultRecipient"`
 	// BaseFeeVaultMinimumWithdrawalAmount represents the minimum withdrawal amount for the BaseFeeVault.
 	BaseFeeVaultMinimumWithdrawalAmount *hexutil.Big `json:"baseFeeVaultMinimumWithdrawalAmount"`
@@ -174,13 +174,13 @@ func (d *L2VaultsDeployConfig) Check(log log.Logger) error {
 		return fmt.Errorf("%w: SequencerFeeVaultRecipient cannot be address(0)", ErrInvalidDeployConfig)
 	}
 	if !d.BaseFeeVaultWithdrawalNetwork.Valid() {
-		return fmt.Errorf("%w: BaseFeeVaultWithdrawalNetwork can only be 0 (L1) or 1 (L2)", ErrInvalidDeployConfig)
+		return fmt.Errorf("%w: BaseFeeVaultWithdrawalNetwork can only be 0 (L1) or 1 (core)", ErrInvalidDeployConfig)
 	}
 	if !d.L1FeeVaultWithdrawalNetwork.Valid() {
-		return fmt.Errorf("%w: L1FeeVaultWithdrawalNetwork can only be 0 (L1) or 1 (L2)", ErrInvalidDeployConfig)
+		return fmt.Errorf("%w: L1FeeVaultWithdrawalNetwork can only be 0 (L1) or 1 (core)", ErrInvalidDeployConfig)
 	}
 	if !d.SequencerFeeVaultWithdrawalNetwork.Valid() {
-		return fmt.Errorf("%w: SequencerFeeVaultWithdrawalNetwork can only be 0 (L1) or 1 (L2)", ErrInvalidDeployConfig)
+		return fmt.Errorf("%w: SequencerFeeVaultWithdrawalNetwork can only be 0 (L1) or 1 (core)", ErrInvalidDeployConfig)
 	}
 	return nil
 }
@@ -219,7 +219,7 @@ func (d *GovernanceDeployConfig) GovernanceEnabled() bool {
 	return d.EnableGovernance
 }
 
-// GasPriceOracleDeployConfig configures the GasPriceOracle L2 predeploy.
+// GasPriceOracleDeployConfig configures the GasPriceOracle core predeploy.
 type GasPriceOracleDeployConfig struct {
 	// GasPriceOracleOverhead represents the initial value of the gas overhead in the GasPriceOracle predeploy.
 	// Deprecated: Since Ecotone, this field is superseded by GasPriceOracleBaseFeeScalar and GasPriceOracleBlobBaseFeeScalar.
@@ -273,7 +273,7 @@ func (d *GasPriceOracleDeployConfig) OperatorFeeParams() [32]byte {
 type GasTokenDeployConfig struct {
 	// UseCustomGasToken is a flag to indicate that a custom gas token should be used
 	UseCustomGasToken bool `json:"useCustomGasToken"`
-	// CustomGasTokenAddress is the address of the ERC20 token to be used to pay for gas on L2.
+	// CustomGasTokenAddress is the address of the ERC20 token to be used to pay for gas on core.
 	CustomGasTokenAddress common.Address `json:"customGasTokenAddress"`
 }
 
@@ -584,17 +584,17 @@ type L2CoreDeployConfig struct {
 	// L1ChainID is the chain ID of the L1 chain.
 	L1ChainID uint64 `json:"l1ChainID"`
 
-	// L2ChainID is the chain ID of the L2 chain.
+	// L2ChainID is the chain ID of the core chain.
 	L2ChainID uint64 `json:"l2ChainID"`
 
-	// L2BlockTime is the number of seconds between each L2 block.
+	// L2BlockTime is the number of seconds between each core block.
 	L2BlockTime uint64 `json:"l2BlockTime"`
 	// FinalizationPeriodSeconds represents the number of seconds before an output is considered
 	// finalized. This impacts the amount of time that withdrawals take to finalize and is
 	// generally set to 1 week.
 	FinalizationPeriodSeconds uint64 `json:"finalizationPeriodSeconds"`
 	// MaxSequencerDrift is the number of seconds after the L1 timestamp of the end of the
-	// sequencing window that batches must be included, otherwise L2 blocks including
+	// sequencing window that batches must be included, otherwise core blocks including
 	// deposits are force included.
 	MaxSequencerDrift uint64 `json:"maxSequencerDrift"`
 	// SequencerWindowSize is the number of L1 blocks per sequencing window.
@@ -663,7 +663,7 @@ func (d *AltDADeployConfig) Check(log log.Logger) error {
 	return nil
 }
 
-// L2InitializationConfig represents all L2 configuration
+// L2InitializationConfig represents all core configuration
 // data that can be configured before the deployment of any L1 contracts.
 type L2InitializationConfig struct {
 	DevDeployConfig
@@ -688,7 +688,7 @@ func (d *L2InitializationConfig) Check(log log.Logger) error {
 }
 
 // DevL1DeployConfig is used to configure a L1 chain for development/testing purposes.
-// A production L2 deployment does not utilize this configuration,
+// A production core deployment does not utilize this configuration,
 // except of a L1BlockTime sanity-check (set this to 12 for L1 Ethereum).
 type DevL1DeployConfig struct {
 	L1BlockTime                 uint64          `json:"l1BlockTime"`
@@ -736,19 +736,19 @@ func (d *SuperchainL1DeployConfig) Check(log log.Logger) error {
 // OutputOracleDeployConfig configures the legacy OutputOracle deployment to L1.
 // This is obsoleted with Fault Proofs. See FaultProofDeployConfig.
 type OutputOracleDeployConfig struct {
-	// L2OutputOracleSubmissionInterval is the number of L2 blocks between outputs that are submitted
+	// L2OutputOracleSubmissionInterval is the number of core blocks between outputs that are submitted
 	// to the L2OutputOracle contract located on L1.
 	L2OutputOracleSubmissionInterval uint64 `json:"l2OutputOracleSubmissionInterval"`
 	// L2OutputOracleStartingTimestamp is the starting timestamp for the L2OutputOracle.
 	// MUST be the same as the timestamp of the L2OO start block.
 	L2OutputOracleStartingTimestamp int64 `json:"l2OutputOracleStartingTimestamp"`
 	// L2OutputOracleStartingBlockNumber is the starting block number for the L2OutputOracle.
-	// Must be greater than or equal to the first Bedrock block. The first L2 output will correspond
+	// Must be greater than or equal to the first Bedrock block. The first core output will correspond
 	// to this value plus the submission interval.
 	L2OutputOracleStartingBlockNumber uint64 `json:"l2OutputOracleStartingBlockNumber"`
-	// L2OutputOracleProposer is the address of the account that proposes L2 outputs.
+	// L2OutputOracleProposer is the address of the account that proposes core outputs.
 	L2OutputOracleProposer common.Address `json:"l2OutputOracleProposer"`
-	// L2OutputOracleChallenger is the address of the account that challenges L2 outputs.
+	// L2OutputOracleChallenger is the address of the account that challenges core outputs.
 	L2OutputOracleChallenger common.Address `json:"l2OutputOracleChallenger"`
 }
 
@@ -824,18 +824,18 @@ func (d *FaultProofDeployConfig) Check(log log.Logger) error {
 	return nil
 }
 
-// L1DependenciesConfig is the set of addresses that affect the L2 genesis construction,
+// L1DependenciesConfig is the set of addresses that affect the core genesis construction,
 // and is dependent on prior deployment of contracts to L1. This is generally not configured in deploy-config JSON,
 // but rather merged in through a L1 deployments JSON file.
 type L1DependenciesConfig struct {
 	// L1StandardBridgeProxy represents the address of the L1StandardBridgeProxy on L1 and is used
-	// as part of building the L2 genesis state.
+	// as part of building the core genesis state.
 	L1StandardBridgeProxy common.Address `json:"l1StandardBridgeProxy"`
 	// L1CrossDomainMessengerProxy represents the address of the L1CrossDomainMessengerProxy on L1 and is used
-	// as part of building the L2 genesis state.
+	// as part of building the core genesis state.
 	L1CrossDomainMessengerProxy common.Address `json:"l1CrossDomainMessengerProxy"`
 	// L1ERC721BridgeProxy represents the address of the L1ERC721Bridge on L1 and is used
-	// as part of building the L2 genesis state.
+	// as part of building the core genesis state.
 	L1ERC721BridgeProxy common.Address `json:"l1ERC721BridgeProxy"`
 	// SystemConfigProxy represents the address of the SystemConfigProxy on L1 and is used
 	// as part of the derivation pipeline.
@@ -897,21 +897,21 @@ func (d *LegacyDeployConfig) Check(log log.Logger) error {
 }
 
 // DeployConfig represents the deployment configuration for an OP Stack chain.
-// It is used to deploy the L1 contracts as well as create the L2 genesis state.
+// It is used to deploy the L1 contracts as well as create the core genesis state.
 type DeployConfig struct {
-	// Pre-L1-deployment L2 configs
+	// Pre-L1-deployment core configs
 	L2InitializationConfig
 
 	// Development purposes only
 	DevL1DeployConfig
 
-	// L1StartingBlockTag anchors the L2 at an L1 block.
+	// L1StartingBlockTag anchors the core at an L1 block.
 	// The timestamp of the block referenced by l1StartingBlockTag is used
-	// in the L2 genesis block, rollup-config, and L1 output-oracle contract.
-	// The Output oracle deploy script may use it if the L2 starting timestamp is nil, assuming the L2 genesis is set up with this.
-	// The L2 genesis timestamp does not affect the initial L2 account state:
+	// in the core genesis block, rollup-config, and L1 output-oracle contract.
+	// The Output oracle deploy script may use it if the core starting timestamp is nil, assuming the core genesis is set up with this.
+	// The core genesis timestamp does not affect the initial core account state:
 	// the storage of the L1Block contract at genesis is zeroed, since the adoption of
-	// the L2-genesis allocs-generation through solidity script.
+	// the core-genesis allocs-generation through solidity script.
 	L1StartingBlockTag *MarshalableRPCBlockNumberOrHash `json:"l1StartingBlockTag" evm:"-"`
 
 	// L1 contracts configuration.
@@ -920,7 +920,7 @@ type DeployConfig struct {
 	OutputOracleDeployConfig
 	FaultProofDeployConfig
 
-	// Post-L1-deployment L2 configs
+	// Post-L1-deployment core configs
 	L1DependenciesConfig
 
 	// Legacy, ignored, here for strict-JSON decoding to be accepted.
@@ -951,15 +951,15 @@ func (d *DeployConfig) Check(log log.Logger) error {
 	if d.L2GenesisCanyonTimeOffset != nil && d.EIP1559DenominatorCanyon == 0 {
 		return fmt.Errorf("%w: EIP1559DenominatorCanyon cannot be 0 if Canyon is activated", ErrInvalidDeployConfig)
 	}
-	// L2 block time must always be smaller than L1 block time
+	// core block time must always be smaller than L1 block time
 	if d.L1BlockTime < d.L2BlockTime {
-		return fmt.Errorf("L2 block time (%d) is larger than L1 block time (%d)", d.L2BlockTime, d.L1BlockTime)
+		return fmt.Errorf("core block time (%d) is larger than L1 block time (%d)", d.L2BlockTime, d.L1BlockTime)
 	}
 	return checkConfigBundle(d, log)
 }
 
 // CheckAddresses will return an error if the addresses are not set.
-// These values are required to create the L2 genesis state and are present in the deploy config
+// These values are required to create the core genesis state and are present in the deploy config
 // even though the deploy config is required to deploy the contracts on L1. This creates a
 // circular dependency that should be resolved in the future.
 func (d *DeployConfig) CheckAddresses() error {

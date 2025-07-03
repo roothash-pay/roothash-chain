@@ -13,7 +13,7 @@ import (
 type searchCheckpoint struct {
 	blockNum uint64
 	// seen logs *after* the seal of the mentioned block, i.e. not part of this block, but building on top of it.
-	// There is at least one checkpoint per L2 block with logsSince == 0, i.e. the exact block boundary.
+	// There is at least one checkpoint per core block with logsSince == 0, i.e. the exact block boundary.
 	logsSince uint32
 	timestamp uint64
 }

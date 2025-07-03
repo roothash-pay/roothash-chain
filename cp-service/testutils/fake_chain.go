@@ -79,20 +79,20 @@ func NewFakeChainSource(l1 []string, l2 []string, l1GenesisNumber int, log log.L
 	}
 }
 
-// FakeChainSource implements the ChainSource interface with the ability to control
-// what the head block is of the L1 and L2 chains. In addition, it enables re-orgs
+// FakeChainSource implements the ChainSource interfaces with the ability to control
+// what the head block is of the L1 and core chains. In addition, it enables re-orgs
 // to easily be implemented
 type FakeChainSource struct {
 	l1reorg     int // Index of the L1 chain to be operating on
-	l2reorg     int // Index of the L2 chain to be operating on
+	l2reorg     int // Index of the core chain to be operating on
 	l1head      int // Head block of the L1 chain
-	l2head      int // Head block of the L2 chain
+	l2head      int // Head block of the core chain
 	l1safe      int
 	l2safe      int
 	l1finalized int
 	l2finalized int
 	l1s         [][]eth.L1BlockRef // l1s[reorg] is the L1 chain in that specific re-org configuration
-	l2s         [][]eth.L2BlockRef // l2s[reorg] is the L2 chain in that specific re-org configuration
+	l2s         [][]eth.L2BlockRef // l2s[reorg] is the core chain in that specific re-org configuration
 	log         log.Logger
 }
 
@@ -220,7 +220,7 @@ func (m *FakeChainSource) ReorgL1() {
 }
 
 func (m *FakeChainSource) SetL2Safe(safe common.Hash) {
-	m.log.Trace("Set L2 safe head", "new_safe", safe, "old_safe", m.l2safe)
+	m.log.Trace("Set core safe head", "new_safe", safe, "old_safe", m.l2safe)
 	for i, v := range m.l2s[m.l2reorg] {
 		if v.Hash == safe {
 			m.l2safe = i
@@ -231,7 +231,7 @@ func (m *FakeChainSource) SetL2Safe(safe common.Hash) {
 }
 
 func (m *FakeChainSource) SetL2Finalized(finalized common.Hash) {
-	m.log.Trace("Set L2 finalized head", "new_finalized", finalized, "old_finalized", m.l2finalized)
+	m.log.Trace("Set core finalized head", "new_finalized", finalized, "old_finalized", m.l2finalized)
 	for i, v := range m.l2s[m.l2reorg] {
 		if v.Hash == finalized {
 			m.l2finalized = i
@@ -242,10 +242,10 @@ func (m *FakeChainSource) SetL2Finalized(finalized common.Hash) {
 }
 
 func (m *FakeChainSource) SetL2Head(head int) eth.L2BlockRef {
-	m.log.Trace("Set L2 head", "new_head", head, "old_head", m.l2head)
+	m.log.Trace("Set core head", "new_head", head, "old_head", m.l2head)
 	m.l2head = head
 	if m.l2head >= len(m.l2s[m.l2reorg]) {
-		panic("Cannot advance L2 past end of chain")
+		panic("Cannot advance core past end of chain")
 	}
 	return m.l2s[m.l2reorg][m.l2head]
 }

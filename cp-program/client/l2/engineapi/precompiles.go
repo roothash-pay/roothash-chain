@@ -163,7 +163,7 @@ func (c *ecrecoverOracle) RequiredGas(input []byte) uint64 {
 
 func (c *ecrecoverOracle) Run(input []byte) ([]byte, error) {
 	// Modification note: the L1 precompile behavior may change, but not in incompatible ways.
-	// We want to enforce the subset that represents the EVM behavior activated in L2.
+	// We want to enforce the subset that represents the EVM behavior activated in core.
 	// Below is a copy of the Cancun behavior. L1 might expand on that at a later point.
 
 	const ecRecoverInputLength = 128
@@ -227,7 +227,7 @@ func (b *bn256PairingOracle) Run(input []byte) ([]byte, error) {
 		return nil, errBadPairingInput
 	}
 	// Modification note: below replaces point verification and pairing checks
-	// Assumes both L2 and the L1 oracle have an identical range of valid points
+	// Assumes both core and the L1 oracle have an identical range of valid points
 	result, ok := b.Oracle.Precompile(bn256PairingPrecompileAddress, input, b.RequiredGas(input))
 	if !ok {
 		return nil, errInvalidBn256PairingCheck
@@ -275,7 +275,7 @@ var (
 // Run executes the point evaluation precompile.
 func (b *kzgPointEvaluationOracle) Run(input []byte) ([]byte, error) {
 	// Modification note: the L1 precompile behavior may change, but not in incompatible ways.
-	// We want to enforce the subset that represents the EVM behavior activated in L2.
+	// We want to enforce the subset that represents the EVM behavior activated in core.
 	// Below is a copy of the Cancun behavior. L1 might expand on that at a later point.
 
 	if len(input) != blobVerifyInputLength {
@@ -353,7 +353,7 @@ func (b *blsOperationOracle) Run(input []byte) ([]byte, error) {
 	}
 
 	// Modification note: below replaces point verification and pairing checks
-	// Assumes both L2 and the L1 oracle have an identical range of valid points
+	// Assumes both core and the L1 oracle have an identical range of valid points
 	result, ok := b.Oracle.Precompile(b.precompileAddress, input, b.RequiredGas(input))
 	if !ok {
 		return nil, errInvalidBlsOperation

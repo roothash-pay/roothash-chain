@@ -92,7 +92,7 @@ var (
 	}
 	L2ChainIDsFlag = &cli.StringFlag{
 		Name:    L2ChainIDsFlagName,
-		Usage:   "Comma-separated list of L2 chain IDs to deploy.",
+		Usage:   "Comma-separated list of core chain IDs to deploy.",
 		EnvVars: PrefixEnvVar("L2_CHAIN_IDS"),
 	}
 	WorkdirFlag = &cli.StringFlag{

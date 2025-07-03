@@ -194,7 +194,7 @@ func (_m *TxManager) SuggestGasPriceCaps(ctx context.Context) (*big.Int, *big.In
 	return r0, r1, r2, r3
 }
 
-// NewTxManager creates a new instance of TxManager. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// NewTxManager creates a new instance of TxManager. It also registers a testing interfaces on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewTxManager(t interface {
 	mock.TestingT

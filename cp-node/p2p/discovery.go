@@ -320,7 +320,7 @@ func (n *NodeP2P) DiscoveryProcess(ctx context.Context, log log.Logger, cfg *rol
 			}
 		}
 	}
-	// Walk the DHT in parallel, the discv5 interface does not use channels for the iteration
+	// Walk the DHT in parallel, the discv5 interfaces does not use channels for the iteration
 	go bufferNodes()
 
 	// Kick off by trying the nodes we have in our table (previous nodes from last run and/or bootnodes)

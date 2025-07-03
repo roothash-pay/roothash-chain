@@ -46,7 +46,7 @@ var (
 	/* Required Flags */
 	L2EngineAddr = &cli.StringFlag{
 		Name:     "l2",
-		Usage:    "Address of L2 Engine JSON-RPC endpoints to use (engine and eth namespace required)",
+		Usage:    "Address of core Engine JSON-RPC endpoints to use (engine and eth namespace required)",
 		EnvVars:  prefixEnvVars("L2_ENGINE_RPC"),
 		Category: RollupCategory,
 	}
@@ -139,21 +139,21 @@ var (
 	}
 	L2EngineRpcTimeout = &cli.DurationFlag{
 		Name:     "l2.engine-rpc-timeout",
-		Usage:    "L2 engine client rpc timeout",
+		Usage:    "core engine client rpc timeout",
 		EnvVars:  prefixEnvVars("L2_ENGINE_RPC_TIMEOUT"),
 		Value:    time.Second * 10,
 		Category: RollupCategory,
 	}
 	VerifierL1Confs = &cli.Uint64Flag{
 		Name:     "verifier.l1-confs",
-		Usage:    "Number of L1 blocks to keep distance from the L1 head before deriving L2 data from. Reorgs are supported, but may be slow to perform.",
+		Usage:    "Number of L1 blocks to keep distance from the L1 head before deriving core data from. Reorgs are supported, but may be slow to perform.",
 		EnvVars:  prefixEnvVars("VERIFIER_L1_CONFS"),
 		Value:    0,
 		Category: L1RPCCategory,
 	}
 	SequencerEnabledFlag = &cli.BoolFlag{
 		Name:     "sequencer.enabled",
-		Usage:    "Enable sequencing of new L2 blocks. A separate batch submitter has to be deployed to publish the data for verifiers.",
+		Usage:    "Enable sequencing of new core blocks. A separate batch submitter has to be deployed to publish the data for verifiers.",
 		EnvVars:  prefixEnvVars("SEQUENCER_ENABLED"),
 		Category: SequencerCategory,
 	}
@@ -165,7 +165,7 @@ var (
 	}
 	SequencerMaxSafeLagFlag = &cli.Uint64Flag{
 		Name:     "sequencer.max-safe-lag",
-		Usage:    "Maximum number of L2 blocks for restricting the distance between L2 safe and unsafe. Disabled if 0.",
+		Usage:    "Maximum number of core blocks for restricting the distance between core safe and unsafe. Disabled if 0.",
 		EnvVars:  prefixEnvVars("SEQUENCER_MAX_SAFE_LAG"),
 		Value:    0,
 		Category: SequencerCategory,
@@ -179,7 +179,7 @@ var (
 	}
 	SequencerRecoverMode = &cli.BoolFlag{
 		Name:     "sequencer.recover",
-		Usage:    "Forces the sequencer to strictly prepare the next L1 origin and create empty L2 blocks",
+		Usage:    "Forces the sequencer to strictly prepare the next L1 origin and create empty core blocks",
 		EnvVars:  prefixEnvVars("SEQUENCER_RECOVER"),
 		Value:    false,
 		Category: SequencerCategory,
@@ -274,7 +274,7 @@ var (
 	}
 	SkipSyncStartCheck = &cli.BoolFlag{
 		Name: "l2.skip-sync-start-check",
-		Usage: "Skip sanity check of consistency of L1 origins of the unsafe L2 blocks when determining the sync-starting point. " +
+		Usage: "Skip sanity check of consistency of L1 origins of the unsafe core blocks when determining the sync-starting point. " +
 			"This defers the L1-origin verification, and is recommended to use in when utilizing l2.engine-sync",
 		EnvVars: prefixEnvVars("L2_SKIP_SYNC_START_CHECK"),
 		Value:   false,
@@ -288,7 +288,7 @@ var (
 	}
 	BackupL2UnsafeSyncRPC = &cli.StringFlag{
 		Name:    "l2.backup-unsafe-sync-rpc",
-		Usage:   "Set the backup L2 unsafe sync RPC endpoint.",
+		Usage:   "Set the backup core unsafe sync RPC endpoint.",
 		EnvVars: prefixEnvVars("L2_BACKUP_UNSAFE_SYNC_RPC"),
 		Hidden:  true,
 	}

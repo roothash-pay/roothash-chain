@@ -8,7 +8,7 @@ import (
 	"github.com/cpchain-network/cp-chain/cp-service/eth"
 )
 
-// L1Tracker implements the L1Fetcher interface while proactively maintaining a reorg-aware cache
+// L1Tracker implements the L1Fetcher interfaces while proactively maintaining a reorg-aware cache
 // of L1 block references by number. This handles the L1UnsafeEvent in order to populate the cache with
 // the latest L1 block references.
 type L1Tracker struct {

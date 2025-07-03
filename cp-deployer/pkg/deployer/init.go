@@ -32,7 +32,7 @@ func (c *InitConfig) Check() error {
 	}
 
 	if len(c.L2ChainIDs) == 0 {
-		return fmt.Errorf("must specify at least one L2 chain ID")
+		return fmt.Errorf("must specify at least one core chain ID")
 	}
 
 	return nil
@@ -46,7 +46,7 @@ func InitCLI() func(ctx *cli.Context) error {
 		intentType := ctx.String(IntentTypeFlagName)
 
 		if len(l2ChainIDsRaw) == 0 {
-			return fmt.Errorf("must specify at least one L2 chain ID")
+			return fmt.Errorf("must specify at least one core chain ID")
 		}
 
 		l2ChainIDsStr := strings.Split(strings.TrimSpace(l2ChainIDsRaw), ",")
@@ -54,7 +54,7 @@ func InitCLI() func(ctx *cli.Context) error {
 		for i, idStr := range l2ChainIDsStr {
 			id, err := op_service.Parse256BitChainID(idStr)
 			if err != nil {
-				return fmt.Errorf("invalid L2 chain ID '%s': %w", idStr, err)
+				return fmt.Errorf("invalid core chain ID '%s': %w", idStr, err)
 			}
 			l2ChainIDs[i] = id
 		}

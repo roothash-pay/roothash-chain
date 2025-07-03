@@ -28,7 +28,7 @@ import (
 )
 
 var (
-	ErrNoL2Chains            = errors.New("at least one L2 chain must be specified")
+	ErrNoL2Chains            = errors.New("at least one core chain must be specified")
 	ErrMissingL2ChainID      = errors.New("missing l2 chain id")
 	ErrMissingL2Genesis      = errors.New("missing l2 genesis")
 	ErrNoRollupForGenesis    = errors.New("no rollup config matching l2 genesis")
@@ -65,24 +65,24 @@ type Config struct {
 	L1TrustRPC  bool
 	L1RPCKind   sources.RPCProviderKind
 
-	// L2Head is the l2 block hash contained in the L2 Output referenced by the L2OutputRoot for pre-interop mode
+	// L2Head is the l2 block hash contained in the core Output referenced by the L2OutputRoot for pre-interop mode
 	L2Head common.Hash
-	// L2OutputRoot is the agreed L2 output root to start derivation from
+	// L2OutputRoot is the agreed core output root to start derivation from
 	L2OutputRoot common.Hash
-	// L2URLs are the URLs of the L2 nodes to fetch L2 data from, these are the canonical URL for L2 data
+	// L2URLs are the URLs of the core nodes to fetch core data from, these are the canonical URL for core data
 	// These URLs are used as a fallback for L2ExperimentalURL if the experimental URL fails or cannot retrieve the desired data
 	// Must have one L2URL for each chain in Rollups
 	L2URLs []string
-	// L2ExperimentalURLs are the URLs of the L2 nodes (non hash db archival node, for example, reth archival node) to fetch L2 data from
+	// L2ExperimentalURLs are the URLs of the core nodes (non hash db archival node, for example, reth archival node) to fetch core data from
 	// Must have one url for each chain in Rollups
 	L2ExperimentalURLs []string
-	// L2Claim is the claimed L2 output root to verify
+	// L2Claim is the claimed core output root to verify
 	L2Claim common.Hash
-	// L2ClaimBlockNumber is the block number the claimed L2 output root is from
+	// L2ClaimBlockNumber is the block number the claimed core output root is from
 	// Must be above 0 and to be a valid claim needs to be above the L2Head block.
 	// For interop this is the superchain root timestamp
 	L2ClaimBlockNumber uint64
-	// L2ChainConfigs are the op-geth chain config for the L2 execution engines
+	// L2ChainConfigs are the op-geth chain config for the core execution engines
 	// Must have one chain config for each rollup config
 	L2ChainConfigs []*params.ChainConfig
 	// ExecCmd specifies the client program to execute in a separate process.
@@ -128,7 +128,7 @@ func (c *Config) Check() error {
 	if len(c.L2ChainConfigs) == 0 {
 		return ErrMissingL2Genesis
 	}
-	// Make of known rollup chain IDs to whether we have the L2 chain config for it
+	// Make of known rollup chain IDs to whether we have the core chain config for it
 	chainIDToHasChainConfig := make(map[uint64]bool, len(c.Rollups))
 	for _, config := range c.Rollups {
 		chainID := config.L2ChainID.Uint64()
@@ -169,7 +169,7 @@ func (c *Config) Check() error {
 			return ErrMissingAgreedPrestate
 		}
 		if crypto.Keccak256Hash(c.AgreedPrestate) != c.L2OutputRoot {
-			return fmt.Errorf("%w: must be preimage of L2 output root", ErrInvalidAgreedPrestate)
+			return fmt.Errorf("%w: must be preimage of core output root", ErrInvalidAgreedPrestate)
 		}
 	}
 	return nil
@@ -323,7 +323,7 @@ func NewConfigFromCLI(log log.Logger, ctx *cli.Context) (*Config, error) {
 		log.Warn("Using custom chain configuration via preimage oracle. This is not compatible with on-chain execution.")
 		l2ChainID = boot.CustomChainIDIndicator
 	} else if len(rollupCfgs) > 1 {
-		// L2ChainID is not applicable when multiple L2 sources are used and not using custom configs
+		// L2ChainID is not applicable when multiple core sources are used and not using custom configs
 		l2ChainID = eth.ChainID{}
 	}
 

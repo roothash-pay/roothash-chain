@@ -44,10 +44,10 @@ type ProvenWithdrawalParameters struct {
 	L2OutputIndex   *big.Int
 	Data            []byte
 	OutputRootProof bindings.TypesOutputRootProof
-	WithdrawalProof [][]byte // List of trie nodes to prove L2 storage
+	WithdrawalProof [][]byte // List of trie nodes to prove core storage
 }
 
-// ProveWithdrawalParameters calls ProveWithdrawalParametersForBlock with the most recent L2 output after the given header.
+// ProveWithdrawalParameters calls ProveWithdrawalParametersForBlock with the most recent core output after the given header.
 func ProveWithdrawalParameters(ctx context.Context, proofCl ProofClient, l2ReceiptCl ReceiptClient, txHash common.Hash, l2Header *types.Header, l2OutputOracleContract *bindings.L2OutputOracleCaller) (ProvenWithdrawalParameters, error) {
 	l2OutputIndex, err := l2OutputOracleContract.GetL2OutputIndexAfter(&bind.CallOpts{}, l2Header.Number)
 	if err != nil {
@@ -56,7 +56,7 @@ func ProveWithdrawalParameters(ctx context.Context, proofCl ProofClient, l2Recei
 	return ProveWithdrawalParametersForBlock(ctx, proofCl, l2ReceiptCl, txHash, l2Header, l2OutputIndex)
 }
 
-// ProveWithdrawalParametersFaultProofs calls ProveWithdrawalParametersForBlock with the most recent L2 output after the latest game.
+// ProveWithdrawalParametersFaultProofs calls ProveWithdrawalParametersForBlock with the most recent core output after the latest game.
 func ProveWithdrawalParametersFaultProofs(ctx context.Context, proofCl ProofClient, l2ReceiptCl ReceiptClient, l2HeaderCl HeaderClient, txHash common.Hash, disputeGameFactoryContract *bindings.DisputeGameFactoryCaller, optimismPortal2Contract *bindingspreview.OptimismPortal2Caller) (ProvenWithdrawalParameters, error) {
 	latestGame, err := FindLatestGame(ctx, disputeGameFactoryContract, optimismPortal2Contract)
 	if err != nil {
@@ -65,7 +65,7 @@ func ProveWithdrawalParametersFaultProofs(ctx context.Context, proofCl ProofClie
 
 	l2BlockNumber := new(big.Int).SetBytes(latestGame.ExtraData[0:32])
 	l2OutputIndex := latestGame.Index
-	// Fetch the block header from the L2 node
+	// Fetch the block header from the core node
 	l2Header, err := l2HeaderCl.HeaderByNumber(ctx, l2BlockNumber)
 	if err != nil {
 		return ProvenWithdrawalParameters{}, fmt.Errorf("failed to get l2Block: %w", err)
@@ -73,8 +73,8 @@ func ProveWithdrawalParametersFaultProofs(ctx context.Context, proofCl ProofClie
 	return ProveWithdrawalParametersForBlock(ctx, proofCl, l2ReceiptCl, txHash, l2Header, l2OutputIndex)
 }
 
-// ProveWithdrawalParametersForBlock queries L1 & L2 to generate all withdrawal parameters and proof necessary to prove a withdrawal on L1.
-// The l2Header provided is very important. It should be a block for which there is a submitted output in the L2 Output Oracle
+// ProveWithdrawalParametersForBlock queries L1 & core to generate all withdrawal parameters and proof necessary to prove a withdrawal on L1.
+// The l2Header provided is very important. It should be a block for which there is a submitted output in the core Output Oracle
 // contract. If not, the withdrawal will fail as it the storage proof cannot be verified if there is no submitted state root.
 func ProveWithdrawalParametersForBlock(ctx context.Context, proofCl ProofClient, l2ReceiptCl ReceiptClient, txHash common.Hash, l2Header *types.Header, l2OutputIndex *big.Int) (ProvenWithdrawalParameters, error) {
 	// Transaction receipt
@@ -91,7 +91,7 @@ func ProveWithdrawalParametersForBlock(ctx context.Context, proofCl ProofClient,
 }
 
 // ProveWithdrawalParametersForEvent queries L1 to generate all withdrawal parameters and proof necessary to prove a withdrawal on L1.
-// The l2Header provided is very important. It should be a block for which there is a submitted output in the L2 Output Oracle
+// The l2Header provided is very important. It should be a block for which there is a submitted output in the core Output Oracle
 // contract. If not, the withdrawal will fail as it the storage proof cannot be verified if there is no submitted state root.
 func ProveWithdrawalParametersForEvent(ctx context.Context, proofCl ProofClient, ev *bindings.L2ToL1MessagePasserMessagePassed, l2Header *types.Header, l2OutputIndex *big.Int) (ProvenWithdrawalParameters, error) {
 	// Generate then verify the withdrawal proof

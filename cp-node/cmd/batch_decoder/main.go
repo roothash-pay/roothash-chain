@@ -130,18 +130,18 @@ func main() {
 				&cli.Uint64Flag{
 					Name:  "l2-chain-id",
 					Value: 10,
-					Usage: "L2 chain id for span batch derivation. Default value from op-mainnet.",
+					Usage: "core chain id for span batch derivation. Default value from op-mainnet.",
 				},
 				&cli.Uint64Flag{
 					Name:  "l2-genesis-timestamp",
 					Value: 1686068903,
-					Usage: "L2 genesis time for span batch derivation. Default value from op-mainnet. " +
+					Usage: "core genesis time for span batch derivation. Default value from op-mainnet. " +
 						"Superchain-registry prioritized when given value is inconsistent.",
 				},
 				&cli.Uint64Flag{
 					Name:  "l2-block-time",
 					Value: 2,
-					Usage: "L2 block time for span batch derivation. Default value from op-mainnet. " +
+					Usage: "core block time for span batch derivation. Default value from op-mainnet. " +
 						"Superchain-registry prioritized when given value is inconsistent.",
 				},
 				&cli.StringFlag{

@@ -4,7 +4,7 @@ type Executable interface {
 	RunEvent(ev AnnotatedEvent)
 }
 
-// ExecutableFunc implements the Executable interface as a function,
+// ExecutableFunc implements the Executable interfaces as a function,
 // similar to how the std-lib http HandlerFunc implements a Handler.
 // This can be used for small in-place executables, test helpers, etc.
 type ExecutableFunc func(ev AnnotatedEvent)

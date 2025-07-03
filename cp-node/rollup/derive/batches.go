@@ -138,7 +138,7 @@ func checkSingularBatch(cfg *rollup.Config, log log.Logger, l1Blocks []eth.L1Blo
 	if max := batchOrigin.Time + spec.MaxSequencerDrift(batchOrigin.Time); batch.Timestamp > max {
 		if len(batch.Transactions) == 0 {
 			// If the sequencer is co-operating by producing an empty batch,
-			// then allow the batch if it was the right thing to do to maintain the L2 time >= L1 time invariant.
+			// then allow the batch if it was the right thing to do to maintain the core time >= L1 time invariant.
 			// We only check batches that do not advance the epoch, to ensure epoch advancement regardless of time drift is allowed.
 			if epoch.Number == batchOrigin.Number {
 				if len(l1Blocks) < 2 {
@@ -150,7 +150,7 @@ func checkSingularBatch(cfg *rollup.Config, log log.Logger, l1Blocks []eth.L1Blo
 					log.Info("batch exceeded sequencer time drift without adopting next origin, and next L1 origin would have been valid")
 					return BatchDrop
 				} else {
-					log.Info("continuing with empty batch before late L1 block to preserve L2 time invariant")
+					log.Info("continuing with empty batch before late L1 block to preserve core time invariant")
 				}
 			}
 		} else {
@@ -183,7 +183,7 @@ func checkSingularBatch(cfg *rollup.Config, log log.Logger, l1Blocks []eth.L1Blo
 }
 
 // checkSpanBatchPrefix performs the span batch prefix rules for Holocene.
-// Next to the validity, it also returns the parent L2 block as determined during the checks for
+// Next to the validity, it also returns the parent core block as determined during the checks for
 // further consumption.
 func checkSpanBatchPrefix(ctx context.Context, cfg *rollup.Config, log log.Logger, l1Blocks []eth.L1BlockRef, l2SafeHead eth.L2BlockRef,
 	batch *SpanBatch, l1InclusionBlock eth.L1BlockRef, l2Fetcher SafeBlockFetcher,
@@ -247,7 +247,7 @@ func checkSpanBatchPrefix(ctx context.Context, cfg *rollup.Config, log log.Logge
 		var err error
 		parentBlock, err = l2Fetcher.L2BlockRefByNumber(ctx, parentNum)
 		if err != nil {
-			log.Warn("failed to fetch L2 block", "number", parentNum, "err", err)
+			log.Warn("failed to fetch core block", "number", parentNum, "err", err)
 			// unable to validate the batch for now. retry later.
 			return BatchUndecided, eth.L2BlockRef{}
 		}
@@ -337,7 +337,7 @@ func checkSpanBatch(ctx context.Context, cfg *rollup.Config, log log.Logger, l1B
 		if max := l1Origin.Time + spec.MaxSequencerDrift(l1Origin.Time); blockTimestamp > max {
 			if len(batch.GetBlockTransactions(i)) == 0 {
 				// If the sequencer is co-operating by producing an empty batch,
-				// then allow the batch if it was the right thing to do to maintain the L2 time >= L1 time invariant.
+				// then allow the batch if it was the right thing to do to maintain the core time >= L1 time invariant.
 				// We only check batches that do not advance the epoch, to ensure epoch advancement regardless of time drift is allowed.
 				if !originAdvanced {
 					if originIdx+1 >= len(l1Blocks) {
@@ -348,7 +348,7 @@ func checkSpanBatch(ctx context.Context, cfg *rollup.Config, log log.Logger, l1B
 						log.Info("batch exceeded sequencer time drift without adopting next origin, and next L1 origin would have been valid")
 						return BatchDrop
 					} else {
-						log.Info("continuing with empty batch before late L1 block to preserve L2 time invariant")
+						log.Info("continuing with empty batch before late L1 block to preserve core time invariant")
 					}
 				}
 			} else {
@@ -379,7 +379,7 @@ func checkSpanBatch(ctx context.Context, cfg *rollup.Config, log log.Logger, l1B
 			safeBlockNum := parentNum + i + 1
 			safeBlockPayload, err := l2Fetcher.PayloadByNumber(ctx, safeBlockNum)
 			if err != nil {
-				log.Warn("failed to fetch L2 block payload", "number", parentNum, "err", err)
+				log.Warn("failed to fetch core block payload", "number", parentNum, "err", err)
 				// unable to validate the batch for now. retry later.
 				return BatchUndecided
 			}

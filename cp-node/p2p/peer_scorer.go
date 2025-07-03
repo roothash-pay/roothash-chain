@@ -19,7 +19,7 @@ type scorer struct {
 	cfg       *rollup.Config
 }
 
-// Peerstore is a subset of the libp2p peerstore.Peerstore interface.
+// Peerstore is a subset of the libp2p peerstore.Peerstore interfaces.
 //
 //go:generate mockery --name Peerstore --output mocks/
 type Peerstore interface {

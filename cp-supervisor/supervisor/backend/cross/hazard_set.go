@@ -127,7 +127,7 @@ func (h *HazardSet) build(deps HazardDeps, logger log.Logger, chainID eth.ChainI
 			return fmt.Errorf("failed to open block: %w", err)
 		}
 		if opened.ID() != candidate.ID() {
-			return fmt.Errorf("unsafe L2 DB has %s, but candidate cross-safe was %s: %w", opened, candidate, types.ErrConflict)
+			return fmt.Errorf("unsafe core DB has %s, but candidate cross-safe was %s: %w", opened, candidate, types.ErrConflict)
 		}
 		if err := h.checkChainCanExecute(depSet, destChainID, candidate, execMsgs); err != nil {
 			return err

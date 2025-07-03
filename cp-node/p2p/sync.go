@@ -159,7 +159,7 @@ type SyncPeerScorer interface {
 	onRejectedPayload(id peer.ID)
 }
 
-// SyncClient implements a reverse chain sync with a minimal interface:
+// SyncClient implements a reverse chain sync with a minimal interfaces:
 // signal the desired range, and receive blocks within this range back.
 // Through parent-hash verification, received blocks are all ensured to be part of the canonical chain at one point,
 // but it is up to the user to organize and process the results further.
@@ -410,7 +410,7 @@ func (s *SyncClient) mainLoop() {
 			s.log.Info("Checking in flight", "num", check.num)
 			check.result <- s.inFlight.get(check.num)
 		case <-s.resCtx.Done():
-			s.log.Info("stopped P2P req-resp L2 block sync client")
+			s.log.Info("stopped P2P req-resp core block sync client")
 			return
 		}
 	}
@@ -435,7 +435,7 @@ func (s *SyncClient) isInFlight(ctx context.Context, num uint64) (bool, error) {
 // This function transforms requested block ranges into work for each peer.
 func (s *SyncClient) onRangeRequest(ctx context.Context, req rangeRequest) {
 	log := s.log.New("target", req.start, "end", req.end)
-	log.Info("processing L2 range request", "rangeReqId", req.id)
+	log.Info("processing core range request", "rangeReqId", req.id)
 
 	// add req head to trusted set of blocks
 	s.trusted.Add(req.end.Hash, struct{}{})
@@ -472,7 +472,7 @@ func (s *SyncClient) onRangeRequest(ctx context.Context, req rangeRequest) {
 			log.Info("did not schedule full P2P sync range", "current", num, "err", ctx.Err())
 			return
 		default: // peers may all be busy processing requests already
-			log.Info("no peers ready to handle block requests for more P2P requests for L2 block history", "current", num)
+			log.Info("no peers ready to handle block requests for more P2P requests for core block history", "current", num)
 			return
 		}
 	}
@@ -766,7 +766,7 @@ func readExecutionPayload(version uint32, data []byte, isCanyon, isIsthmus bool)
 func verifyBlock(envelope *eth.ExecutionPayloadEnvelope, expectedNum uint64) error {
 	payload := envelope.ExecutionPayload
 
-	// verify L2 block
+	// verify core block
 	if expectedNum != uint64(payload.BlockNumber) {
 		return fmt.Errorf("received execution payload for block %d, but expected block %d", payload.BlockNumber, expectedNum)
 	}
@@ -820,7 +820,7 @@ func NewReqRespServer(cfg *rollup.Config, l2 L2Chain, metrics ReqRespServerMetri
 	}
 }
 
-// HandleSyncRequest is a stream handler function to register the L2 unsafe payloads alt-sync protocol.
+// HandleSyncRequest is a stream handler function to register the core unsafe payloads alt-sync protocol.
 // See MakeStreamHandler to transform this into a LibP2P handler function.
 //
 // Note that the same peer may open parallel streams.
@@ -900,14 +900,14 @@ func (srv *ReqRespServer) handleSyncRequest(ctx context.Context, stream network.
 
 	// Check the request is within the expected range of blocks
 	if req < srv.cfg.Genesis.L2.Number {
-		return req, fmt.Errorf("cannot serve request for L2 block %d before genesis %d: %w", req, srv.cfg.Genesis.L2.Number, errInvalidRequest)
+		return req, fmt.Errorf("cannot serve request for core block %d before genesis %d: %w", req, srv.cfg.Genesis.L2.Number, errInvalidRequest)
 	}
 	max, err := srv.cfg.TargetBlockNumber(uint64(time.Now().Unix()))
 	if err != nil {
 		return req, fmt.Errorf("cannot determine max target block number to verify request: %w", errInvalidRequest)
 	}
 	if req > max {
-		return req, fmt.Errorf("cannot serve request for L2 block %d after max expected block (%v): %w", req, max, errInvalidRequest)
+		return req, fmt.Errorf("cannot serve request for core block %d after max expected block (%v): %w", req, max, errInvalidRequest)
 	}
 
 	envelope, err := srv.l2.PayloadByNumber(ctx, req)

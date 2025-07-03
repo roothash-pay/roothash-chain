@@ -22,10 +22,10 @@ const defaultGasLimit = 30_000_000
 // HoloceneExtraData represents the default extra data for Holocene-genesis chains.
 var HoloceneExtraData = eip1559.EncodeHoloceneExtraData(250, 6)
 
-// NewL2Genesis will create a new L2 genesis
+// NewL2Genesis will create a new core genesis
 func NewL2Genesis(config *DeployConfig, l1StartHeader *eth.BlockRef) (*core.Genesis, error) {
 	if config.L2ChainID == 0 {
-		return nil, errors.New("must define L2 ChainID")
+		return nil, errors.New("must define core ChainID")
 	}
 
 	eip1559Denom := config.EIP1559Denominator

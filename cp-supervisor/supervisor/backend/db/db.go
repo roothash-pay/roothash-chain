@@ -100,7 +100,7 @@ type Metrics interface {
 }
 
 // ChainsDB is a database that stores logs and derived-from data for multiple chains.
-// it implements the LogStorage interface, as well as several DB interfaces needed by the cross package.
+// it implements the LogStorage interfaces, as well as several DB interfaces needed by the cross package.
 type ChainsDB struct {
 	// unsafe info: the sequence of block seals and events
 	logDBs locks.RWMap[eth.ChainID, LogStorage]
@@ -113,14 +113,14 @@ type ChainsDB struct {
 	// If present but set to a zeroed value the cross-unsafe will fallback to cross-safe.
 	crossUnsafe locks.RWMap[eth.ChainID, *locks.RWValue[types.BlockSeal]]
 
-	// local-safe: index of what we optimistically know about L2 blocks being derived from L1
+	// local-safe: index of what we optimistically know about core blocks being derived from L1
 	localDBs locks.RWMap[eth.ChainID, DerivationStorage]
 
-	// cross-safe: index of L2 blocks we know to only have cross-L2 valid dependencies
+	// cross-safe: index of core blocks we know to only have cross-core valid dependencies
 	crossDBs locks.RWMap[eth.ChainID, DerivationStorage]
 
-	// finalized: the L1 finality progress. This can be translated into what may be considered as finalized in L2.
-	// It is initially zeroed, and the L2 finality query will return
+	// finalized: the L1 finality progress. This can be translated into what may be considered as finalized in core.
+	// It is initially zeroed, and the core finality query will return
 	// an error until it has this L1 finality to work with.
 	finalizedL1 locks.RWValue[eth.L1BlockRef]
 

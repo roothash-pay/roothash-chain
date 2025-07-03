@@ -181,7 +181,7 @@ func NewMetrics(procName string) *Metrics {
 		RPCMetrics: metrics.MakeRPCMetrics(ns, factory),
 
 		L1SourceCache: metrics.NewCacheMetrics(factory, ns, "l1_source_cache", "L1 Source cache"),
-		L2SourceCache: metrics.NewCacheMetrics(factory, ns, "l2_source_cache", "L2 Source cache"),
+		L2SourceCache: metrics.NewCacheMetrics(factory, ns, "l2_source_cache", "core Source cache"),
 
 		DerivationIdle: factory.NewGauge(prometheus.GaugeOpts{
 			Namespace: ns,
@@ -209,12 +209,12 @@ func NewMetrics(procName string) *Metrics {
 		UnsafePayloadsBufferLen: factory.NewGauge(prometheus.GaugeOpts{
 			Namespace: ns,
 			Name:      "unsafe_payloads_buffer_len",
-			Help:      "Number of buffered L2 unsafe payloads",
+			Help:      "Number of buffered core unsafe payloads",
 		}),
 		UnsafePayloadsBufferMemSize: factory.NewGauge(prometheus.GaugeOpts{
 			Namespace: ns,
 			Name:      "unsafe_payloads_buffer_mem_size",
-			Help:      "Total estimated memory size of buffered L2 unsafe payloads",
+			Help:      "Total estimated memory size of buffered core unsafe payloads",
 		}),
 
 		RefMetrics: metrics.MakeRefMetrics(ns, factory),

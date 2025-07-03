@@ -9,7 +9,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/urfave/cli/v2"
+	cli "github.com/urfave/cli/v2"
 
 	"github.com/cpchain-network/cp-chain/common/devkeys"
 	"github.com/cpchain-network/cp-chain/common/foundry"
@@ -43,12 +43,12 @@ var (
 	}
 	artifactsDirFlag = &cli.StringFlag{
 		Name:    "artifacts-dir",
-		Value:   "packages/contracts-bedrock/forge-artifacts",
+		Value:   "packages/contracts-cpchain/forge-artifacts",
 		EnvVars: op_service.PrefixEnvVar(EnvPrefix, "ARTIFACTS_DIR"),
 	}
 	foundryDirFlag = &cli.StringFlag{
 		Name:    "foundry-dir",
-		Value:   "packages/contracts-bedrock",
+		Value:   "packages/contracts-cpchain",
 		EnvVars: op_service.PrefixEnvVar(EnvPrefix, "FOUNDRY_DIR"),
 		Usage:   "Optional, for source-map info during genesis generation",
 	}
@@ -150,7 +150,7 @@ var InteropDevSetup = &cli.Command{
 			for id, dep := range worldDeployment.L2s {
 				l2Dir := filepath.Join(l2sDir, id)
 				if err := writeJson(filepath.Join(l2Dir, "addresses.json"), dep); err != nil {
-					return fmt.Errorf("failed to write L2 %s deployment data: %w", id, err)
+					return fmt.Errorf("failed to write core %s deployment data: %w", id, err)
 				}
 			}
 		}
@@ -165,10 +165,10 @@ var InteropDevSetup = &cli.Command{
 			for id, dep := range worldOutput.L2s {
 				l2Dir := filepath.Join(l2sDir, id)
 				if err := writeJson(filepath.Join(l2Dir, "genesis.json"), dep.Genesis); err != nil {
-					return fmt.Errorf("failed to write L2 %s genesis config: %w", id, err)
+					return fmt.Errorf("failed to write core %s genesis config: %w", id, err)
 				}
 				if err := writeJson(filepath.Join(l2Dir, "rollup.json"), dep.RollupCfg); err != nil {
-					return fmt.Errorf("failed to write L2 %s rollup config: %w", id, err)
+					return fmt.Errorf("failed to write core %s rollup config: %w", id, err)
 				}
 			}
 		}

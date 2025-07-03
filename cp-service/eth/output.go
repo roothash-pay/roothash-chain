@@ -28,10 +28,10 @@ var (
 )
 
 type Output interface {
-	// Version returns the version of the L2 output
+	// Version returns the version of the core output
 	Version() Bytes32
 
-	// Marshal a L2 output into a byte slice for hashing
+	// Marshal a core output into a byte slice for hashing
 	Marshal() []byte
 }
 
@@ -55,7 +55,7 @@ func (o *OutputV0) Marshal() []byte {
 	return buf[:]
 }
 
-// OutputRoot returns the keccak256 hash of the marshaled L2 output
+// OutputRoot returns the keccak256 hash of the marshaled core output
 func OutputRoot(output Output) Bytes32 {
 	marshaled := output.Marshal()
 	return Bytes32(crypto.Keccak256Hash(marshaled))

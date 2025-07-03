@@ -20,7 +20,7 @@ import (
 )
 
 type L2EndpointSetup interface {
-	// Setup a RPC client to a L2 execution engine to process rollup blocks with.
+	// Setup a RPC client to a core execution engine to process rollup blocks with.
 	Setup(ctx context.Context, log log.Logger, rollupCfg *rollup.Config, metrics opmetrics.RPCMetricer) (cl client.RPC, rpcCfg *sources.EngineClientConfig, err error)
 	Check() error
 }
@@ -42,16 +42,16 @@ type L1BeaconEndpointSetup interface {
 }
 
 type L2EndpointConfig struct {
-	// L2EngineAddr is the address of the L2 Engine JSON-RPC endpoint to use. The engine and eth
+	// L2EngineAddr is the address of the core Engine JSON-RPC endpoint to use. The engine and eth
 	// namespaces must be enabled by the endpoint.
 	L2EngineAddr string
 
-	// JWT secrets for L2 Engine API authentication during HTTP or initial Websocket communication.
+	// JWT secrets for core Engine API authentication during HTTP or initial Websocket communication.
 	// Any value for an IPC connection.
 	L2EngineJWTSecret [32]byte
 
-	// L2EngineCallTimeout is the default timeout duration for L2 calls.
-	// Defines the maximum time a call to the L2 engine is allowed to take before timing out.
+	// L2EngineCallTimeout is the default timeout duration for core calls.
+	// Defines the maximum time a call to the core engine is allowed to take before timing out.
 	L2EngineCallTimeout time.Duration
 }
 
@@ -59,7 +59,7 @@ var _ L2EndpointSetup = (*L2EndpointConfig)(nil)
 
 func (cfg *L2EndpointConfig) Check() error {
 	if cfg.L2EngineAddr == "" {
-		return errors.New("empty L2 Engine Address")
+		return errors.New("empty core Engine Address")
 	}
 
 	return nil
@@ -84,7 +84,7 @@ func (cfg *L2EndpointConfig) Setup(ctx context.Context, log log.Logger, rollupCf
 	return l2Node, sources.EngineClientDefaultConfig(rollupCfg), nil
 }
 
-// PreparedL2Endpoints enables testing with in-process pre-setup RPC connections to L2 engines
+// PreparedL2Endpoints enables testing with in-process pre-setup RPC connections to core engines
 type PreparedL2Endpoints struct {
 	Client client.RPC
 }

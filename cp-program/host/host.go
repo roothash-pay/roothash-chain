@@ -93,10 +93,10 @@ func makeDefaultPrefetcher(ctx context.Context, logger log.Logger, kv kvstore.KV
 	l1Beacon := sources.NewBeaconHTTPClient(client.NewBasicHTTPClient(cfg.L1BeaconURL, logger))
 	l1BlobFetcher := sources.NewL1BeaconClient(l1Beacon, sources.L1BeaconClientConfig{FetchAllSidecars: false})
 
-	logger.Info("Initializing L2 clients")
+	logger.Info("Initializing core clients")
 	sources, err := prefetcher.NewRetryingL2SourcesFromURLs(ctx, logger, cfg.Rollups, cfg.L2URLs, cfg.L2ExperimentalURLs)
 	if err != nil {
-		return nil, fmt.Errorf("failed to create L2 sources: %w", err)
+		return nil, fmt.Errorf("failed to create core sources: %w", err)
 	}
 
 	executor := MakeProgramExecutor(logger, cfg)
@@ -132,7 +132,7 @@ func (p *programExecutor) RunProgram(
 		}
 	}
 	if l2ChainConfig == nil {
-		return fmt.Errorf("could not find L2 chain config in the host for chain ID %v", chainID)
+		return fmt.Errorf("could not find core chain config in the host for chain ID %v", chainID)
 	}
 	var rollupConfig *rollup.Config
 	for _, c := range newCfg.Rollups {

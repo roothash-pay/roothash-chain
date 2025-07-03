@@ -180,7 +180,7 @@ func ApplyPipeline(
 	} else {
 		l2Afs, err := artifacts.Download(ctx, intent.L2ContractsLocator, artifacts.BarProgressor(), opts.CacheDir)
 		if err != nil {
-			return fmt.Errorf("failed to download L2 artifacts: %w", err)
+			return fmt.Errorf("failed to download core artifacts: %w", err)
 		}
 		l2ArtifactsFS = l2Afs
 	}

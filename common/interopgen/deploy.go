@@ -33,10 +33,10 @@ func Deploy(logger log.Logger, fa *foundry.ArtifactsFS, srcFS *foundry.SourceMap
 	// Sanity check all L2s have consistent chain ID and attach to the same L1
 	for id, l2Cfg := range cfg.L2s {
 		if fmt.Sprintf("%d", l2Cfg.L2ChainID) != id {
-			return nil, nil, fmt.Errorf("chain L2 %s declared different L2 chain ID %d in config", id, l2Cfg.L2ChainID)
+			return nil, nil, fmt.Errorf("chain core %s declared different core chain ID %d in config", id, l2Cfg.L2ChainID)
 		}
 		if !cfg.L1.ChainID.IsUint64() || cfg.L1.ChainID.Uint64() != l2Cfg.L1ChainID {
-			return nil, nil, fmt.Errorf("chain L2 %s declared different L1 chain ID %d in config than global %d", id, l2Cfg.L1ChainID, cfg.L1.ChainID)
+			return nil, nil, fmt.Errorf("chain core %s declared different L1 chain ID %d in config than global %d", id, l2Cfg.L1ChainID, cfg.L1.ChainID)
 		}
 		if l2Cfg.L2GenesisJovianTimeOffset != nil {
 			return nil, nil, fmt.Errorf("jovian is not compatible with interop, but got fork offset %d", *l2Cfg.L2GenesisJovianTimeOffset)
@@ -64,15 +64,15 @@ func Deploy(logger log.Logger, fa *foundry.ArtifactsFS, srcFS *foundry.SourceMap
 	}
 	deployments.Superchain = superDeployment
 
-	// We deploy contracts for each L2 to the L1
+	// We deploy contracts for each core to the L1
 	// because we need to compute the genesis block hash
-	// to put into the L2 genesis configs, and can thus not mutate the L1 state
-	// after creating the final config for any particular L2. Will add comments.
+	// to put into the core genesis configs, and can thus not mutate the L1 state
+	// after creating the final config for any particular core. Will add comments.
 
 	for l2ChainID, l2Cfg := range cfg.L2s {
 		l2Deployment, err := DeployL2ToL1(l1Host, cfg.Superchain, superDeployment, l2Cfg)
 		if err != nil {
-			return nil, nil, fmt.Errorf("failed to deploy L2 %d to L1: %w", &l2ChainID, err)
+			return nil, nil, fmt.Errorf("failed to deploy core %d to L1: %w", &l2ChainID, err)
 		}
 		deployments.L2s[l2ChainID] = l2Deployment
 	}
@@ -99,14 +99,14 @@ func Deploy(logger log.Logger, fa *foundry.ArtifactsFS, srcFS *foundry.SourceMap
 	for l2ChainID, l2Cfg := range cfg.L2s {
 		l2Host := CreateL2(logger, fa, srcFS, l2Cfg, genesisTimestamp)
 		if err := l2Host.EnableCheats(); err != nil {
-			return nil, nil, fmt.Errorf("failed to enable cheats in L2 state %s: %w", l2ChainID, err)
+			return nil, nil, fmt.Errorf("failed to enable cheats in core state %s: %w", l2ChainID, err)
 		}
 		if err := GenesisL2(l2Host, l2Cfg, deployments.L2s[l2ChainID]); err != nil {
-			return nil, nil, fmt.Errorf("failed to apply genesis data to L2 %s: %w", l2ChainID, err)
+			return nil, nil, fmt.Errorf("failed to apply genesis data to core %s: %w", l2ChainID, err)
 		}
 		l2Out, err := CompleteL2(l2Host, l2Cfg, l1GenesisBlock, deployments.L2s[l2ChainID])
 		if err != nil {
-			return nil, nil, fmt.Errorf("failed to complete L2 %s: %w", l2ChainID, err)
+			return nil, nil, fmt.Errorf("failed to complete core %s: %w", l2ChainID, err)
 		}
 		out.L2s[l2ChainID] = l2Out
 	}
@@ -231,7 +231,7 @@ func DeployL2ToL1(l1Host *script.Host, superCfg *SuperchainConfig, superDeployme
 		DisputeMaxClockDuration: cfg.DisputeMaxClockDuration,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to deploy L2 OP chain: %w", err)
+		return nil, fmt.Errorf("failed to deploy core OP chain: %w", err)
 	}
 
 	// Collect deployment addresses
@@ -293,7 +293,7 @@ func GenesisL2(l2Host *script.Host, cfg *L2Config, deployment *L2Deployment) err
 		},
 		L2Config: cfg.L2InitializationConfig,
 	}); err != nil {
-		return fmt.Errorf("failed L2 genesis: %w", err)
+		return fmt.Errorf("failed core genesis: %w", err)
 	}
 
 	return nil
@@ -360,7 +360,7 @@ func CompleteL2(l2Host *script.Host, cfg *L2Config, l1Block *types.Block, deploy
 	// l1Block is used to determine genesis time.
 	l2Genesis, err := genesis.NewL2Genesis(deployCfg, eth.BlockRefFromHeader(l1Block.Header()))
 	if err != nil {
-		return nil, fmt.Errorf("failed to build L2 genesis config: %w", err)
+		return nil, fmt.Errorf("failed to build core genesis config: %w", err)
 	}
 
 	allocs, err := l2Host.StateDump()
@@ -371,7 +371,7 @@ func CompleteL2(l2Host *script.Host, cfg *L2Config, l1Block *types.Block, deploy
 	// Sanity check that the default deployer didn't include anything,
 	// and make sure it's not in the state.
 	if err := ensureNoDeployed(allocs, sysGenesisDeployer); err != nil {
-		return nil, fmt.Errorf("unexpected deployed account content by L2 genesis deployer: %w", err)
+		return nil, fmt.Errorf("unexpected deployed account content by core genesis deployer: %w", err)
 	}
 
 	for addr, amount := range cfg.Prefund {
@@ -387,7 +387,7 @@ func CompleteL2(l2Host *script.Host, cfg *L2Config, l1Block *types.Block, deploy
 
 	rollupCfg, err := deployCfg.RollupConfig(eth.BlockRefFromHeader(l1Block.Header()), l2GenesisBlock.Hash(), l2GenesisBlock.NumberU64())
 	if err != nil {
-		return nil, fmt.Errorf("failed to build L2 rollup config: %w", err)
+		return nil, fmt.Errorf("failed to build core rollup config: %w", err)
 	}
 	return &L2Output{
 		Genesis:   l2Genesis,

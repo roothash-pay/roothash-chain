@@ -39,14 +39,14 @@ type SimpleAsyncGossiper struct {
 	metrics        Metrics
 }
 
-// To avoid import cycles, we define a new Network interface here
-// this interface is compatible with driver.Network
+// To avoid import cycles, we define a new Network interfaces here
+// this interfaces is compatible with driver.Network
 type Network interface {
 	PublishL2Payload(ctx context.Context, payload *eth.ExecutionPayloadEnvelope) error
 }
 
-// To avoid import cycles, we define a new Metrics interface here
-// this interface is compatible with driver.Metrics
+// To avoid import cycles, we define a new Metrics interfaces here
+// this interfaces is compatible with driver.Metrics
 type Metrics interface {
 	RecordPublishingError()
 }

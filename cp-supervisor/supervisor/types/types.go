@@ -260,11 +260,11 @@ const (
 	// This matches RPC label "safe".
 	CrossSafe SafetyLevel = "safe"
 	// LocalSafe is verified to be reproducible from L1,
-	// without any verified cross-L2 dependencies.
+	// without any verified cross-core dependencies.
 	// This does not have an RPC label.
 	LocalSafe SafetyLevel = "local-safe"
 	// CrossUnsafe is as safe as LocalUnsafe,
-	// but with verified cross-L2 dependencies that are at least CrossUnsafe.
+	// but with verified cross-core dependencies that are at least CrossUnsafe.
 	// This does not have an RPC label.
 	CrossUnsafe SafetyLevel = "cross-unsafe"
 	// LocalUnsafe is the safety of the tip of the chain. This matches RPC label "unsafe".
@@ -428,7 +428,7 @@ func LogToMessagePayload(l *ethTypes.Log) []byte {
 	return msg
 }
 
-// DerivedBlockRefPair is a pair of block refs, where Derived (L2) is derived from Source (L1).
+// DerivedBlockRefPair is a pair of block refs, where Derived (core) is derived from Source (L1).
 type DerivedBlockRefPair struct {
 	Source  eth.BlockRef `json:"source"`
 	Derived eth.BlockRef `json:"derived"`
@@ -452,7 +452,7 @@ func (refs DerivedBlockRefPair) String() string {
 	return fmt.Sprintf("refPair(source: %s, derived: %s)", refs.Source, refs.Derived)
 }
 
-// DerivedBlockSealPair is a pair of block seals, where Derived (L2) is derived from Source (L1).
+// DerivedBlockSealPair is a pair of block seals, where Derived (core) is derived from Source (L1).
 type DerivedBlockSealPair struct {
 	Source  BlockSeal `json:"source"`
 	Derived BlockSeal `json:"derived"`
@@ -469,7 +469,7 @@ func (seals DerivedBlockSealPair) String() string {
 	return fmt.Sprintf("sealPair(source: %s, derived: %s)", seals.Source, seals.Derived)
 }
 
-// DerivedIDPair is a pair of block IDs, where Derived (L2) is derived from Source (L1).
+// DerivedIDPair is a pair of block IDs, where Derived (core) is derived from Source (L1).
 type DerivedIDPair struct {
 	Source  eth.BlockID `json:"source"`
 	Derived eth.BlockID `json:"derived"`

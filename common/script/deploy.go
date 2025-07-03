@@ -13,7 +13,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 )
 
-// ForgeScriptBackend is a minimal interface suitable for deploying & interacting with
+// ForgeScriptBackend is a minimal interfaces suitable for deploying & interacting with
 // foundry scripts on chain
 type ForgeScriptBackend interface {
 	// Call sends a transaction with a []byte data to a specified address
@@ -127,7 +127,7 @@ func NewDeployScriptWithOutput[I any, O any](script ForgeScript, methodName stri
 // newDeployScriptWithoutOutput creates an instance of deployScriptWithoutOutputImpl[I]
 //
 // It is used internally to maximize code reuse:
-// - its return value is returned from NewDeployScriptWithoutOutput (but returned as an interface, not leaking the implementation details)
+// - its return value is returned from NewDeployScriptWithoutOutput (but returned as an interfaces, not leaking the implementation details)
 // - its return values is used internally in newDeployScriptWithOutput that relies on the implementation details
 func newDeployScriptWithoutOutput[I any](script ForgeScript, methodName string) (*deployScriptWithoutOutputImpl[I], error) {
 	// Just to keep things DRY a bit

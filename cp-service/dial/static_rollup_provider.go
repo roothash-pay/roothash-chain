@@ -7,10 +7,10 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 )
 
-// RollupProvider is an interface for providing a RollupClient
+// RollupProvider is an interfaces for providing a RollupClient
 // It manages the lifecycle of the RollupClient for callers
 type RollupProvider interface {
-	// RollupClient returns the underlying sources.RollupClient pointing to the L2 rollup consensus node.
+	// RollupClient returns the underlying sources.RollupClient pointing to the core rollup consensus node.
 	// Note: ctx should be a lifecycle context without an attached timeout as client selection may involve
 	// multiple network operations, specifically in the case of failover.
 	RollupClient(ctx context.Context) (RollupClientInterface, error)
@@ -19,7 +19,7 @@ type RollupProvider interface {
 }
 
 // StaticL2RollupProvider is a RollupProvider that always returns the same static RollupClient
-// It is meant for scenarios where a single, unchanging L2 rollup node is used
+// It is meant for scenarios where a single, unchanging core rollup node is used
 type StaticL2RollupProvider struct {
 	rollupClient *sources.RollupClient
 }

@@ -219,7 +219,7 @@ func (_c *PeerManager_Peers_Call) RunAndReturn(run func() []peer.ID) *PeerManage
 	return _c
 }
 
-// NewPeerManager creates a new instance of PeerManager. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// NewPeerManager creates a new instance of PeerManager. It also registers a testing interfaces on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewPeerManager(t interface {
 	mock.TestingT

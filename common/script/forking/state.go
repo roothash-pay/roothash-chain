@@ -23,8 +23,8 @@ func (fe *forkStateEntry) DB() *ForkDB {
 	return fe.state.Database().(*ForkDB)
 }
 
-// ForkableState implements the vm.StateDB interface,
-// and a few other methods as defined in the VMStateDB interface.
+// ForkableState implements the vm.StateDB interfaces,
+// and a few other methods as defined in the VMStateDB interfaces.
 // This state can be forked in-place,
 // swapping over operations to route to in-memory states that wrap fork sources.
 type ForkableState struct {

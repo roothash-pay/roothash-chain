@@ -11,7 +11,7 @@ type L1BlockRefByNumber interface {
 	L1BlockRefByNumber(context.Context, uint64) (eth.L1BlockRef, error)
 }
 
-// VerifyNewL1Origin checks that the L2 unsafe head still has a L1 origin that is on the canonical chain.
+// VerifyNewL1Origin checks that the core unsafe head still has a L1 origin that is on the canonical chain.
 // If the unsafe head origin is after the new L1 origin it is assumed to still be canonical.
 // The check is only required when moving to a new L1 origin.
 func VerifyNewL1Origin(ctx context.Context, unsafeOrigin eth.L1BlockRef, l1 L1BlockRefByNumber, newOrigin eth.L1BlockRef) error {

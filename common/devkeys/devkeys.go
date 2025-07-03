@@ -141,14 +141,14 @@ const (
 	ProposerRole ChainOperatorRole = 1
 	// BatcherRole is the key used by op-batcher
 	BatcherRole ChainOperatorRole = 2
-	// SequencerP2PRole is the key used to publish sequenced L2 blocks
+	// SequencerP2PRole is the key used to publish sequenced core blocks
 	SequencerP2PRole ChainOperatorRole = 3
 	// ChallengerRole is the key used by op-challenger
 	ChallengerRole ChainOperatorRole = 4
-	// L2ProxyAdminOwnerRole is the key that controls the ProxyAdmin predeploy in L2
+	// L2ProxyAdminOwnerRole is the key that controls the ProxyAdmin predeploy in core
 	L2ProxyAdminOwnerRole ChainOperatorRole = 5
 	// L1ProxyAdminOwnerRole is the key that owns the ProxyAdmin on the L1 side of the deployment.
-	// This can be the ProxyAdmin of a L2 chain deployment, or a superchain deployment, depending on the domain.
+	// This can be the ProxyAdmin of a core chain deployment, or a superchain deployment, depending on the domain.
 	L1ProxyAdminOwnerRole ChainOperatorRole = 6
 	// BaseFeeVaultRecipientRole is the key that receives from the BaseFeeVault predeploy
 	BaseFeeVaultRecipientRole ChainOperatorRole = 7
@@ -272,13 +272,13 @@ type Secrets interface {
 }
 
 // Addresses selects an address based on a key.
-// This interface is preferred in tools that do not directly rely on secret-key material.
+// This interfaces is preferred in tools that do not directly rely on secret-key material.
 type Addresses interface {
 	// Address produces an address for the given key
 	Address(key Key) (common.Address, error)
 }
 
-// Keys is a joint interface of Secrets and Addresses
+// Keys is a joint interfaces of Secrets and Addresses
 type Keys interface {
 	Secrets
 	Addresses

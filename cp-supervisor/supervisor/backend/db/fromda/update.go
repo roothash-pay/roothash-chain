@@ -194,8 +194,8 @@ func (db *DB) rewindLocked(t types.DerivedBlockSealPair, including bool) error {
 	return nil
 }
 
-// addLink adds a L1/L2 derivation link, with strong consistency checks.
-// if the link invalidates a prior L2 block, that was valid in a prior L1,
+// addLink adds a L1/core derivation link, with strong consistency checks.
+// if the link invalidates a prior core block, that was valid in a prior L1,
 // the invalidated hash needs to match it, even if a new derived block replaces it.
 // If types.RevisionAny is provided, the last registered revision is repeated.
 func (db *DB) addLink(source eth.BlockRef, derived eth.BlockRef, invalidated common.Hash, revision types.Revision) error {
@@ -288,10 +288,10 @@ func (db *DB) addLink(source eth.BlockRef, derived eth.BlockRef, invalidated com
 		return nil
 	}
 
-	// Check derived relation: the L2 chain has to be sequential without gaps. An L2 block may repeat if the L1 block is empty.
+	// Check derived relation: the core chain has to be sequential without gaps. An core block may repeat if the L1 block is empty.
 	if lastDerived.Number == derived.Number {
 		// Same block height? Then it must be the same block.
-		// I.e. we encountered an empty L1 block, and the same L2 block continues to be the last block that was derived from it.
+		// I.e. we encountered an empty L1 block, and the same core block continues to be the last block that was derived from it.
 		if invalidated != (common.Hash{}) {
 			if lastDerived.Hash != invalidated {
 				return fmt.Errorf("inserting block %s that invalidates %s at height %d, but expected %s: %w", derived.Hash, invalidated, lastDerived.Number, lastDerived.Hash, types.ErrConflict)
@@ -327,7 +327,7 @@ func (db *DB) addLink(source eth.BlockRef, derived eth.BlockRef, invalidated com
 		}
 	}
 
-	// Check derived-from relation: multiple L2 blocks may be derived from the same L1 block. But everything in sequence.
+	// Check derived-from relation: multiple core blocks may be derived from the same L1 block. But everything in sequence.
 	if lastSource.Number == source.Number {
 		// Same block height? Then it must be the same block.
 		if lastSource.Hash != source.Hash {

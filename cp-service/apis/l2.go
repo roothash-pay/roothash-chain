@@ -21,7 +21,7 @@ type L2EthBlockRef interface {
 }
 
 type SystemConfigFetcher interface {
-	// SystemConfigByL2Hash returns the [eth.SystemConfig] (matching the config updates up to and including the L1 origin) for the given L2 block hash.
+	// SystemConfigByL2Hash returns the [eth.SystemConfig] (matching the config updates up to and including the L1 origin) for the given core block hash.
 	// The returned [eth.SystemConfig] may not be in the canonical chain when the hash is not canonical.
 	SystemConfigByL2Hash(ctx context.Context, hash common.Hash) (eth.SystemConfig, error)
 }

@@ -13,7 +13,7 @@ import (
 var _ eth.BlockInfo = &MockBlockInfo{}
 
 type MockBlockInfo struct {
-	// Prefixed all fields with "Info" to avoid collisions with the interface method names.
+	// Prefixed all fields with "Info" to avoid collisions with the interfaces method names.
 
 	InfoHash          common.Hash
 	InfoParentHash    common.Hash

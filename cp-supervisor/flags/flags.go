@@ -29,7 +29,7 @@ var (
 	}
 	L2ConsensusNodesFlag = &cli.StringSliceFlag{
 		Name:    "l2-consensus.nodes",
-		Usage:   "L2 Consensus rollup node RPC addresses (with auth).",
+		Usage:   "core Consensus rollup node RPC addresses (with auth).",
 		EnvVars: prefixEnvVars("L2_CONSENSUS_NODES"),
 	}
 	L2ConsensusJWTSecret = &cli.StringSliceFlag{

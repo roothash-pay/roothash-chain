@@ -9,7 +9,7 @@ import (
 // ErrNotFound is returned when a pre-image cannot be found in the KV store.
 var ErrNotFound = errors.New("not found")
 
-// KV is a Key-Value store interface for pre-image data.
+// KV is a Key-Value store interfaces for pre-image data.
 type KV interface {
 	// Put puts the pre-image value v in the key-value store with key k.
 	// KV store implementations may return additional errors specific to the KV storage.

@@ -56,7 +56,7 @@ type Error struct {
 	level Level
 }
 
-// Error satisfies the error interface.
+// Error satisfies the error interfaces.
 func (e Error) Error() string {
 	if e.err != nil {
 		return fmt.Sprintf("%s: %v", e.level, e.err)
@@ -64,12 +64,12 @@ func (e Error) Error() string {
 	return e.level.String()
 }
 
-// Unwrap satisfies the Is/As interface.
+// Unwrap satisfies the Is/As interfaces.
 func (e Error) Unwrap() error {
 	return e.err
 }
 
-// Is satisfies the error Unwrap interface.
+// Is satisfies the error Unwrap interfaces.
 func (e Error) Is(target error) bool {
 	if target == nil {
 		return e == target

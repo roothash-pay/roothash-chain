@@ -49,20 +49,20 @@ func NewOracleEngine(rollupCfg *rollup.Config, logger log.Logger, backend engine
 func (o *OracleEngine) L2OutputRoot(l2ClaimBlockNum uint64) (common.Hash, eth.Bytes32, error) {
 	outBlock := o.backend.GetHeaderByNumber(l2ClaimBlockNum)
 	if outBlock == nil {
-		return common.Hash{}, eth.Bytes32{}, fmt.Errorf("%w: failed to get L2 block at %d", ethereum.NotFound, l2ClaimBlockNum)
+		return common.Hash{}, eth.Bytes32{}, fmt.Errorf("%w: failed to get core block at %d", ethereum.NotFound, l2ClaimBlockNum)
 	}
 	output, err := o.l2OutputAtHeader(outBlock)
 	if err != nil {
-		return common.Hash{}, eth.Bytes32{}, fmt.Errorf("failed to get L2 output: %w", err)
+		return common.Hash{}, eth.Bytes32{}, fmt.Errorf("failed to get core output: %w", err)
 	}
 	return outBlock.Hash(), eth.OutputRoot(output), nil
 }
 
-// L2OutputAtBlockHash returns the L2 output at the specified block hash
+// L2OutputAtBlockHash returns the core output at the specified block hash
 func (o *OracleEngine) L2OutputAtBlockHash(blockHash common.Hash) (*eth.OutputV0, error) {
 	header := o.backend.GetHeaderByHash(blockHash)
 	if header == nil {
-		return nil, fmt.Errorf("%w: failed to get L2 block at %s", ethereum.NotFound, blockHash)
+		return nil, fmt.Errorf("%w: failed to get core block at %s", ethereum.NotFound, blockHash)
 	}
 	return o.l2OutputAtHeader(header)
 }
@@ -84,7 +84,7 @@ func (o *OracleEngine) l2OutputAtHeader(header *types.Header) (*eth.OutputV0, er
 		}
 		stateDB, err := o.backend.StateAt(header.Root)
 		if err != nil {
-			return nil, fmt.Errorf("failed to open L2 state db at block %s: %w", blockHash, err)
+			return nil, fmt.Errorf("failed to open core state db at block %s: %w", blockHash, err)
 		}
 		withdrawalsTrie, err := stateDB.OpenStorageTrie(predeploys.L2ToL1MessagePasserAddr)
 		if err != nil {

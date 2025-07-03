@@ -81,7 +81,7 @@ func (a *AdminFrontend) Stop(ctx context.Context) error {
 	return a.Supervisor.Stop(ctx)
 }
 
-// AddL2RPC adds a new L2 chain to the supervisor backend
+// AddL2RPC adds a new core chain to the supervisor backend
 func (a *AdminFrontend) AddL2RPC(ctx context.Context, rpc string, jwtSecret eth.Bytes32) error {
 	return a.Supervisor.AddL2RPC(ctx, rpc, jwtSecret)
 }

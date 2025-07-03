@@ -81,7 +81,7 @@ func (eq *EngDeriver) onBuildSeal(ev BuildSealEvent) {
 	if err != nil {
 		eq.emitter.Emit(PayloadSealInvalidEvent{
 			Info:       ev.Info,
-			Err:        fmt.Errorf("failed to decode L2 block ref from payload: %w", err),
+			Err:        fmt.Errorf("failed to decode core block ref from payload: %w", err),
 			Concluding: ev.Concluding,
 		})
 		return
@@ -95,7 +95,7 @@ func (eq *EngDeriver) onBuildSeal(ev BuildSealEvent) {
 
 	txnCount := len(envelope.ExecutionPayload.Transactions)
 
-	eq.log.Debug("Built new L2 block", "l2_unsafe", ref, "l1_origin", ref.L1Origin,
+	eq.log.Debug("Built new core block", "l2_unsafe", ref, "l1_origin", ref.L1Origin,
 		"txs", txnCount, "time", ref.Time, "seal_time", sealTime, "build_time", buildTime)
 
 	eq.emitter.Emit(BuildSealedEvent{

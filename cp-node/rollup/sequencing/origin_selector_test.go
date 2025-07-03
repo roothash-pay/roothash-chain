@@ -55,7 +55,7 @@ func TestOriginSelectorFetchCurrentError(t *testing.T) {
 	_, err := s.FindL1Origin(ctx, l2Head)
 	require.ErrorContains(t, err, "test error")
 
-	// The same outcome occurs when the cached origin is different from that of the L2 head.
+	// The same outcome occurs when the cached origin is different from that of the core head.
 	l1.ExpectL1BlockRefByHash(a.Hash, eth.L1BlockRef{}, errors.New("test error"))
 
 	s = NewL1OriginSelector(ctx, log, cfg, l1)
@@ -119,8 +119,8 @@ func TestOriginSelectorFetchNextError(t *testing.T) {
 // TestOriginSelectorAdvances ensures that the origin selector
 // advances the origin with the internal cache
 //
-// There are 3 L1 blocks at times 20, 22, 24. The L2 Head is at time 24.
-// The next L2 time is 26 which is after the next L1 block time. There
+// There are 3 L1 blocks at times 20, 22, 24. The core Head is at time 24.
+// The next core time is 26 which is after the next L1 block time. There
 // is no conf depth to stop the origin selection so block `b` should
 // be the next L1 origin, and then block `c` is the subsequent L1 origin.
 func TestOriginSelectorAdvances(t *testing.T) {
@@ -285,7 +285,7 @@ func TestOriginSelectorHandlesReset(t *testing.T) {
 // TestOriginSelectorFetchesNextOrigin ensures that the origin selector
 // fetches the next origin when a fcu is received and the internal cache is empty
 //
-// The next L2 time is 26 which is after the next L1 block time. There
+// The next core time is 26 which is after the next L1 block time. There
 // is no conf depth to stop the origin selection so block `b` will
 // be the next L1 origin as soon as it is fetched.
 func TestOriginSelectorFetchesNextOrigin(t *testing.T) {
@@ -341,12 +341,12 @@ func TestOriginSelectorFetchesNextOrigin(t *testing.T) {
 }
 
 // TestOriginSelectorRespectsOriginTiming ensures that the origin selector
-// does not pick an origin that is ahead of the next L2 block time
+// does not pick an origin that is ahead of the next core block time
 //
-// There are 2 L1 blocks at time 20 & 25. The L2 Head is at time 22.
-// The next L2 time is 24 which is before the next L1 block time. There
+// There are 2 L1 blocks at time 20 & 25. The core Head is at time 22.
+// The next core time is 24 which is before the next L1 block time. There
 // is no conf depth to stop the LOS from potentially selecting block `b`
-// but it should select block `a` because the L2 block time must be ahead
+// but it should select block `a` because the core block time must be ahead
 // of the the timestamp of it's L1 origin.
 func TestOriginSelectorRespectsOriginTiming(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
@@ -386,10 +386,10 @@ func TestOriginSelectorRespectsOriginTiming(t *testing.T) {
 
 // TestOriginSelectorRespectsSeqDrift
 //
-// There are 2 L1 blocks at time 20 & 25. The L2 Head is at time 27.
-// The next L2 time is 29. The sequencer drift is 8 so the L2 head is
-// valid with origin `a`, but the next L2 block is not valid with origin `b.`
-// This is because 29 (next L2 time) > 20 (origin) + 8 (seq drift) => invalid block.
+// There are 2 L1 blocks at time 20 & 25. The core Head is at time 27.
+// The next core time is 29. The sequencer drift is 8 so the core head is
+// valid with origin `a`, but the next core block is not valid with origin `b.`
+// This is because 29 (next core time) > 20 (origin) + 8 (seq drift) => invalid block.
 // The origin selector does not yet know about block `b` so it should wait for the
 // background fetch to complete synchronously.
 func TestOriginSelectorRespectsSeqDrift(t *testing.T) {
@@ -433,8 +433,8 @@ func TestOriginSelectorRespectsSeqDrift(t *testing.T) {
 // TestOriginSelectorRespectsConfDepth ensures that the origin selector
 // will respect the confirmation depth requirement
 //
-// There are 2 L1 blocks at time 20 & 25. The L2 Head is at time 27.
-// The next L2 time is 29 which enough to normally select block `b`
+// There are 2 L1 blocks at time 20 & 25. The core Head is at time 27.
+// The next core time is 29 which enough to normally select block `b`
 // as the origin, however block `b` is the L1 Head & the sequencer
 // needs to wait until that block is confirmed enough before advancing.
 func TestOriginSelectorRespectsConfDepth(t *testing.T) {
@@ -475,13 +475,13 @@ func TestOriginSelectorRespectsConfDepth(t *testing.T) {
 
 // TestOriginSelectorStrictConfDepth ensures that the origin selector will maintain the sequencer conf depth,
 // even while the time delta between the current L1 origin and the next
-// L2 block is greater than the sequencer drift.
+// core block is greater than the sequencer drift.
 // It's more important to maintain safety with an empty block than to maintain liveness with poor conf depth.
 //
-// There are 2 L1 blocks at time 20 & 25. The L2 Head is at time 27.
-// The next L2 time is 29. The sequencer drift is 8 so the L2 head is
-// valid with origin `a`, but the next L2 block is not valid with origin `b.`
-// This is because 29 (next L2 time) > 20 (origin) + 8 (seq drift) => invalid block.
+// There are 2 L1 blocks at time 20 & 25. The core Head is at time 27.
+// The next core time is 29. The sequencer drift is 8 so the core head is
+// valid with origin `a`, but the next core block is not valid with origin `b.`
+// This is because 29 (next core time) > 20 (origin) + 8 (seq drift) => invalid block.
 // We maintain confirmation distance, even though we would shift to the next origin if we could.
 func TestOriginSelectorStrictConfDepth(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
@@ -545,7 +545,7 @@ func TestOriginSelector_FjordSeqDrift(t *testing.T) {
 	}
 	l2Head := eth.L2BlockRef{
 		L1Origin: a.ID(),
-		Time:     27, // next L2 block time would be past pre-Fjord seq drift
+		Time:     27, // next core block time would be past pre-Fjord seq drift
 	}
 
 	s := NewL1OriginSelector(ctx, log, cfg, l1)
@@ -558,10 +558,10 @@ func TestOriginSelector_FjordSeqDrift(t *testing.T) {
 
 // TestOriginSelectorSeqDriftRespectsNextOriginTime
 //
-// There are 2 L1 blocks at time 20 & 100. The L2 Head is at time 27.
-// The next L2 time is 29. Even though the next L2 time is past the seq
+// There are 2 L1 blocks at time 20 & 100. The core Head is at time 27.
+// The next core time is 29. Even though the next core time is past the seq
 // drift, the origin should remain on block `a` because the next origin's
-// time is greater than the next L2 time.
+// time is greater than the next core time.
 func TestOriginSelectorSeqDriftRespectsNextOriginTime(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -600,10 +600,10 @@ func TestOriginSelectorSeqDriftRespectsNextOriginTime(t *testing.T) {
 
 // TestOriginSelectorSeqDriftRespectsNextOriginTimeNoCache
 //
-// There are 2 L1 blocks at time 20 & 100. The L2 Head is at time 27.
-// The next L2 time is 29. Even though the next L2 time is past the seq
+// There are 2 L1 blocks at time 20 & 100. The core Head is at time 27.
+// The next core time is 29. Even though the next core time is past the seq
 // drift, the origin should remain on block `a` because the next origin's
-// time is greater than the next L2 time.
+// time is greater than the next core time.
 // The L1OriginSelector does not have the next origin cached, and must fetch it
 // because the max sequencer drift has been exceeded.
 func TestOriginSelectorSeqDriftRespectsNextOriginTimeNoCache(t *testing.T) {
@@ -646,10 +646,10 @@ func TestOriginSelectorSeqDriftRespectsNextOriginTimeNoCache(t *testing.T) {
 // TestOriginSelectorHandlesLateL1Blocks tests the forced repeat of the previous origin,
 // but with a conf depth that first prevents it from learning about the need to repeat.
 //
-// There are 2 L1 blocks at time 20 & 100. The L2 Head is at time 27.
-// The next L2 time is 29. Even though the next L2 time is past the seq
+// There are 2 L1 blocks at time 20 & 100. The core Head is at time 27.
+// The next core time is 29. Even though the next core time is past the seq
 // drift, the origin should remain on block `a` because the next origin's
-// time is greater than the next L2 time.
+// time is greater than the next core time.
 // Due to a conf depth of 2, block `b` is not immediately visible,
 // and the origin selection should fail until it is visible, by waiting for block `c`.
 func TestOriginSelectorHandlesLateL1Blocks(t *testing.T) {
@@ -710,7 +710,7 @@ func TestOriginSelectorHandlesLateL1Blocks(t *testing.T) {
 	l1Head = d
 	next, err := s.FindL1Origin(ctx, l2Head)
 	require.Nil(t, err)
-	require.Equal(t, a, next, "must stay on a because the L1 time may not be higher than the L2 time")
+	require.Equal(t, a, next, "must stay on a because the L1 time may not be higher than the core time")
 }
 
 // TestOriginSelectorMiscEvent ensures that the origin selector ignores miscellaneous events,

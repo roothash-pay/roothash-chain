@@ -29,15 +29,15 @@ func GenerateL2Genesis(pEnv *Env, intent *state.Intent, bundle ArtifactsBundle, 
 	}
 
 	if !shouldGenerateL2Genesis(thisChainState) {
-		lgr.Info("L2 genesis generation not needed")
+		lgr.Info("core genesis generation not needed")
 		return nil
 	}
 
-	lgr.Info("generating L2 genesis", "id", chainID.Hex())
+	lgr.Info("generating core genesis", "id", chainID.Hex())
 
 	initCfg, err := state.CombineDeployConfig(intent, thisIntent, st, thisChainState)
 	if err != nil {
-		return fmt.Errorf("failed to combine L2 init config: %w", err)
+		return fmt.Errorf("failed to combine core init config: %w", err)
 	}
 
 	host, err := env.DefaultScriptHost(
@@ -47,7 +47,7 @@ func GenerateL2Genesis(pEnv *Env, intent *state.Intent, bundle ArtifactsBundle, 
 		bundle.L2,
 	)
 	if err != nil {
-		return fmt.Errorf("failed to create L2 script host: %w", err)
+		return fmt.Errorf("failed to create core script host: %w", err)
 	}
 
 	// This is an ugly hack to support holocene. The v1.7.0 predeploy contracts do not support setting the allocs

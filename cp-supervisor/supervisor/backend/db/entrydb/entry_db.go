@@ -30,8 +30,8 @@ type Entry[T EntryType] interface {
 	comparable
 }
 
-// Binary is the binary interface to encode/decode/size entries.
-// This should be a zero-cost abstraction, and is bundled as interface for the EntryDB
+// Binary is the binary interfaces to encode/decode/size entries.
+// This should be a zero-cost abstraction, and is bundled as interfaces for the EntryDB
 // to have generic access to this functionality without const-generics for array size in Go.
 type Binary[T EntryType, E Entry[T]] interface {
 	Append(dest []byte, e *E) []byte

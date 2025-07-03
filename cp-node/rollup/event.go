@@ -17,8 +17,8 @@ func (ev L1TemporaryErrorEvent) String() string {
 }
 
 // EngineTemporaryErrorEvent identifies a temporary processing issue.
-// It applies to both L1 and L2 data, often inter-related.
-// This scope will be reduced over time, to only capture L2-engine specific temporary errors.
+// It applies to both L1 and core data, often inter-related.
+// This scope will be reduced over time, to only capture core-engine specific temporary errors.
 // See L1TemporaryErrorEvent for L1 related temporary errors.
 type EngineTemporaryErrorEvent struct {
 	Err error

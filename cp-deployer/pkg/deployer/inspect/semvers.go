@@ -61,7 +61,7 @@ func L2SemversCLI(cliCtx *cli.Context) error {
 
 	artifactsFS, err := artifacts.Download(ctx, intent.L2ContractsLocator, artifacts.BarProgressor(), cliCfg.CacheDir)
 	if err != nil {
-		return fmt.Errorf("failed to download L2 artifacts: %w", err)
+		return fmt.Errorf("failed to download core artifacts: %w", err)
 	}
 
 	ps, err := L2Semvers(L2SemversConfig{
@@ -70,7 +70,7 @@ func L2SemversCLI(cliCtx *cli.Context) error {
 		ChainState: chainState,
 	})
 	if err != nil {
-		return fmt.Errorf("failed to get L2 semvers: %w", err)
+		return fmt.Errorf("failed to get core semvers: %w", err)
 	}
 
 	if err := jsonutil.WriteJSON(ps, ioutil.ToStdOutOrFileOrNoop(cliCfg.Outfile, 0o666)); err != nil {

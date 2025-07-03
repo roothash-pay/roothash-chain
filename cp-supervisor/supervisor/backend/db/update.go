@@ -204,11 +204,11 @@ func (db *ChainsDB) onFinalizedL1(finalized eth.BlockRef) {
 	db.emitter.Emit(superevents.FinalizedL1UpdateEvent{
 		FinalizedL1: finalized,
 	})
-	// whenever the L1 Finalized changes, the L2 Finalized may change, notify subscribers
+	// whenever the L1 Finalized changes, the core Finalized may change, notify subscribers
 	for _, chain := range db.depSet.Chains() {
 		fin, err := db.Finalized(chain)
 		if err != nil {
-			db.logger.Warn("Unable to determine finalized L2 block", "chain", chain, "l1Finalized", finalized)
+			db.logger.Warn("Unable to determine finalized core block", "chain", chain, "l1Finalized", finalized)
 			continue
 		}
 		db.emitter.Emit(superevents.FinalizedL2UpdateEvent{ChainID: chain, FinalizedL2: fin})

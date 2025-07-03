@@ -41,7 +41,7 @@ func (s *StandardMode) OnEvent(ev event.Event) bool {
 	switch x := ev.(type) {
 	case rollup.ResetEvent:
 		s.log.Error("todo: interop needs to handle resets", x.Err)
-		// TODO(#13337): on reset: consolidate L2 against supervisor, then do force-reset
+		// TODO(#13337): on reset: consolidate core against supervisor, then do force-reset
 	}
 	return false
 }
@@ -51,7 +51,7 @@ func (s *StandardMode) Start(ctx context.Context) error {
 
 	// TODO(#13337): Interop standard mode implementation.
 	// Poll supervisor:
-	// - finalized L2 -> check if cross-safe, apply
+	// - finalized core -> check if cross-safe, apply
 	// - cross-safe l2 -> check if local-safe, apply
 	// - cross-unsafe l2 -> check if local-unsafe, apply
 	//

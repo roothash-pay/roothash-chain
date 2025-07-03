@@ -90,27 +90,27 @@ func makeRefMetrics(ns string, factory Factory, extraLabels ...string) RefMetric
 		RefsNumber: factory.NewGaugeVec(prometheus.GaugeOpts{
 			Namespace: ns,
 			Name:      "refs_number",
-			Help:      "Gauge representing the different L1/L2 reference block numbers",
+			Help:      "Gauge representing the different L1/core reference block numbers",
 		}, labels),
 		RefsTime: factory.NewGaugeVec(prometheus.GaugeOpts{
 			Namespace: ns,
 			Name:      "refs_time",
-			Help:      "Gauge representing the different L1/L2 reference block timestamps",
+			Help:      "Gauge representing the different L1/core reference block timestamps",
 		}, labels),
 		RefsHash: factory.NewGaugeVec(prometheus.GaugeOpts{
 			Namespace: ns,
 			Name:      "refs_hash",
-			Help:      "Gauge representing the different L1/L2 reference block hashes truncated to float values",
+			Help:      "Gauge representing the different L1/core reference block hashes truncated to float values",
 		}, labels),
 		RefsSeqNr: factory.NewGaugeVec(prometheus.GaugeOpts{
 			Namespace: ns,
 			Name:      "refs_seqnr",
-			Help:      "Gauge representing the different L2 reference sequence numbers",
+			Help:      "Gauge representing the different core reference sequence numbers",
 		}, seqLabels),
 		RefsLatency: factory.NewGaugeVec(prometheus.GaugeOpts{
 			Namespace: ns,
 			Name:      "refs_latency",
-			Help:      "Gauge representing the different L1/L2 reference block timestamps minus current time, in seconds",
+			Help:      "Gauge representing the different L1/core reference block timestamps minus current time, in seconds",
 		}, labels),
 		LatencySeen: make(map[string]common.Hash),
 	}

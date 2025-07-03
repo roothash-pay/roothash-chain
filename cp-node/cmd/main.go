@@ -44,7 +44,7 @@ func main() {
 	app.Flags = cliapp.ProtectFlags(flags.Flags)
 	app.Name = "cp-node"
 	app.Usage = "Optimism Rollup Node"
-	app.Description = "The Optimism Rollup Node derives L2 block inputs from L1 data and drives an external L2 Execution Engine to build a L2 chain."
+	app.Description = "The Optimism Rollup Node derives core block inputs from L1 data and drives an external core Execution Engine to build a core chain."
 	app.Action = cliapp.LifecycleCmd(RollupNodeMain)
 	app.Commands = []*cli.Command{
 		{

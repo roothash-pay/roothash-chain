@@ -17,9 +17,9 @@ import (
 
 var (
 	ErrNoSources               = errors.New("no sources specified")
-	ErrNoL2ForRollup           = errors.New("no L2 RPC available for rollup")
-	ErrNoRollupForL2           = errors.New("no rollup config available for L2 RPC")
-	ErrNoRollupForExperimental = errors.New("no rollup config available for L2 experimental RPC")
+	ErrNoL2ForRollup           = errors.New("no core RPC available for rollup")
+	ErrNoRollupForL2           = errors.New("no rollup config available for core RPC")
+	ErrNoRollupForExperimental = errors.New("no rollup config available for core experimental RPC")
 )
 
 type L2Sources struct {
@@ -41,7 +41,7 @@ func NewL2SourcesFromURLs(ctx context.Context, logger log.Logger, configs []*rol
 func connectRPCs(ctx context.Context, logger log.Logger, urls []string) ([]client.RPC, error) {
 	l2Clients := make([]client.RPC, len(urls))
 	for i, url := range urls {
-		logger.Info("Connecting to L2 source", "url", url)
+		logger.Info("Connecting to core source", "url", url)
 		// eth_getProof calls are expensive and takes time, so we use a longer timeout
 		rpc, err := client.NewRPC(ctx, logger, url, client.WithDialAttempts(10), client.WithCallTimeout(5*time.Minute))
 		if err != nil {

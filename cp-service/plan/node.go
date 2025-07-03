@@ -122,7 +122,7 @@ func (p *Lazy[V]) eval(ctx context.Context) (V, error) {
 	return v, err
 }
 
-// depEval is used to fit a generic interface, used to call eval on upstream deps.
+// depEval is used to fit a generic interfaces, used to call eval on upstream deps.
 func (p *Lazy[V]) depEval(ctx context.Context) error {
 	p.mu.Lock()
 	defer p.mu.Unlock()

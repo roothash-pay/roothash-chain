@@ -38,7 +38,7 @@ func BuildDepositOnlyBlock(
 ) (common.Hash, eth.Bytes32, error) {
 	engineBackend, err := l2.NewOracleBackedL2Chain(logger, l2Oracle, l1Oracle, l2Cfg, common.Hash(agreedL2OutputRoot), db)
 	if err != nil {
-		return common.Hash{}, eth.Bytes32{}, fmt.Errorf("failed to create oracle-backed L2 chain: %w", err)
+		return common.Hash{}, eth.Bytes32{}, fmt.Errorf("failed to create oracle-backed core chain: %w", err)
 	}
 	l2Source := l2.NewOracleEngine(cfg, logger, engineBackend, l2Oracle.Hinter())
 	l2Head := l2Oracle.BlockByHash(optimisticBlock.ParentHash(), eth.ChainIDFromBig(l2Cfg.ChainID))
@@ -46,7 +46,7 @@ func BuildDepositOnlyBlock(
 
 	optimisticBlockOutput, err := getL2Output(logger, cfg, l2Cfg, l2Oracle, l1Oracle, optimisticBlock)
 	if err != nil {
-		return common.Hash{}, eth.Bytes32{}, fmt.Errorf("failed to get L2 output: %w", err)
+		return common.Hash{}, eth.Bytes32{}, fmt.Errorf("failed to get core output: %w", err)
 	}
 	logger.Info("Building a deposts-only block to replace block %v", optimisticBlock.Hash())
 	attrs, err := blockToDepositsOnlyAttributes(cfg, optimisticBlock, optimisticBlockOutput)
@@ -92,13 +92,13 @@ func BuildDepositOnlyBlock(
 	}
 	output, err := l2Source.L2OutputAtBlockHash(payload.ExecutionPayload.BlockHash)
 	if err != nil {
-		return common.Hash{}, eth.Bytes32{}, fmt.Errorf("failed to get L2 output: %w", err)
+		return common.Hash{}, eth.Bytes32{}, fmt.Errorf("failed to get core output: %w", err)
 	}
 	marshaledOutput := output.Marshal()
 	outputRoot := eth.Bytes32(crypto.Keccak256Hash(marshaledOutput))
 	var outputRootKey []byte
 	if err := db.Put(outputRootKey[:], marshaledOutput); err != nil {
-		return common.Hash{}, eth.Bytes32{}, fmt.Errorf("failed to store L2 output: %w", err)
+		return common.Hash{}, eth.Bytes32{}, fmt.Errorf("failed to store core output: %w", err)
 	}
 
 	return payload.ExecutionPayload.BlockHash, outputRoot, nil
@@ -109,7 +109,7 @@ func getL2Output(logger log.Logger, cfg *rollup.Config, l2Cfg *params.ChainConfi
 	engine := l2.NewOracleEngine(cfg, logger, backend, l2Oracle.Hinter())
 	output, err := engine.L2OutputAtBlockHash(block.Hash())
 	if err != nil {
-		return nil, fmt.Errorf("failed to get L2 output: %w", err)
+		return nil, fmt.Errorf("failed to get core output: %w", err)
 	}
 	return output, nil
 }

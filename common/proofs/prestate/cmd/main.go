@@ -82,7 +82,7 @@ func main() {
 	}
 }
 
-// chainConfigList implements flag.Value interface for repeated chain flags
+// chainConfigList implements flag.Value interfaces for repeated chain flags
 type chainConfigList []*chainConfig
 
 func (c *chainConfigList) String() string {

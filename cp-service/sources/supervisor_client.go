@@ -47,7 +47,7 @@ func (cl *SupervisorClient) Start(ctx context.Context) error {
 func (cl *SupervisorClient) AddL2RPC(ctx context.Context, rpc string, auth eth.Bytes32) error {
 	err := cl.client.CallContext(ctx, nil, "admin_addL2RPC", rpc, auth)
 	if err != nil {
-		return fmt.Errorf("failed to Add L2 to Supervisor (rpc: %s): %w", rpc, err)
+		return fmt.Errorf("failed to Add core to Supervisor (rpc: %s): %w", rpc, err)
 	}
 	return nil
 }

@@ -94,7 +94,7 @@ Before running tests: **follow the above instructions to get everything built**.
 #### Running unit tests (solidity)
 
 ```bash
-cd packages/contracts-bedrock
+cd packages/contracts-cpchain
 just test
 ```
 
@@ -117,7 +117,7 @@ You must have Python 3.x installed to run `slither`.
 To run `slither` locally, do:
 
 ```bash
-cd packages/contracts-bedrock
+cd packages/contracts-cpchain
 pip3 install slither-analyzer
 just slither
 ```

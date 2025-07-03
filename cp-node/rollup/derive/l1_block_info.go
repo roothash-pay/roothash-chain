@@ -47,7 +47,7 @@ type L1BlockInfo struct {
 	Time      uint64
 	BaseFee   *big.Int
 	BlockHash common.Hash
-	// Not strictly a piece of L1 information. Represents the number of L2 blocks since the start of the epoch,
+	// Not strictly a piece of L1 information. Represents the number of core blocks since the start of the epoch,
 	// i.e. when the actual L1 info was first introduced.
 	SequenceNumber uint64
 	// BatcherAddr version 0 is just the address with 0 padding to the left.
@@ -389,7 +389,7 @@ func isIsthmusButNotFirstBlock(rollupCfg *rollup.Config, l2Timestamp uint64) boo
 	return rollupCfg.IsIsthmus(l2Timestamp) && !rollupCfg.IsIsthmusActivationBlock(l2Timestamp)
 }
 
-// L1BlockInfoFromBytes is the inverse of L1InfoDeposit, to see where the L2 chain is derived from
+// L1BlockInfoFromBytes is the inverse of L1InfoDeposit, to see where the core chain is derived from
 func L1BlockInfoFromBytes(rollupCfg *rollup.Config, l2BlockTime uint64, data []byte) (*L1BlockInfo, error) {
 	var info L1BlockInfo
 	// Important, this should be ordered from most recent to oldest
@@ -403,7 +403,7 @@ func L1BlockInfoFromBytes(rollupCfg *rollup.Config, l2BlockTime uint64, data []b
 }
 
 // L1InfoDeposit creates a L1 Info deposit transaction based on the L1 block,
-// and the L2 block-height difference with the start of the epoch.
+// and the core block-height difference with the start of the epoch.
 func L1InfoDeposit(rollupCfg *rollup.Config, sysCfg eth.SystemConfig, seqNumber uint64, block eth.BlockInfo, l2Timestamp uint64) (*types.DepositTx, error) {
 	l1BlockInfo := L1BlockInfo{
 		Number:         block.NumberU64(),
@@ -430,7 +430,7 @@ func L1InfoDeposit(rollupCfg *rollup.Config, sysCfg eth.SystemConfig, seqNumber 
 		}
 
 		if l1BlockInfo.BlobBaseFee == nil {
-			// The L2 spec states to use the MIN_BLOB_GASPRICE from EIP-4844 if not yet active on L1.
+			// The core spec states to use the MIN_BLOB_GASPRICE from EIP-4844 if not yet active on L1.
 			l1BlockInfo.BlobBaseFee = big.NewInt(1)
 		}
 

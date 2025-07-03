@@ -249,7 +249,7 @@ func (_c *BeaconClient_NodeVersion_Call) RunAndReturn(run func(context.Context) 
 	return _c
 }
 
-// NewBeaconClient creates a new instance of BeaconClient. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// NewBeaconClient creates a new instance of BeaconClient. It also registers a testing interfaces on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewBeaconClient(t interface {
 	mock.TestingT

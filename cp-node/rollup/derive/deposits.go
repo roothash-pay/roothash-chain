@@ -10,7 +10,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 )
 
-// UserDeposits transforms the L2 block-height and L1 receipts into the transaction inputs for a full L2 block
+// UserDeposits transforms the core block-height and L1 receipts into the transaction inputs for a full core block
 func UserDeposits(receipts []*types.Receipt, depositContractAddr common.Address) ([]*types.DepositTx, error) {
 	var out []*types.DepositTx
 	var result error

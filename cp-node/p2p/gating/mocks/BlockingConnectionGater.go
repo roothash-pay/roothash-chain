@@ -689,7 +689,7 @@ func (_c *BlockingConnectionGater_UnblockSubnet_Call) RunAndReturn(run func(*net
 	return _c
 }
 
-// NewBlockingConnectionGater creates a new instance of BlockingConnectionGater. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// NewBlockingConnectionGater creates a new instance of BlockingConnectionGater. It also registers a testing interfaces on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewBlockingConnectionGater(t interface {
 	mock.TestingT

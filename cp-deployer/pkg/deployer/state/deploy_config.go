@@ -141,8 +141,8 @@ func CombineDeployConfig(intent *Intent, chainIntent *ChainIntent, state *State,
 
 	// The below dummy variables are set in order to allow the deploy
 	// config to pass validation. The validation checks are useful to
-	// ensure that the L2 is properly configured. They are not used by
-	// the L2 genesis script itself.
+	// ensure that the core is properly configured. They are not used by
+	// the core genesis script itself.
 
 	cfg.L1BlockTime = 12
 	dummyAddr := common.Address{19: 0x01}
@@ -162,7 +162,7 @@ func CombineDeployConfig(intent *Intent, chainIntent *ChainIntent, state *State,
 	if len(intent.GlobalDeployOverrides) > 0 {
 		cfg, err = jsonutil.MergeJSON(cfg, intent.GlobalDeployOverrides)
 		if err != nil {
-			return genesis.DeployConfig{}, fmt.Errorf("error merging global L2 overrides: %w", err)
+			return genesis.DeployConfig{}, fmt.Errorf("error merging global core overrides: %w", err)
 
 		}
 	}
@@ -170,7 +170,7 @@ func CombineDeployConfig(intent *Intent, chainIntent *ChainIntent, state *State,
 	if len(chainIntent.DeployOverrides) > 0 {
 		cfg, err = jsonutil.MergeJSON(cfg, chainIntent.DeployOverrides)
 		if err != nil {
-			return genesis.DeployConfig{}, fmt.Errorf("error merging chain L2 overrides: %w", err)
+			return genesis.DeployConfig{}, fmt.Errorf("error merging chain core overrides: %w", err)
 		}
 	}
 

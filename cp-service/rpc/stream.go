@@ -81,8 +81,8 @@ func StreamFallback[E any](fn func(ctx context.Context) (*E, error), frequency t
 	}), nil
 }
 
-// Subscriber implements the subscribe subset of the RPC client interface.
-// The inner geth-native Subscribe interface returns a struct subscription type,
+// Subscriber implements the subscribe subset of the RPC client interfaces.
+// The inner geth-native Subscribe interfaces returns a struct subscription type,
 // this can be interpreted as general ethereum.Subscription but may require a wrapper,
 // like in the cp-service client package.
 type Subscriber interface {
@@ -97,7 +97,7 @@ var ErrClosedByServer = errors.New("closed by server")
 // The client should then fall back to manual RPC polling, with OutOfEventsErrCode error checks.
 // The returned subscription has an error channel, which may send a ErrClosedByServer when the server closes the subscription intentionally.
 // Or any of the geth RPC errors, when the connection closes or RPC fails.
-// The args work like the Subscriber interface: the subscription identifier needs to be there.
+// The args work like the Subscriber interfaces: the subscription identifier needs to be there.
 func SubscribeStream[E any](ctx context.Context, namespace string, subscriber Subscriber, dest chan *E, args ...any) (ethereum.Subscription, error) {
 	unpackCh := make(chan EventEntry[E])
 	sub, err := subscriber.Subscribe(ctx, namespace, unpackCh, args...)

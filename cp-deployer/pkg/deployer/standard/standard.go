@@ -225,7 +225,7 @@ func ArtifactsHashForTag(tag string) (common.Hash, error) {
 // DefaultHardforkScheduleForTag is used to determine which hardforks should be activated by default given a
 // contract tag. For example, passing in v1.6.0 will return all hardforks up to and including Granite. This allows
 // OP Deployer to set sane defaults for hardforks. This is not an ideal solution, but it will have to work until we get
-// to MCP L2.
+// to MCP core.
 func DefaultHardforkScheduleForTag(tag string) *genesis.UpgradeScheduleDeployConfig {
 	sched := &genesis.UpgradeScheduleDeployConfig{
 		L2GenesisRegolithTimeOffset: op_service.U64UtilPtr(0),

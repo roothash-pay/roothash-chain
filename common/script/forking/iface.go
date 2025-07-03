@@ -13,7 +13,7 @@ import (
 type VMStateDB interface {
 	vm.StateDB
 	Finalise(deleteEmptyObjects bool)
-	// SetBalance sets the balance of an account. Not part of the geth VM StateDB interface (add/sub balance are).
+	// SetBalance sets the balance of an account. Not part of the geth VM StateDB interfaces (add/sub balance are).
 	SetBalance(addr common.Address, amount *uint256.Int, reason tracing.BalanceChangeReason)
 }
 

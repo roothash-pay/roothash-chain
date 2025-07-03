@@ -34,7 +34,7 @@ type DerivationOptions struct {
 	StoreBlockData bool
 }
 
-// RunDerivation executes the L2 state transition, given a minimal interface to retrieve data.
+// RunDerivation executes the core state transition, given a minimal interfaces to retrieve data.
 // Returns the L2BlockRef of the safe head reached and the output root at l2ClaimBlockNum or
 // the final safe head when l1Head is reached if l2ClaimBlockNum is not reached.
 // Derivation may stop prior to l1Head if the l2ClaimBlockNum has already been reached though
@@ -54,7 +54,7 @@ func RunDerivation(
 	l1BlobsSource := l1.NewBlobFetcher(logger, l1Oracle)
 	engineBackend, err := l2.NewOracleBackedL2Chain(logger, l2Oracle, l1Oracle, l2Cfg, l2OutputRoot, db)
 	if err != nil {
-		return DerivationResult{}, fmt.Errorf("failed to create oracle-backed L2 chain: %w", err)
+		return DerivationResult{}, fmt.Errorf("failed to create oracle-backed core chain: %w", err)
 	}
 	l2Source := l2.NewOracleEngine(cfg, logger, engineBackend, l2Oracle.Hinter())
 
@@ -78,7 +78,7 @@ func RunDerivation(
 func loadOutputRoot(l2ClaimBlockNum uint64, head eth.L2BlockRef, src L2Source) (DerivationResult, error) {
 	blockHash, outputRoot, err := src.L2OutputRoot(min(l2ClaimBlockNum, head.Number))
 	if err != nil {
-		return DerivationResult{}, fmt.Errorf("calculate L2 output root: %w", err)
+		return DerivationResult{}, fmt.Errorf("calculate core output root: %w", err)
 	}
 	return DerivationResult{
 		Head:       head,

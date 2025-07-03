@@ -45,7 +45,7 @@ type SupervisorBackend struct {
 	// depSet is the dependency set that the backend uses to know about the chains it is indexing
 	depSet depset.DependencySet
 
-	// chainDBs is the primary interface to the databases, including logs, derived-from information and L1 finalization
+	// chainDBs is the primary interfaces to the databases, including logs, derived-from information and L1 finalization
 	chainDBs *db.ChainsDB
 
 	// l1Accessor provides access to the L1 chain for the L1 processor and subscribes to new block events

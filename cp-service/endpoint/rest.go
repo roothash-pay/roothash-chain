@@ -1,6 +1,6 @@
 package endpoint
 
-// RestHTTP is an interface for an endpoint to provide flexibility.
+// RestHTTP is an interfaces for an endpoint to provide flexibility.
 // By default the RestHTTP just returns an REST-ful HTTP endpoint string.
 // But the RestHTTP can implement one or more extension interfaces,
 // to provide alternative ways of establishing a connection,

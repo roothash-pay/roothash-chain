@@ -94,10 +94,10 @@ func (recipe *InteropDevRecipe) Build(addrs devkeys.Addresses) (*WorldConfig, er
 	for _, l2 := range r.L2s {
 		l2Cfg, err := l2.build(r.L1ChainID, addrs)
 		if err != nil {
-			return nil, fmt.Errorf("failed to generate L2 config for chain %d: %w", l2.ChainID, err)
+			return nil, fmt.Errorf("failed to generate core config for chain %d: %w", l2.ChainID, err)
 		}
 		if err := prefundL2Accounts(l1Cfg, l2Cfg, addrs); err != nil {
-			return nil, fmt.Errorf("failed to prefund addresses on L1 for L2 chain %d: %w", l2.ChainID, err)
+			return nil, fmt.Errorf("failed to prefund addresses on L1 for core chain %d: %w", l2.ChainID, err)
 		}
 		world.L2s[fmt.Sprintf("%d", l2.ChainID)] = l2Cfg
 	}
@@ -292,7 +292,7 @@ func (r *InteropDevL2Recipe) build(l1ChainID uint64, addrs devkeys.Addresses) (*
 	for i := uint64(0); i < 20; i++ {
 		userAddr, err := addrs.Address(l2Users(i))
 		if err != nil {
-			return nil, fmt.Errorf("failed to get L2 user addr %d: %w", i, err)
+			return nil, fmt.Errorf("failed to get core user addr %d: %w", i, err)
 		}
 		l2Cfg.Prefund[userAddr] = Ether(10_000_000)
 	}

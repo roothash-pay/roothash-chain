@@ -25,12 +25,12 @@ func main() {
 	flag.StringVar(&l1RpcUrl, "l1", "", "L1 RPC URL to use")
 	flag.StringVar(&l1BeaconUrl, "l1.beacon", "", "L1 Beacon URL to use")
 	flag.StringVar(&l1RpcKind, "l1-rpckind", "", "L1 RPC kind")
-	flag.StringVar(&l2RpcUrl, "l2", "", "L2 RPC URL to use")
+	flag.StringVar(&l2RpcUrl, "l2", "", "core RPC URL to use")
 	flag.StringVar(&dataDir, "datadir", "",
 		"Directory to use for storing pre-images. If not set a temporary directory will be used.")
 	flag.StringVar(&l1HashStr, "l1.head", "", "Hash of L1 block to use")
-	flag.Uint64Var(&l2Start, "l2.start", 0, "Block number of agreed L2 block")
-	flag.Uint64Var(&l2End, "l2.end", 0, "Block number of claimed L2 block")
+	flag.Uint64Var(&l2Start, "l2.start", 0, "Block number of agreed core block")
+	flag.Uint64Var(&l2End, "l2.end", 0, "Block number of claimed core block")
 	flag.Parse()
 
 	if l1RpcUrl == "" {

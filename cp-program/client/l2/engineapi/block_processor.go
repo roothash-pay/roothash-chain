@@ -147,7 +147,7 @@ func (b *BlockProcessor) AddTx(tx *types.Transaction) (*types.Receipt, error) {
 	b.state.SetTxContext(tx.Hash(), txIndex)
 	receipt, err := core.ApplyTransaction(b.evm, b.gasPool, b.state, b.header, tx, &b.header.GasUsed)
 	if err != nil {
-		return nil, fmt.Errorf("failed to apply transaction to L2 block (tx %d): %w", txIndex, err)
+		return nil, fmt.Errorf("failed to apply transaction to core block (tx %d): %w", txIndex, err)
 	}
 	b.receipts = append(b.receipts, receipt)
 	b.transactions = append(b.transactions, tx)

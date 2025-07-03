@@ -16,7 +16,7 @@ var (
 	ErrExecMsgUnknownChain    = errors.New("executing message references unknown chain")
 )
 
-// CycleCheckDeps is an interface for checking cyclical dependencies between logs.
+// CycleCheckDeps is an interfaces for checking cyclical dependencies between logs.
 type CycleCheckDeps interface {
 	// OpenBlock returns log data for the requested block, to be used for cycle checking.
 	OpenBlock(chainID eth.ChainID, blockNum uint64) (block eth.BlockRef, logCount uint32, execMsgs map[uint32]*types.ExecutingMessage, err error)
@@ -305,7 +305,7 @@ func GenerateMermaidDiagram(g *graph) string {
 	// Add a legend
 	sb.WriteString("    subgraph Legend\n")
 	sb.WriteString("        L1((In-Degree 0))\n")
-	sb.WriteString("        L2[In-Degree > 0]\n")
+	sb.WriteString("        core[In-Degree > 0]\n")
 	sb.WriteString("    end\n")
 
 	return sb.String()

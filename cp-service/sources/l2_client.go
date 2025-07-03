@@ -32,8 +32,8 @@ type L2ClientConfig struct {
 func L2ClientDefaultConfig(config *rollup.Config, trustRPC bool) *L2ClientConfig {
 	// Cache 3/2 worth of sequencing window of payloads, block references, receipts and txs
 	span := int(config.SeqWindowSize) * 3 / 2
-	// Estimate number of L2 blocks in this span of L1 blocks
-	// (there's always one L2 block per L1 block, L1 is thus the minimum, even if block time is very high)
+	// Estimate number of core blocks in this span of L1 blocks
+	// (there's always one core block per L1 block, L1 is thus the minimum, even if block time is very high)
 	if config.BlockTime < 12 && config.BlockTime > 0 {
 		span *= 12
 		span /= int(config.BlockTime)
@@ -73,7 +73,7 @@ type L2Client struct {
 	// common.Hash -> eth.L2BlockRef
 	l2BlockRefsCache *caching.LRUCache[common.Hash, eth.L2BlockRef]
 
-	// cache SystemConfig by L2 hash
+	// cache SystemConfig by core hash
 	// common.Hash -> eth.SystemConfig
 	systemConfigsCache *caching.LRUCache[common.Hash, eth.SystemConfig]
 
@@ -159,7 +159,7 @@ func (s *L2Client) L2BlockRefByHash(ctx context.Context, hash common.Hash) (eth.
 	return ref, nil
 }
 
-// SystemConfigByL2Hash returns the [eth.SystemConfig] (matching the config updates up to and including the L1 origin) for the given L2 block hash.
+// SystemConfigByL2Hash returns the [eth.SystemConfig] (matching the config updates up to and including the L1 origin) for the given core block hash.
 // The returned [eth.SystemConfig] may not be in the canonical chain when the hash is not canonical.
 func (s *L2Client) SystemConfigByL2Hash(ctx context.Context, hash common.Hash) (eth.SystemConfig, error) {
 	if ref, ok := s.systemConfigsCache.Get(hash); ok {
@@ -182,14 +182,14 @@ func (s *L2Client) SystemConfigByL2Hash(ctx context.Context, hash common.Hash) (
 func (s *L2Client) OutputV0AtBlockNumber(ctx context.Context, blockNum uint64) (*eth.OutputV0, error) {
 	head, err := s.InfoByNumber(ctx, blockNum)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get L2 block by hash: %w", err)
+		return nil, fmt.Errorf("failed to get core block by hash: %w", err)
 	}
 	return s.outputV0(ctx, head)
 }
 func (s *L2Client) OutputV0AtBlock(ctx context.Context, blockHash common.Hash) (*eth.OutputV0, error) {
 	head, err := s.InfoByHash(ctx, blockHash)
 	if err != nil {
-		return nil, fmt.Errorf("failed to get L2 block by hash: %w", err)
+		return nil, fmt.Errorf("failed to get core block by hash: %w", err)
 	}
 	return s.outputV0(ctx, head)
 }

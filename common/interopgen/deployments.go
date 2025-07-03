@@ -66,7 +66,7 @@ type L2Deployment struct {
 	L2OpchainDeployment
 
 	// In the future this may contain optional extras,
-	// e.g. a Safe that will own the L2 chain contracts
+	// e.g. a Safe that will own the core chain contracts
 }
 
 type InteropDeployment struct {

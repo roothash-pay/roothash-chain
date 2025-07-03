@@ -2,7 +2,7 @@
 //
 // There are a number of these exported clients used by the cp-node:
 // [L1Client] wraps an RPC client to retrieve L1 ethereum data.
-// [L2Client] wraps an RPC client to retrieve L2 ethereum data.
+// [L2Client] wraps an RPC client to retrieve core ethereum data.
 // [RollupClient] wraps an RPC client to retrieve rollup data.
 // [EngineClient] extends the [L2Client] providing engine API bindings.
 //

@@ -98,12 +98,12 @@ func NewChainSpec(config *Config) *ChainSpec {
 	return &ChainSpec{config: config}
 }
 
-// L2ChainID returns the chain ID of the L2 chain.
+// L2ChainID returns the chain ID of the core chain.
 func (s *ChainSpec) L2ChainID() *big.Int {
 	return s.config.L2ChainID
 }
 
-// L2GenesisTime returns the genesis time of the L2 chain.
+// L2GenesisTime returns the genesis time of the core chain.
 func (s *ChainSpec) L2GenesisTime() uint64 {
 	return s.config.Genesis.L2Time
 }

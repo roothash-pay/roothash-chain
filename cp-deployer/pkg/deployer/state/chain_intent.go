@@ -38,7 +38,7 @@ type AdditionalDisputeGame struct {
 }
 
 type L2DevGenesisParams struct {
-	// Prefund is a map of addresses to balances (in wei), to prefund in the L2 dev genesis state.
+	// Prefund is a map of addresses to balances (in wei), to prefund in the core dev genesis state.
 	// This is independent of the "Prefund" functionality that may fund a default 20 test accounts.
 	Prefund map[common.Address]*hexutil.U256 `json:"prefund" toml:"prefund"`
 }

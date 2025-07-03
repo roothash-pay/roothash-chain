@@ -57,7 +57,7 @@ type CachingEngineBackend interface {
 
 // L2EngineAPI wraps an engine actor, and implements the RPC backend required to serve the engine API.
 // This re-implements some of the Geth API work, but changes the API backend so we can deterministically
-// build and control the L2 block contents to reach very specific edge cases as desired for testing.
+// build and control the core block contents to reach very specific edge cases as desired for testing.
 type L2EngineAPI struct {
 	log     log.Logger
 	backend EngineBackend
@@ -66,7 +66,7 @@ type L2EngineAPI struct {
 	remotes    map[common.Hash]*types.Block
 	downloader *downloader.Downloader
 
-	// L2 block building data
+	// core block building data
 	blockProcessor *BlockProcessor
 	pendingIndices map[common.Address]uint64 // per account, how many txs from the pool were already included in the block, since the pool is lagging behind block mining.
 	l2ForceEmpty   bool                      // when no additional txs may be processed (i.e. when sequencer drift runs out)
@@ -153,7 +153,7 @@ func (ea *L2EngineAPI) IncludeTx(tx *types.Transaction, from common.Address) (*t
 	rcpt, err := ea.blockProcessor.AddTx(tx)
 	if err != nil {
 		ea.l2TxFailed = append(ea.l2TxFailed, tx)
-		return nil, fmt.Errorf("invalid L2 block (tx %d): %w", len(ea.blockProcessor.transactions), err)
+		return nil, fmt.Errorf("invalid core block (tx %d): %w", len(ea.blockProcessor.transactions), err)
 	}
 	return rcpt, nil
 }
@@ -182,7 +182,7 @@ func (ea *L2EngineAPI) startBlock(parent common.Hash, attrs *eth.PayloadAttribut
 		_, err := ea.blockProcessor.AddTx(&tx)
 		if err != nil {
 			ea.l2TxFailed = append(ea.l2TxFailed, &tx)
-			return fmt.Errorf("failed to apply deposit transaction to L2 block (tx %d): %w", i, err)
+			return fmt.Errorf("failed to apply deposit transaction to core block (tx %d): %w", i, err)
 		}
 	}
 	return nil

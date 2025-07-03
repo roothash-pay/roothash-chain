@@ -16,7 +16,7 @@ func PayloadToBlockRef(rollupCfg *rollup.Config, payload *eth.ExecutionPayload) 
 	if uint64(payload.BlockNumber) == genesis.L2.Number {
 		if payload.BlockHash != genesis.L2.Hash {
 			genesis.L2.Hash = payload.BlockHash
-			//return eth.L2BlockRef{}, fmt.Errorf("expected L2 genesis hash to match L2 block at genesis block number %d: %s <> %s", genesis.L2.Number, payload.BlockHash, genesis.L2.Hash)
+			//return eth.L2BlockRef{}, fmt.Errorf("expected core genesis hash to match core block at genesis block number %d: %s <> %s", genesis.core.Number, payload.BlockHash, genesis.core.Hash)
 		}
 		sequenceNumber = 0
 	} else {
@@ -36,7 +36,7 @@ func PayloadToSystemConfig(rollupCfg *rollup.Config, payload *eth.ExecutionPaylo
 	if uint64(payload.BlockNumber) == rollupCfg.Genesis.L2.Number {
 		if payload.BlockHash != rollupCfg.Genesis.L2.Hash {
 			return eth.SystemConfig{}, fmt.Errorf(
-				"expected L2 genesis hash to match L2 block at genesis block number %d: %s <> %s",
+				"expected core genesis hash to match core block at genesis block number %d: %s <> %s",
 				rollupCfg.Genesis.L2.Number, payload.BlockHash, rollupCfg.Genesis.L2.Hash)
 		}
 		return rollupCfg.Genesis.SystemConfig, nil

@@ -905,7 +905,7 @@ func (_c *API_UnprotectPeer_Call) RunAndReturn(run func(context.Context, peer.ID
 	return _c
 }
 
-// NewAPI creates a new instance of API. It also registers a testing interface on the mock and a cleanup function to assert the mocks expectations.
+// NewAPI creates a new instance of API. It also registers a testing interfaces on the mock and a cleanup function to assert the mocks expectations.
 // The first argument is typically a *testing.T value.
 func NewAPI(t interface {
 	mock.TestingT

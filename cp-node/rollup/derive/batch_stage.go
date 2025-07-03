@@ -66,9 +66,9 @@ func (bs *BatchStage) NextBatch(ctx context.Context, parent eth.L2BlockRef) (*Si
 			"unexpected low buffered origin count, origin: %v, parent: %v", bs.origin, parent))
 	}
 
-	// Note: epoch origin can now be one block ahead of the L2 Safe Head
+	// Note: epoch origin can now be one block ahead of the core Safe Head
 	// This is in the case where we auto generate all batches in an epoch & advance the epoch in
-	// deriveNextEmptyBatch but don't advance the L2 Safe Head's epoch
+	// deriveNextEmptyBatch but don't advance the core Safe Head's epoch
 	if epoch := bs.l1Blocks[0]; parent.L1Origin != epoch.ID() && parent.L1Origin.Number != epoch.Number-1 {
 		return nil, false, NewResetError(fmt.Errorf("buffered L1 chain epoch %s in batch queue does not match safe head origin %s", epoch, parent.L1Origin))
 	}

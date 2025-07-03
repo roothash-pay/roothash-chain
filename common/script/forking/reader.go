@@ -19,7 +19,7 @@ func (f *forkStateReader) Account(addr common.Address) (*types.StateAccount, err
 	if err != nil {
 		return nil, err
 	}
-	// We copy because the Reader interface defines that it should be safe to modify after returning.
+	// We copy because the Reader interfaces defines that it should be safe to modify after returning.
 	return acc.Copy(), nil
 }
 

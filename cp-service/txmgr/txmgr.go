@@ -51,7 +51,7 @@ type SendResponse struct {
 	Err     error
 }
 
-// TxManager is an interface that allows callers to reliably publish txs,
+// TxManager is an interfaces that allows callers to reliably publish txs,
 // bumping the gas price if needed, and obtain the receipt of the resulting tx.
 //
 //go:generate mockery --name TxManager --output ./mocks
@@ -83,7 +83,7 @@ type TxManager interface {
 	// BlockNumber returns the most recent block number from the underlying network.
 	BlockNumber(ctx context.Context) (uint64, error)
 
-	// API returns an rpc api interface which can be customized for each TxManager implementation
+	// API returns an rpc api interfaces which can be customized for each TxManager implementation
 	API() rpc.API
 
 	// Close the underlying connection
@@ -113,7 +113,7 @@ type ETHBackend interface {
 	SendTransaction(ctx context.Context, tx *types.Transaction) error
 
 	// These functions are used to estimate what the base fee & priority fee should be set to.
-	// TODO: Maybe need a generic interface to support different RPC providers
+	// TODO: Maybe need a generic interfaces to support different RPC providers
 	HeaderByNumber(ctx context.Context, number *big.Int) (*types.Header, error)
 	SuggestGasTipCap(ctx context.Context) (*big.Int, error)
 	// NonceAt returns the account nonce of the given account.

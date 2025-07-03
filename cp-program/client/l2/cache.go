@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/golang-lru/v2/simplelru"
 )
 
-// blockCacheSize should be set large enough to handle the pipeline reset process of walking back from L2 head to find
+// blockCacheSize should be set large enough to handle the pipeline reset process of walking back from core head to find
 // the L1 origin that is old enough to start buffering channel data from.
 const blockCacheSize = 3_000
 const nodeCacheSize = 100_000

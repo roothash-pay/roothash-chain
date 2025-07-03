@@ -67,15 +67,15 @@ func (los *L1OriginSelector) OnEvent(ev event.Event) bool {
 }
 
 // FindL1Origin determines what the next L1 Origin should be.
-// The L1 Origin is either the L2 Head's Origin, or the following L1 block
-// if the next L2 block's time is greater than or equal to the L2 Head's Origin.
+// The L1 Origin is either the core Head's Origin, or the following L1 block
+// if the next core block's time is greater than or equal to the core Head's Origin.
 func (los *L1OriginSelector) FindL1Origin(ctx context.Context, l2Head eth.L2BlockRef) (eth.L1BlockRef, error) {
 	currentOrigin, nextOrigin, err := los.CurrentAndNextOrigin(ctx, l2Head)
 	if err != nil {
 		return eth.L1BlockRef{}, err
 	}
 
-	// If the next L2 block time is greater than the next origin block's time, we can choose to
+	// If the next core block time is greater than the next origin block's time, we can choose to
 	// start building on top of the next origin. Sequencer implementation has some leeway here and
 	// could decide to continue to build on top of the previous origin until the Sequencer runs out
 	// of slack. For simplicity, we implement our Sequencer to always start building on the latest
@@ -96,7 +96,7 @@ func (los *L1OriginSelector) FindL1Origin(ctx context.Context, l2Head eth.L2Bloc
 	}
 
 	// Otherwise, we need to find the next L1 origin block in order to continue producing blocks.
-	log.Warn("Next L2 block time is past the sequencer drift + current origin time")
+	log.Warn("Next core block time is past the sequencer drift + current origin time")
 
 	if nextOrigin == (eth.L1BlockRef{}) {
 		fetchCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
@@ -105,11 +105,11 @@ func (los *L1OriginSelector) FindL1Origin(ctx context.Context, l2Head eth.L2Bloc
 		// If the next origin is not set, we need to fetch it now.
 		nextOrigin, err = los.fetch(fetchCtx, currentOrigin.Number+1)
 		if err != nil {
-			return eth.L1BlockRef{}, fmt.Errorf("cannot build next L2 block past current L1 origin %s by more than sequencer time drift, and failed to find next L1 origin: %w", currentOrigin, err)
+			return eth.L1BlockRef{}, fmt.Errorf("cannot build next core block past current L1 origin %s by more than sequencer time drift, and failed to find next L1 origin: %w", currentOrigin, err)
 		}
 	}
 
-	// If the next origin is ahead of the L2 head, we must return the current origin.
+	// If the next origin is ahead of the core head, we must return the current origin.
 	if l2Head.Time+los.cfg.BlockTime < nextOrigin.Time {
 		return currentOrigin, nil
 	}
@@ -139,13 +139,13 @@ func (los *L1OriginSelector) CurrentAndNextOrigin(ctx context.Context, l2Head et
 	}
 
 	if l2Head.L1Origin == los.currentOrigin.ID() {
-		// Most likely outcome: the L2 head is still on the current origin.
+		// Most likely outcome: the core head is still on the current origin.
 	} else if l2Head.L1Origin == los.nextOrigin.ID() {
-		// If the L2 head has progressed to the next origin, update the current and next origins.
+		// If the core head has progressed to the next origin, update the current and next origins.
 		los.currentOrigin = los.nextOrigin
 		los.nextOrigin = eth.L1BlockRef{}
 	} else {
-		// If for some reason the L2 head is not on the current or next origin, we need to find the
+		// If for some reason the core head is not on the current or next origin, we need to find the
 		// current origin block and reset the next origin.
 		// This is most likely to occur on the first block after a restart.
 

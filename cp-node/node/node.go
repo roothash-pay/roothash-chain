@@ -55,8 +55,8 @@ type OpNode struct {
 	eventSys   event.System
 	eventDrain event.Drainer
 
-	l2Driver  *driver.Driver        // L2 Engine to Sync
-	l2Source  *sources.EngineClient // L2 Execution Engine RPC bindings
+	l2Driver  *driver.Driver        // core Engine to Sync
+	l2Source  *sources.EngineClient // core Execution Engine RPC bindings
 	server    *oprpc.Server         // RPC server hosting the rollup-node API
 	p2pNode   *p2p.NodeP2P          // P2P node functionality
 	p2pMu     gosync.Mutex          // protects p2pNode
@@ -131,9 +131,9 @@ func (n *OpNode) init(ctx context.Context, cfg *Config) error {
 	}
 	n.initEventSystem()
 	if err := n.initL2(ctx, cfg); err != nil {
-		return fmt.Errorf("failed to init L2: %w", err)
+		return fmt.Errorf("failed to init core: %w", err)
 	}
-	if err := n.initRuntimeConfig(ctx, cfg); err != nil { // depends on L2, to signal initial runtime values to
+	if err := n.initRuntimeConfig(ctx, cfg); err != nil { // depends on core, to signal initial runtime values to
 		return fmt.Errorf("failed to init the runtime config: %w", err)
 	}
 	if err := n.initP2PSigner(ctx, cfg); err != nil {
@@ -185,7 +185,7 @@ func (n *OpNode) initRuntimeConfig(ctx context.Context, cfg *Config) error {
 func (n *OpNode) initL2(ctx context.Context, cfg *Config) error {
 	rpcClient, rpcCfg, err := cfg.L2.Setup(ctx, n.log, &cfg.Rollup, n.metrics)
 	if err != nil {
-		return fmt.Errorf("failed to setup L2 execution-engine RPC client: %w", err)
+		return fmt.Errorf("failed to setup core execution-engine RPC client: %w", err)
 	}
 
 	rpcCfg.FetchWithdrawalRootFromState = cfg.FetchWithdrawalRootFromState
@@ -360,7 +360,7 @@ func (n *OpNode) OnNewL1Head(ctx context.Context, sig eth.L1BlockRef) {
 	if n.l2Driver == nil {
 		return
 	}
-	// Pass on the event to the L2 Engine
+	// Pass on the event to the core Engine
 	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
 	defer cancel()
 	if err := n.l2Driver.OnL1Head(ctx, sig); err != nil {
@@ -372,7 +372,7 @@ func (n *OpNode) OnNewL1Safe(ctx context.Context, sig eth.L1BlockRef) {
 	if n.l2Driver == nil {
 		return
 	}
-	// Pass on the event to the L2 Engine
+	// Pass on the event to the core Engine
 	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
 	defer cancel()
 	if err := n.l2Driver.OnL1Safe(ctx, sig); err != nil {
@@ -384,7 +384,7 @@ func (n *OpNode) OnNewL1Finalized(ctx context.Context, sig eth.L1BlockRef) {
 	if n.l2Driver == nil {
 		return
 	}
-	// Pass on the event to the L2 Engine
+	// Pass on the event to the core Engine
 	ctx, cancel := context.WithTimeout(ctx, time.Second*10)
 	defer cancel()
 	if err := n.l2Driver.OnL1Finalized(ctx, sig); err != nil {
@@ -418,12 +418,12 @@ func (n *OpNode) OnUnsafeL2Payload(ctx context.Context, from peer.ID, envelope *
 	n.log.Info("Received signed execution payload from p2p", "id", envelope.ExecutionPayload.ID(), "peer", from,
 		"txs", len(envelope.ExecutionPayload.Transactions))
 
-	// Pass on the event to the L2 Engine
+	// Pass on the event to the core Engine
 	ctx, cancel := context.WithTimeout(ctx, time.Second*30)
 	defer cancel()
 
 	if err := n.l2Driver.OnUnsafeL2Payload(ctx, envelope); err != nil {
-		n.log.Warn("failed to notify engine driver of new L2 payload", "err", err, "id", envelope.ExecutionPayload.ID())
+		n.log.Warn("failed to notify engine driver of new core payload", "err", err, "id", envelope.ExecutionPayload.ID())
 	}
 
 	return nil
@@ -433,7 +433,7 @@ func (n *OpNode) RequestL2Range(ctx context.Context, start, end eth.L2BlockRef) 
 	if p2pNode := n.getP2PNodeIfEnabled(); p2pNode != nil && p2pNode.AltSyncEnabled() {
 		if unixTimeStale(start.Time, 12*time.Hour) {
 			n.log.Debug(
-				"ignoring request to sync L2 range, timestamp is too old for p2p",
+				"ignoring request to sync core range, timestamp is too old for p2p",
 				"start", start,
 				"end", end,
 				"start_time", start.Time)
@@ -441,7 +441,7 @@ func (n *OpNode) RequestL2Range(ctx context.Context, start, end eth.L2BlockRef) 
 		}
 		return p2pNode.RequestL2Range(ctx, start, end)
 	}
-	n.log.Debug("ignoring request to sync L2 range, no sync method available", "start", start, "end", end)
+	n.log.Debug("ignoring request to sync core range, no sync method available", "start", start, "end", end)
 	return nil
 }
 
@@ -520,10 +520,10 @@ func (n *OpNode) Stop(ctx context.Context) error {
 		n.l1FinalizedSub.Unsubscribe()
 	}
 
-	// close L2 driver
+	// close core driver
 	if n.l2Driver != nil {
 		if err := n.l2Driver.Close(); err != nil {
-			result = multierror.Append(result, fmt.Errorf("failed to close L2 engine driver cleanly: %w", err))
+			result = multierror.Append(result, fmt.Errorf("failed to close core engine driver cleanly: %w", err))
 		}
 	}
 
@@ -549,7 +549,7 @@ func (n *OpNode) Stop(ctx context.Context) error {
 		<-n.runtimeConfigReloaderDone
 	}
 
-	// close L2 engine RPC client
+	// close core engine RPC client
 	if n.l2Source != nil {
 		n.l2Source.Close()
 	}

@@ -16,8 +16,8 @@ import (
 )
 
 // ReplaceBlockSource is a magic value for the "Source" attribute,
-// used when a L2 block is a replacement of an invalidated block.
-// After the replacement has been processed, a reset is performed to derive the next L2 blocks.
+// used when a core block is a replacement of an invalidated block.
+// After the replacement has been processed, a reset is performed to derive the next core blocks.
 var ReplaceBlockSource = eth.L1BlockRef{
 	Hash:       common.HexToHash("0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"),
 	Number:     ^uint64(0),
@@ -392,16 +392,16 @@ func (d *EngDeriver) OnEvent(ev event.Event) bool {
 			}
 		} else if x.triggeredByPayloadSuccess() {
 			logValues := x.getBlockProcessingMetrics()
-			d.log.Info("Inserted new L2 unsafe block", logValues...)
+			d.log.Info("Inserted new core unsafe block", logValues...)
 		}
 	case ProcessUnsafePayloadEvent:
 		ref, err := derive.PayloadToBlockRef(d.cfg, x.Envelope.ExecutionPayload)
 		if err != nil {
-			d.log.Error("failed to decode L2 block ref from payload", "err", err)
+			d.log.Error("failed to decode core block ref from payload", "err", err)
 			return true
 		}
 		// Avoid re-processing the same unsafe payload if it has already been processed. Because a FCU event emits the ProcessUnsafePayloadEvent
-		// it is possible to have multiple queueed up ProcessUnsafePayloadEvent for the same L2 block. This becomes an issue when processing
+		// it is possible to have multiple queueed up ProcessUnsafePayloadEvent for the same core block. This becomes an issue when processing
 		// a large number of unsafe payloads at once (like when iterating through the payload queue after the safe head has advanced).
 		if ref.BlockRef().ID() == d.ec.UnsafeL2Head().BlockRef().ID() {
 			return true
@@ -410,7 +410,7 @@ func (d *EngDeriver) OnEvent(ev event.Event) bool {
 			d.log.Info("failed to insert payload", "ref", ref,
 				"txs", len(x.Envelope.ExecutionPayload.Transactions), "err", err)
 			// yes, duplicate error-handling. After all derivers are interacting with the engine
-			// through events, we can drop the engine-controller interface:
+			// through events, we can drop the engine-controller interfaces:
 			// unify the events handler with the engine-controller,
 			// remove a lot of code, and not do this error translation.
 			if errors.Is(err, derive.ErrReset) {

@@ -34,8 +34,8 @@ just cp-node
 # Essential Connections:
 # - L1 ethereum RPC, to fetch blocks, receipts, finality
 # - L1 beacon API, to fetch blobs
-# - L2 engine API, to apply new blocks to
-# - P2P TCP port, to expose publicly, to retrieve and relay the latest L2 blocks
+# - core engine API, to apply new blocks to
+# - P2P TCP port, to expose publicly, to retrieve and relay the latest core blocks
 # - P2P UDP port, to expose publicly, to discover other nodes to peer with
 # - RPC port, to serve RPC of the cp-node
 #

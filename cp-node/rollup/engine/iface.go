@@ -5,7 +5,7 @@ import (
 	"github.com/cpchain-network/cp-chain/cp-service/eth"
 )
 
-// EngineState provides a read-only interface of the forkchoice state properties of the L2 Engine.
+// EngineState provides a read-only interfaces of the forkchoice state properties of the core Engine.
 type EngineState interface {
 	Finalized() eth.L2BlockRef
 	UnsafeL2Head() eth.L2BlockRef

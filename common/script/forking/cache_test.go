@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// MockForkSource implements ForkSource interface for testing
+// MockForkSource implements ForkSource interfaces for testing
 type MockForkSource struct {
 	mock.Mock
 }

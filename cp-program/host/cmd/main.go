@@ -44,7 +44,7 @@ func run(args []string, action ConfigAction) error {
 	app.Flags = flags.Flags
 	app.Name = "cp-program"
 	app.Usage = "Optimism Fault Proof Program"
-	app.Description = "The Optimism Fault Proof Program fault proof program that runs through the rollup state-transition to verify an L2 output from L1 inputs."
+	app.Description = "The Optimism Fault Proof Program fault proof program that runs through the rollup state-transition to verify an core output from L1 inputs."
 	app.Commands = []*cli.Command{
 		subcmds.ConfigsCommand,
 	}
