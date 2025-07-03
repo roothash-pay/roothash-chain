@@ -3,7 +3,7 @@ package devnet
 import (
 	"context"
 
-	"github.com/ethereum-optimism/optimism/devnet-sdk/proofs/prestate"
+	"github.com/ethereum-optimism/optimism/common/proofs/prestate"
 )
 
 type mockPreStateBuilder struct {

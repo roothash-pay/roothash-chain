@@ -5,7 +5,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/core"
 
-	"github.com/ethereum-optimism/optimism/devnet-sdk/proofs/prestate"
+	"github.com/ethereum-optimism/optimism/common/proofs/prestate"
 	"github.com/ethereum-optimism/optimism/op-deployer/pkg/deployer/broadcaster"
 
 	"github.com/ethereum-optimism/optimism/op-chain-ops/foundry"
