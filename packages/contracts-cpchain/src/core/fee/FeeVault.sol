@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.15;
+pragma solidity ^0.8.20;
 
 import { SafeCall } from "src/libraries/SafeCall.sol";
 import { Predeploys } from "src/libraries/Predeploys.sol";
@@ -44,7 +44,7 @@ abstract contract FeeVault {
 
         emit Withdrawal(value, RECIPIENT, msg.sender);
 
-        bool success = SafeCall.send(RECIPIENT, value);
+        bool success = SafeCall.send(RECIPIENT, 210000, value);
 
         require(success, "FeeVault: failed to send ETH to L2 fee recipient");
     }
