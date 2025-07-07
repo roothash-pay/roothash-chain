@@ -2,7 +2,6 @@ package p2p
 
 import (
 	"context"
-
 	opsigner "github.com/cpchain-network/cp-chain/cp-service/signer"
 )
 
@@ -11,7 +10,7 @@ type Signer interface {
 }
 
 type PreparedSigner struct {
-	Signer
+	Signer opsigner.BlockSigner
 }
 
 func (p *PreparedSigner) SetupSigner(ctx context.Context) (Signer, error) {

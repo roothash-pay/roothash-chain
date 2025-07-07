@@ -94,11 +94,10 @@ func (r *RuntimeConfig) RecommendedProtocolVersion() params.ProtocolVersion {
 // Load resets the runtime configuration by fetching the latest config data from L1 at the given L1 block.
 // Load is safe to call concurrently, but will lock the runtime configuration modifications only,
 // and will thus not block other Load calls with possibly alternative L1 block views.
-func (r *RuntimeConfig) Load(ctx context.Context, l1Ref eth.L1BlockRef) error {
+func (r *RuntimeConfig) Load(ctx context.Context, p2pSignerAddress common.Address) error {
 	r.mu.Lock()
 	defer r.mu.Unlock()
-	r.l1Ref = l1Ref
-	r.p2pBlockSignerAddr = common.HexToAddress("0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199")
+	r.p2pBlockSignerAddr = p2pSignerAddress
 	r.required = params.ProtocolVersion(common.HexToHash("0x1"))
 	r.recommended = params.ProtocolVersion(common.HexToHash("0x1"))
 	r.log.Info("loaded new runtime config values!", "p2p_seq_address", r.p2pBlockSignerAddr)

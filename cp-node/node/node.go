@@ -179,6 +179,14 @@ func (n *OpNode) initTracer(ctx context.Context, cfg *Config) error {
 func (n *OpNode) initRuntimeConfig(ctx context.Context, cfg *Config) error {
 	// attempt to load runtime config, repeat N times
 	n.runCfg = NewRuntimeConfig(n.log, &cfg.Rollup)
+
+	fetchCtx, fetchCancel := context.WithTimeout(ctx, time.Second*10)
+	err := n.runCfg.Load(fetchCtx, cfg.P2PSignerAddress)
+	fetchCancel()
+	if err != nil {
+		n.log.Error("failed to fetch runtime config data", "err", err)
+		return err
+	}
 	return nil
 }
 

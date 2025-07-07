@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/ethereum/go-ethereum/common"
 	"math"
 	"time"
 
@@ -30,6 +31,8 @@ type Config struct {
 	// P2PSigner will be used for signing off on published content
 	// if the node is sequencing and if the p2p stack is enabled
 	P2PSigner p2p.SignerSetup
+
+	P2PSignerAddress common.Address
 
 	RPC RPCConfig
 

@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/finality"
 	gosync "sync"
 	"time"
 
@@ -224,8 +223,8 @@ func (s *Driver) eventLoop() {
 			altSyncTicker.Reset(syncCheckInterval)
 		}
 
-		s.emitter.Emit(finality.FinalizeL1Event{}) // todo: if all node vote change block to finalized
-		reqStep()                                  // we may be able to mark more core data as finalized now
+		//s.emitter.Emit(finality.FinalizeL1Event{}) // todo: if all node vote change block to finalized
+		//reqStep()                                  // we may be able to mark more core data as finalized now
 
 		select {
 		case <-sequencerCh:

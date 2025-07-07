@@ -47,7 +47,7 @@ var (
 
 const (
 	// All fields (4s are offsets to dynamic data)
-	blockV1FixedPart = 32 + 20 + 32 + 32 + 256 + 32 + 8 + 8 + 8 + 8 + 4 + 32 + 32 + 4
+	blockV1FixedPart = 32 + 20 + 32 + 32 + 256 + 32 + 8 + 8 + 8 + 4 + 32 + 32 + 4
 
 	// V1 + Withdrawals offset
 	blockV2FixedPart = blockV1FixedPart + 4

@@ -39,7 +39,7 @@ func NewConfig(ctx *cli.Context, log log.Logger) (*node.Config, error) {
 
 	driverConfig := NewDriverConfig(ctx)
 
-	p2pSignerSetup, err := p2pcli.LoadSignerSetup(ctx, log)
+	p2pSignerSetup, p2pSignerAddress, err := p2pcli.LoadSignerSetup(ctx, log)
 	if err != nil {
 		return nil, fmt.Errorf("failed to load p2p signer: %w", err)
 	}
@@ -88,6 +88,7 @@ func NewConfig(ctx *cli.Context, log log.Logger) (*node.Config, error) {
 		Pprof:                       oppprof.ReadCLIConfig(ctx),
 		P2P:                         p2pConfig,
 		P2PSigner:                   p2pSignerSetup,
+		P2PSignerAddress:            p2pSignerAddress,
 		L1EpochPollInterval:         ctx.Duration(flags.L1EpochPollIntervalFlag.Name),
 		RuntimeConfigReloadInterval: ctx.Duration(flags.RuntimeConfigReloadIntervalFlag.Name),
 		ConfigPersistence:           configPersistence,
