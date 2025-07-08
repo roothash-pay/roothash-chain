@@ -6,7 +6,7 @@ import "./utils/ExistingDeploymentParser.sol";
 /**
  * @notice Script used for the first deployment of CpChainLayer core contracts to Cp Chain
  * forge script script/DeployerBasic.s.sol --rpc-url http://127.0.0.1:8545 --private-key $PRIVATE_KEY --broadcast -vvvv
- * forge script script/DeployerBasic.s.sol --rpc-url $RPC_MANTA --private-key $PRIVATE_KEY --broadcast -vvvv
+ * forge script script/DeployerBasic.s.sol --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast -vvvv
  */
 contract DeployerBasic is ExistingDeploymentParser {
     function run() external virtual {
