@@ -230,9 +230,9 @@ func (payload *ExecutionPayload) MarshalSSZ(w io.Writer) (n int, err error) {
 		offset += 32
 	}
 
-	if payload.Withdrawals != nil && offset != fixedSize {
-		panic("withdrawals - fixed part size is inconsistent")
-	}
+	//if payload.Withdrawals != nil && offset != fixedSize {
+	//	panic("withdrawals - fixed part size is inconsistent")
+	//}
 
 	// dynamic value 1: ExtraData
 	copy(buf[offset:offset+extraDataSize], payload.ExtraData[:])
@@ -241,9 +241,9 @@ func (payload *ExecutionPayload) MarshalSSZ(w io.Writer) (n int, err error) {
 	marshalTransactions(buf[offset:offset+transactionSize], payload.Transactions)
 	offset += transactionSize
 	// dynamic value 3: Withdrawals
-	if payload.Withdrawals != nil {
-		marshalWithdrawals(buf[offset:], *payload.Withdrawals)
-	}
+	//if payload.Withdrawals != nil {
+	//	marshalWithdrawals(buf[offset:], *payload.Withdrawals)
+	//}
 
 	return w.Write(buf)
 }

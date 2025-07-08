@@ -122,7 +122,7 @@ contract CpChainBase is Initializable, ICpChainBase, Pausable {
     }
 
     function shares(address user) public view virtual returns (uint256) {
-        return cpChainDepositManager.stakerCpChainBaseShares(user, ICpChainBase(address(this)));
+        return cpChainDepositManager.stakerCpChainBaseShares(user);
     }
 
     function setDepositLimits(uint256 newMinDeposit, uint256 newMaxDeposit) external onlyStrategyManager {

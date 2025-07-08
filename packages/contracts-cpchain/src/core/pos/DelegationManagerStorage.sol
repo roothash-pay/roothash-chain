@@ -3,6 +3,8 @@ pragma solidity ^0.8.24;
 
 import "../../interfaces/ICpChainDepositManager.sol";
 import "../../interfaces/IDelegationManager.sol";
+import "../../interfaces/ISlashingManager.sol";
+
 
 abstract contract DelegationManagerStorage is IDelegationManager {
     bytes32 public constant DOMAIN_TYPEHASH =
@@ -14,14 +16,23 @@ abstract contract DelegationManagerStorage is IDelegationManager {
     bytes32 public constant DELEGATION_APPROVAL_TYPEHASH =
     keccak256("DelegationApproval(address staker,address operator,address delegationApprover,bytes32 salt,uint256 expiry)");
 
+    bytes32 internal _DOMAIN_SEPARATOR;
+
     ICpChainDepositManager public immutable cpChainDepositManager;
 
+    ICpChainBase public immutable cpChainBase;
 
-    bytes32 internal _DOMAIN_SEPARATOR;
+    ISlashingManager public immutable slashingManager;
 
     uint256 public constant MAX_WITHDRAWAL_DELAY_BLOCKS = 216000;
 
-    mapping(address => mapping(ICpChainBase => uint256)) public operatorShares;
+    uint256 public chainBaseWithdrawalDelayBlock;
+
+    address[] public stakerList;
+
+    mapping(address => uint256) public operatorShares;
+
+    mapping(address => mapping(address => uint256)) public stakerDelegateSharesToOperator;
 
     mapping(address => OperatorDetails) internal _operatorDetails;
 
@@ -31,16 +42,14 @@ abstract contract DelegationManagerStorage is IDelegationManager {
 
     mapping(address => mapping(bytes32 => bool)) public delegationApproverSaltIsSpent;
 
-    uint256 public minWithdrawalDelayBlocks;
-
     mapping(bytes32 => bool) public pendingWithdrawals;
 
     mapping(address => uint256) public cumulativeWithdrawalsQueued;
 
-    mapping(ICpChainBase => uint256) public chainBaseWithdrawalDelayBlocks;
-
-    constructor(ICpChainDepositManager _cpChainDepositManager) {
+    constructor(ICpChainDepositManager _cpChainDepositManager, ICpChainBase _cpChainBase,  ISlashingManager _slashingManager) {
         cpChainDepositManager = _cpChainDepositManager;
+        cpChainBase = _cpChainBase;
+        slashingManager = _slashingManager;
     }
 
     uint256[100] private __gap;

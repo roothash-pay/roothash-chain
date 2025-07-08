@@ -29,6 +29,8 @@ contract RewardManager is RewardManagerStorage {
         _disableInitializers();
     }
 
+    receive() external payable {}
+
     function initialize(address initialOwner, address _rewardManager, address _payFeeManager, uint256 _stakePercent) external initializer {
         payFeeManager = _payFeeManager;
         rewardManager = _rewardManager;
@@ -39,7 +41,7 @@ contract RewardManager is RewardManagerStorage {
     function payFee(address chainBase, address operator, uint256 baseFee) external onlyPayFeeManager {
         uint256 totalShares = ICpChainBase(chainBase).totalShares();
 
-        uint256 operatorShares = delegationManager.operatorShares(operator, ICpChainBase(chainBase));
+        uint256 operatorShares = delegationManager.operatorShares(operator);
 
         require(
             totalShares > 0 && operatorShares > 0,
@@ -108,7 +110,7 @@ contract RewardManager is RewardManagerStorage {
     }
 
     function _stakeHolderAmount(address staker, address chainBase) internal view returns  (uint256) {
-        uint256 stakeHoldersShare = cpChainDepositManager.stakerCpChainBaseShares(staker, ICpChainBase(chainBase));
+        uint256 stakeHoldersShare = cpChainDepositManager.stakerCpChainBaseShares(staker);
         uint256 chainBaseShares = ICpChainBase(chainBase).totalShares();
         if (stakeHoldersShare == 0 ||chainBaseShares == 0) {
             return 0;

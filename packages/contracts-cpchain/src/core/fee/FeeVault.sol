@@ -23,7 +23,7 @@ abstract contract FeeVault {
         MIN_WITHDRAWAL_AMOUNT = _minWithdrawalAmount;
     }
 
-    receive() external payable { }
+    receive() external payable {}
 
     function minWithdrawalAmount() public view returns (uint256 amount_) {
         amount_ = MIN_WITHDRAWAL_AMOUNT;

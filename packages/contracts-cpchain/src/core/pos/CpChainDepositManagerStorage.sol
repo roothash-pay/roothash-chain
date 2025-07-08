@@ -11,36 +11,27 @@ abstract contract CpChainDepositManagerStorage is ICpChainDepositManager {
 
     uint8 internal constant MAX_STAKER_STRATEGY_LIST_LENGTH = 32;
 
-    IDelegationManager public immutable delegation;
-
     bytes32 internal _DOMAIN_SEPARATOR;
-
-    mapping(address => uint256) public nonces;
-
-    address public cpChainWhitelister;
 
     uint256 internal withdrawalDelayBlocks;
 
-    mapping(address => mapping(ICpChainBase => uint256)) public stakerCpChainBaseShares;
+    IDelegationManager public immutable delegation;
 
-    mapping(address => ICpChainBase[]) public stakerCpChainBaseList;
+    ICpChainBase public immutable cpChainBase;
+
+    mapping(address => uint256) public nonces;
+
+    mapping(address => uint256) public stakerCpChainBaseShares;
 
     mapping(bytes32 => bool) public withdrawalRootPending;
 
     mapping(address => uint256) internal numWithdrawalsQueued;
 
-    mapping(ICpChainBase => bool) public cpChainWhitelistedForDeposit;
 
-    mapping(address => uint256) internal beaconChainETHSharesToDecrementOnWithdrawal;
-
-
-    mapping(ICpChainBase => bool) public thirdPartyTransfersForbidden;
-
-
-    constructor(IDelegationManager _delegation) {
+    constructor(IDelegationManager _delegation, ICpChainBase _cpChainBase) {
         delegation = _delegation;
+        cpChainBase = _cpChainBase;
     }
-
 
     uint256[100] private __gap;
 }
