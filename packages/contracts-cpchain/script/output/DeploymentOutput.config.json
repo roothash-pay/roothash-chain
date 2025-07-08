@@ -1,22 +1,22 @@
 {
   "addresses": {
-    "cpChainBase": "0x49EA5126fD67f877b62dDC0144DBeb42591DF7bb",
-    "cpChainBaseImplementation": "0x867bFAFda54B592392C550B538F77F9F2101551e",
-    "cpChainDepositManager": "0x5E388db7c3aef7deA9585FbE3c077f0c98857d0d",
-    "cpChainDepositManagerImplementation": "0xa7328DEAa1B585a494f055Fc9Bd99ea56d52CD3d",
-    "cpChainLayerPauserReg": "0x5D1ce2A19Aa885765aBcef89b7590E213422a8b9",
-    "cpChainLayerProxyAdmin": "0xC624801dd98beF87C0718DDb43aD3a566cc51ecc",
-    "delegationManager": "0x2fb5e98f1eFE95aE50F9BecAfCE660701aD8D9be",
-    "delegationManagerImplementation": "0xEd28d2f9E7281a63254E6EA4894a5460e24d0450",
-    "emptyContract": "0xd3497aB25DA369B3eE5A239890348eA542b0F479",
-    "rewardManager": "0x270fBc6A0f1007eB41863237Eefb773795fd1F9C",
-    "rewardManagerImplementation": "0x2f634917cc00A9897621cd3490327721198Fa369",
-    "slashingManager": "0x9DB9797733FE5F734724Aa05D29Fa39563563Af5",
-    "slashingManagerImplementation": "0xEF1707af46b68aA697c427325aEA18f82b6B2629"
+    "cpChainBase": "0x5f474bC674b6Ad4d7b6A5c6429d586D53053DA33",
+    "cpChainBaseImplementation": "0x1799D99cac17ABEAb9CA860Cf6F10A8949c876ab",
+    "cpChainDepositManager": "0xdB94B6E81E0b9F0874ABa5F4F8258c31A9b97Ce8",
+    "cpChainDepositManagerImplementation": "0xDAB375CdB2fAebfb67D63DB5234011EAAe40bd70",
+    "cpChainLayerPauserReg": "0x3Be63776630ac9f282109352C804E650d515C604",
+    "cpChainLayerProxyAdmin": "0x3C4249f1cDf4C5Ee12D480a543a6A42362baAAFf",
+    "delegationManager": "0x1Da1e5EE07AD91E402BD4Fc14773f7a4caa6b2ad",
+    "delegationManagerImplementation": "0x0777DBe3E4a1781F467A456aE589878556601457",
+    "emptyContract": "0x43992F5f575c28A1dE03b1F337974b94e44FAb8c",
+    "rewardManager": "0x1489eA81CBEDd53a8Eb1a95E99AF8EB5683b3330",
+    "rewardManagerImplementation": "0xA7AC0E836954c163CF2f5CC097D6b6FEE131235B",
+    "slashingManager": "0xe031A491d0ec16f32f9BE25046956425034F0918",
+    "slashingManagerImplementation": "0x13f6928e5B43913B358CFB40C3ab111DC1ac213c"
   },
   "chainInfo": {
     "chainId": 31337,
-    "deploymentBlock": 32
+    "deploymentBlock": 42
   },
   "parameters": {
     "communityMultisig": "0xa0Ee7A142d267C1f36714E4a8F75612F20a79720",
