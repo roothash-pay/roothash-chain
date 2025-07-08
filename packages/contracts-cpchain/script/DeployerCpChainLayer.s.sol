@@ -27,7 +27,6 @@ contract DeployerCpChainLayer is DeployerBasic {
         operationsMultisig = EOAowner;
         pauserMultisig = EOAowner;
         communityMultisig = EOAowner;
-        STRATEGY_MANAGER_WHITELISTER = EOAowner;
 
         // START RECORDING TRANSACTIONS FOR DEPLOYMENT
         vm.startBroadcast();
@@ -42,7 +41,7 @@ contract DeployerCpChainLayer is DeployerBasic {
         // Sanity Checks
         _verifyContractPointers();
         _verifyImplementations();
-        _verifyContractsInitialized({isInitialDeployment: true});
+        _verifyContractsInitialized();
         _verifyInitializationParams(); // override to check contract.owner() is EOAowner instead
 
         logAndOutputContractAddresses("script/output/DeploymentOutput.config.json");

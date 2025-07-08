@@ -11,6 +11,8 @@ import "../../src/core/pos/DelegationManager.sol";
 import "../../src/core/pos/RewardManager.sol";
 import "../../src/core/pos/CpChainBase.sol";
 import "../../src/core/pos/CpChainDepositManager.sol";
+import "../../src/core/pos/SlashingManager.sol";
+
 import "../../src/access/PauserRegistry.sol";
 
 import "../utils/EmptyContract.sol";
@@ -40,6 +42,12 @@ contract ExistingDeploymentParser is Script, Test {
     RewardManager public rewardManager;
     ProxyAdmin public rewardManagerProxyAdmin;
     RewardManager public rewardManagerImplementation;
+
+    SlashingManager public slashingManager;
+    ProxyAdmin public slashingManagerProxyAdmin;
+    SlashingManager public slashingManagerImplementation;
+
+    CpChainBase public cpChainBase;
     ProxyAdmin public chainBaseBaseProxyAdmin;
     CpChainBase public cpChainBaseImplementation;
 
@@ -54,20 +62,15 @@ contract ExistingDeploymentParser is Script, Test {
     address pauserMultisig;
     address timelock;
 
-    // strategies deployed
-    uint256 numChainBasesDeployed;
-    CpChainBase[] public deployedStrategyArray;
-    // ChainBases to Deploy
-    uint256 numChainBasesToDeploy;
-    CpTokenConfig[] public strategiesToDeploy;
-
     /// @notice Initialization Params for first initial deployment scripts
     // CpChainDepositManager
-    uint256 STRATEGY_MANAGER_INIT_PAUSED_STATUS;
-    address STRATEGY_MANAGER_WHITELISTER;
+    uint256 CPCHAINDEPOSITMANAGER_MANAGER_INIT_PAUSED_STATUS;
+
+
     // DelegationManager
     uint256 DELEGATION_MANAGER_INIT_PAUSED_STATUS;
-    uint256 DELEGATION_MANAGER_MIN_WITHDRAWAL_DELAY_BLOCKS;
+    uint256 DELEGATION_MANAGER_WITHDRAWAL_DELAY_BLOCK;
+
     // RewardManager
     uint256 REWARD_MANAGER_INIT_PAUSED_STATUS;
     uint32 REWARD_MANAGER_MAX_REWARDS_DURATION;
@@ -84,9 +87,9 @@ contract ExistingDeploymentParser is Script, Test {
     // one week in blocks -- 50400
     uint32 DELAYED_WITHDRAWAL_ROUTER_INIT_WITHDRAWAL_DELAY_BLOCKS;
 
-    // Strategy Deployment
-    uint256 STRATEGY_MAX_PER_DEPOSIT;
-    uint256 STRATEGY_MAX_TOTAL_DEPOSITS;
+    // CpChainBase Deployment
+    uint256 CPCHAINBASE_MIN_DEPOSIT;
+    uint256 CPCHAINBASE_MAX_DEPOSIT;
 
     /// @notice use for parsing already deployed CpChainLayer contracts
     function _parseDeployedContracts(string memory existingDeploymentInfoPath) internal virtual {
@@ -114,37 +117,36 @@ contract ExistingDeploymentParser is Script, Test {
         cpChainLayerPauserReg = PauserRegistry(
             stdJson.readAddress(existingDeploymentData, ".addresses.cpChainLayerPauserReg")
         );
+
         delegationManager = DelegationManager(
-            stdJson.readAddress(existingDeploymentData, ".addresses.delegationManager")
+            payable(stdJson.readAddress(existingDeploymentData, ".addresses.delegationManager"))
         );
         delegationManagerImplementation = DelegationManager(
-            stdJson.readAddress(existingDeploymentData, ".addresses.delegationManagerImplementation")
+            payable(stdJson.readAddress(existingDeploymentData, ".addresses.delegationManagerImplementation"))
         );
+
         rewardManager = RewardManager(
-            stdJson.readAddress(existingDeploymentData, ".addresses.rewardManager")
+            payable(stdJson.readAddress(existingDeploymentData, ".addresses.rewardManager"))
         );
         rewardManagerImplementation = RewardManager(
-            stdJson.readAddress(existingDeploymentData, ".addresses.rewardManagerImplementation")
+            payable(stdJson.readAddress(existingDeploymentData, ".addresses.rewardManagerImplementation"))
         );
-        cpChainDepositManager = CpChainDepositManager(stdJson.readAddress(existingDeploymentData, ".addresses.cpChainDepositManager"));
+
+        cpChainDepositManager = CpChainDepositManager(
+            payable(stdJson.readAddress(existingDeploymentData, ".addresses.cpChainDepositManager"))
+        );
         cpChainDepositManagerImplementation = CpChainDepositManager(
-            stdJson.readAddress(existingDeploymentData, ".addresses.cpChainDepositManagerImplementation")
+            payable(stdJson.readAddress(existingDeploymentData, ".addresses.cpChainDepositManagerImplementation"))
+        );
+
+        cpChainBase = CpChainBase(
+            payable(stdJson.readAddress(existingDeploymentData, ".addresses.cpChainBase"))
         );
         cpChainBaseImplementation = CpChainBase(
-            stdJson.readAddress(existingDeploymentData, ".addresses.cpChainBaseImplementation")
+            payable(stdJson.readAddress(existingDeploymentData, ".addresses.cpChainBaseImplementation"))
         );
+
         emptyContract = EmptyContract(stdJson.readAddress(existingDeploymentData, ".addresses.emptyContract"));
-
-        // ChainBases Deployed, load chainBase list
-        numChainBasesDeployed = stdJson.readUint(existingDeploymentData, ".addresses.numChainBasesDeployed");
-        for (uint256 i = 0; i < numChainBasesDeployed; ++i) {
-            // Form the key for the current element
-            string memory key = string.concat(".addresses.chainBaseAddresses[", vm.toString(i), "]");
-
-            // Use the key and parse the chainBase address
-            address chainBaseAddress = abi.decode(stdJson.parseRaw(existingDeploymentData, key), (address));
-            deployedStrategyArray.push(CpChainBase(chainBaseAddress));
-        }
     }
 
     /// @notice use for deploying a new set of CpChainLayer contracts
@@ -168,38 +170,19 @@ contract ExistingDeploymentParser is Script, Test {
         pauserMultisig = stdJson.readAddress(initialDeploymentData, ".multisig_addresses.pauserMultisig");
 
         // ChainBases to Deploy, load chainBase list
-        numChainBasesToDeploy = stdJson.readUint(initialDeploymentData, ".strategies.numChainBases");
-        STRATEGY_MAX_PER_DEPOSIT = stdJson.readUint(initialDeploymentData, ".strategies.MAX_PER_DEPOSIT");
-        STRATEGY_MAX_TOTAL_DEPOSITS = stdJson.readUint(initialDeploymentData, ".strategies.MAX_TOTAL_DEPOSITS");
-        for (uint256 i = 0; i < numChainBasesToDeploy; ++i) {
-            // Form the key for the current element
-            string memory key = string.concat(".strategies.strategiesToDeploy[", vm.toString(i), "]");
-
-            // Use parseJson with the key to get the value for the current element
-            bytes memory tokenInfoBytes = stdJson.parseRaw(initialDeploymentData, key);
-
-            // Decode the token information into the Token struct
-            CpTokenConfig memory tokenInfo = abi.decode(
-                tokenInfoBytes,
-                (CpTokenConfig)
-            );
-
-            strategiesToDeploy.push(tokenInfo);
-        }
+        CPCHAINBASE_MIN_DEPOSIT = stdJson.readUint(initialDeploymentData, ".cpChainBase.MIN_DEPOSIT");
+        CPCHAINBASE_MAX_DEPOSIT = stdJson.readUint(initialDeploymentData, ".cpChainBase.MAX_DEPOSIT");
 
         // Read initialize params for upgradeable contracts
-        STRATEGY_MANAGER_INIT_PAUSED_STATUS = stdJson.readUint(
+        CPCHAINDEPOSITMANAGER_MANAGER_INIT_PAUSED_STATUS = stdJson.readUint(
             initialDeploymentData,
             ".cpChainDepositManager.init_paused_status"
         );
-        STRATEGY_MANAGER_WHITELISTER = stdJson.readAddress(
-            initialDeploymentData,
-            ".cpChainDepositManager.init_chainBase_whitelister"
-        );
+
         // DelegationManager
-        DELEGATION_MANAGER_MIN_WITHDRAWAL_DELAY_BLOCKS = stdJson.readUint(
+        DELEGATION_MANAGER_WITHDRAWAL_DELAY_BLOCK = stdJson.readUint(
             initialDeploymentData,
-            ".delegationManager.init_minWithdrawalDelayBlocks"
+            ".delegationManager.withdrawalDelayBlock"
         );
         DELEGATION_MANAGER_INIT_PAUSED_STATUS = stdJson.readUint(
             initialDeploymentData,
@@ -220,7 +203,6 @@ contract ExistingDeploymentParser is Script, Test {
         REWARD_MANAGER_GLOBAL_OPERATOR_COMMISSION_BIPS = uint32(
             stdJson.readUint(initialDeploymentData, ".rewardManager.global_operator_commission_bips")
         );
-        REWARD_MANAGER_RWARD_TOKEN_ADDRESS = stdJson.readAddress(initialDeploymentData, ".rewardManager.reward_token_address");
         REWARD_MANAGER_STAKE_PERCENTAGE = uint32(stdJson.readUint(initialDeploymentData, ".rewardManager.stake_percentage"));
 
         logInitialDeploymentParams();
@@ -264,22 +246,13 @@ contract ExistingDeploymentParser is Script, Test {
             getImplementationAddress(address(cpChainDepositManager)) == address(cpChainDepositManagerImplementation),
             "cpChainDepositManager: implementation set incorrectly"
         );
-
-        // for (uint256 i = 0; i < deployedStrategyArray.length; ++i) {
-        //     require(
-        //         TransparentUpgradeableProxy(payable(address(deployedStrategyArray[i])))._implementation()
-        //         == address(cpChainBaseImplementation),
-        //         "chainBase: implementation set incorrectly"
-        //     );
-        // }
     }
 
     /**
      * @notice Verify initialization of Transparent Upgradeable Proxies. Also check
      * initialization params if this is the first deployment.
-     * @param isInitialDeployment True if this is the first deployment of contracts from scratch
      */
-    function _verifyContractsInitialized(bool isInitialDeployment) internal virtual {
+    function _verifyContractsInitialized() internal virtual {
         // RewardManager
         vm.expectRevert(abi.encodeWithSignature("InvalidInitialization()"));
         rewardManager.initialize(
@@ -288,31 +261,27 @@ contract ExistingDeploymentParser is Script, Test {
             executorMultisig,
             REWARD_MANAGER_STAKE_PERCENTAGE
         );
+
         // DelegationManager
         vm.expectRevert(abi.encodeWithSignature("InvalidInitialization()"));
-        ICpChainBase[] memory initializeChainBasesToSetDelayBlocks = new ICpChainBase[](0);
-        uint256[] memory initializeWithdrawalDelayBlocks = new uint256[](0);
         delegationManager.initialize(
             address(0),
             cpChainLayerPauserReg,
             0,
-            0, // minWithdrawalDelayBLocks
-            initializeChainBasesToSetDelayBlocks,
-            initializeWithdrawalDelayBlocks
+            0
         );
+
         // CpChainDepositManager
         vm.expectRevert(abi.encodeWithSignature("InvalidInitialization()"));
-        cpChainDepositManager.initialize(address(0), address(0));
+        cpChainDepositManager.initialize(address(0));
+
         // ChainBases
-        for (uint256 i = 0; i < deployedStrategyArray.length; ++i) {
-            vm.expectRevert(abi.encodeWithSignature("InvalidInitialization()"));
-            CpChainBase(address(deployedStrategyArray[i])).initialize(
-                IERC20(address(0)),
-                cpChainLayerPauserReg,
-                0,
-                0
-            );
-        }
+        vm.expectRevert(abi.encodeWithSignature("InvalidInitialization()"));
+        CpChainBase(address(cpChainBase)).initialize(
+            cpChainLayerPauserReg,
+            0,
+            0
+        );
     }
 
     /// @notice Verify params based on config constants that are updated from calling `_parseInitialDeploymentParams`
@@ -332,39 +301,19 @@ contract ExistingDeploymentParser is Script, Test {
             delegationManager.paused() == DELEGATION_MANAGER_INIT_PAUSED_STATUS,
             "delegationManager: init paused status set incorrectly"
         );
-        require(
-            delegationManager.minWithdrawalDelayBlocks() == DELEGATION_MANAGER_MIN_WITHDRAWAL_DELAY_BLOCKS,
-            "delegationManager: minWithdrawalDelayBlocks not set correctly"
-        );
+
         // CpChainDepositManager
         require(cpChainDepositManager.owner() == executorMultisig, "cpChainDepositManager: owner not set correctly");
-        if (block.chainid == 1) {
-            require(
-                cpChainDepositManager.chainBaseWhitelister() == operationsMultisig,
-                "cpChainDepositManager: chainBaseWhitelister not set correctly"
-            );
-        } else if (block.chainid == 17000) {
-            // On holesky, for ease of whitelisting we set to executorMultisig
-            require(
-                cpChainDepositManager.chainBaseWhitelister() == executorMultisig,
-                "cpChainDepositManager: chainBaseWhitelister not set correctly"
-            );
-        }
+
         // ChainBases
-        for (uint256 i = 0; i < deployedStrategyArray.length; ++i) {
-            require(
-                deployedStrategyArray[i].pauserRegistry() == cpChainLayerPauserReg,
-                "CpChainBase: pauser registry not set correctly"
-            );
-            require(
-                deployedStrategyArray[i].paused() == 0,
-                "CpChainBase: init paused status set incorrectly"
-            );
-            require(
-                cpChainDepositManager.chainBaseIsWhitelistedForDeposit(deployedStrategyArray[i]),
-                "CpChainBase: chainBase should be whitelisted"
-            );
-        }
+        require(
+            cpChainBase.pauserRegistry() == cpChainLayerPauserReg,
+            "CpChainBase: pauser registry not set correctly"
+        );
+        require(
+            cpChainBase.paused() == 0,
+            "CpChainBase: init paused status set incorrectly"
+        );
 
         // Pausing Permissions
         require(cpChainLayerPauserReg.isPauser(operationsMultisig), "pauserRegistry: operationsMultisig is not pauser");
@@ -381,81 +330,35 @@ contract ExistingDeploymentParser is Script, Test {
         emit log_named_address("communityMultisig", communityMultisig);
         emit log_named_address("pauserMultisig", pauserMultisig);
 
-        emit log_named_uint("STRATEGY_MANAGER_INIT_PAUSED_STATUS", STRATEGY_MANAGER_INIT_PAUSED_STATUS);
-        emit log_named_address("STRATEGY_MANAGER_WHITELISTER", STRATEGY_MANAGER_WHITELISTER);
-        emit log_named_uint(
-            "DELEGATION_MANAGER_MIN_WITHDRAWAL_DELAY_BLOCKS",
-            DELEGATION_MANAGER_MIN_WITHDRAWAL_DELAY_BLOCKS
-        );
+        emit log_named_uint("CPCHAINDEPOSITMANAGER_MANAGER_INIT_PAUSED_STATUS", CPCHAINDEPOSITMANAGER_MANAGER_INIT_PAUSED_STATUS);
+        emit log_named_uint("DELEGATION_MANAGER_WITHDRAWAL_DELAY_BLOCK", DELEGATION_MANAGER_WITHDRAWAL_DELAY_BLOCK);
         emit log_named_uint("DELEGATION_MANAGER_INIT_PAUSED_STATUS", DELEGATION_MANAGER_INIT_PAUSED_STATUS);
         emit log_named_uint("REWARD_MANAGER_INIT_PAUSED_STATUS", REWARD_MANAGER_INIT_PAUSED_STATUS);
-        emit log_named_uint(
-            "DELAYED_WITHDRAWAL_ROUTER_INIT_WITHDRAWAL_DELAY_BLOCKS",
-            DELAYED_WITHDRAWAL_ROUTER_INIT_WITHDRAWAL_DELAY_BLOCKS
-        );
-
-        emit log_string("==== ChainBases to Deploy ====");
-        for (uint256 i = 0; i < numChainBasesToDeploy; ++i) {
-            // Decode the token information into the Token struct
-            CpTokenConfig memory tokenInfo = strategiesToDeploy[i];
-
-            strategiesToDeploy.push(tokenInfo);
-            emit log_named_address("TOKEN ADDRESS", tokenInfo.tokenAddress);
-            emit log_named_string("TOKEN NAME", tokenInfo.tokenName);
-            emit log_named_string("TOKEN SYMBOL", tokenInfo.tokenSymbol);
-        }
+        emit log_named_uint("DELAYED_WITHDRAWAL_ROUTER_INIT_WITHDRAWAL_DELAY_BLOCKS", DELAYED_WITHDRAWAL_ROUTER_INIT_WITHDRAWAL_DELAY_BLOCKS);
     }
 
     /**
      * @notice Log contract addresses and write to output json file
      */
     function logAndOutputContractAddresses(string memory outputPath) public {
-        // WRITE JSON DATA
         string memory parent_object = "parent object";
-
-        string memory deployed_strategies = "strategies";
-        for (uint256 i = 0; i < numChainBasesToDeploy; ++i) {
-            vm.serializeAddress(
-                deployed_strategies,
-                strategiesToDeploy[i].tokenSymbol,
-                address(deployedStrategyArray[i])
-            );
-        }
-        string memory deployed_strategies_output = numChainBasesToDeploy == 0
-            ? ""
-            : vm.serializeAddress(
-                deployed_strategies,
-                strategiesToDeploy[numChainBasesToDeploy - 1].tokenSymbol,
-                address(deployedStrategyArray[numChainBasesToDeploy - 1])
-            );
 
         string memory deployed_addresses = "addresses";
         vm.serializeAddress(deployed_addresses, "cpChainLayerProxyAdmin", address(cpChainLayerProxyAdmin));
         vm.serializeAddress(deployed_addresses, "cpChainLayerPauserReg", address(cpChainLayerPauserReg));
-        vm.serializeAddress(deployed_addresses, "delegationManager", address(delegationManager));
-        vm.serializeAddress(
-            deployed_addresses,
-            "delegationManagerImplementation",
-            address(delegationManagerImplementation)
-        );
-        vm.serializeAddress(deployed_addresses, "cpChainDepositManager", address(cpChainDepositManager));
-        vm.serializeAddress(
-            deployed_addresses,
-            "cpChainDepositManagerImplementation",
-            address(cpChainDepositManagerImplementation)
-        );
-        vm.serializeAddress(deployed_addresses, "rewardManager", address(rewardManager));
-        vm.serializeAddress(
-            deployed_addresses,
-            "rewardManagerImplementation",
-            address(rewardManagerImplementation)
-        );
+        vm.serializeAddress(deployed_addresses, "cpChainBase", address(cpChainBase));
         vm.serializeAddress(deployed_addresses, "cpChainBaseImplementation", address(cpChainBaseImplementation));
+        vm.serializeAddress(deployed_addresses, "delegationManager", address(delegationManager));
+        vm.serializeAddress(deployed_addresses, "delegationManagerImplementation", address(delegationManagerImplementation));
+        vm.serializeAddress(deployed_addresses, "cpChainDepositManager", address(cpChainDepositManager));
+        vm.serializeAddress(deployed_addresses, "cpChainDepositManagerImplementation", address(cpChainDepositManagerImplementation));
+        vm.serializeAddress(deployed_addresses, "rewardManager", address(rewardManager));
+        vm.serializeAddress(deployed_addresses, "rewardManagerImplementation", address(rewardManagerImplementation));
+        vm.serializeAddress(deployed_addresses, "slashingManager", address(slashingManager));
+        vm.serializeAddress(deployed_addresses, "slashingManagerImplementation", address(slashingManagerImplementation));
         vm.serializeAddress(deployed_addresses, "emptyContract", address(emptyContract));
-        string memory deployed_addresses_output = vm.serializeString(
-            deployed_addresses,
-            "strategies",
-            deployed_strategies_output
+        string memory deployed_addresses_output = vm.serializeAddress(
+            deployed_addresses, "emptyContract", address(emptyContract)
         );
 
         string memory parameters = "parameters";
@@ -470,7 +373,6 @@ contract ExistingDeploymentParser is Script, Test {
         vm.serializeUint(chain_info, "deploymentBlock", block.number);
         string memory chain_info_output = vm.serializeUint(chain_info, "chainId", block.chainid);
 
-        // serialize all the data
         vm.serializeString(parent_object, deployed_addresses, deployed_addresses_output);
         vm.serializeString(parent_object, chain_info, chain_info_output);
         string memory finalJson = vm.serializeString(parent_object, parameters, parameters_output);
@@ -479,19 +381,15 @@ contract ExistingDeploymentParser is Script, Test {
     }
 
     function getProxyAdminAddress(address proxy) internal view returns (address) {
-        // Cheatcode address of Foundry
         address CHEATCODE_ADDRESS = 0x7109709ECfa91a80626fF3989D68f67F5b1DD12D;
         Vm vm = Vm(CHEATCODE_ADDRESS);
-
         bytes32 adminSlot = vm.load(proxy, ERC1967Utils.ADMIN_SLOT);
         return address(uint160(uint256(adminSlot)));
     }
 
     function getImplementationAddress(address proxy) internal view returns (address) {
-        // Cheatcode address of Foundry
         address CHEATCODE_ADDRESS = 0x7109709ECfa91a80626fF3989D68f67F5b1DD12D;
         Vm vm = Vm(CHEATCODE_ADDRESS);
-
         bytes32 implementationSlot = vm.load(proxy, ERC1967Utils.IMPLEMENTATION_SLOT);
         return address(uint160(uint256(implementationSlot)));
     }

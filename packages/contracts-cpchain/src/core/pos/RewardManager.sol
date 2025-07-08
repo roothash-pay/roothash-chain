@@ -23,9 +23,8 @@ contract RewardManager is RewardManagerStorage {
 
     constructor(
         IDelegationManager _delegationManager,
-        ICpChainDepositManager _cpChainDepositManager,
-        IERC20 _rewardTokenAddress
-    ) RewardManagerStorage(_delegationManager, _cpChainDepositManager, _rewardTokenAddress) {
+        ICpChainDepositManager _cpChainDepositManager
+    ) RewardManagerStorage(_delegationManager, _cpChainDepositManager) {
         _disableInitializers();
     }
 
@@ -73,16 +72,19 @@ contract RewardManager is RewardManagerStorage {
             "RewardManager operatorClaimReward: operator claim amount need more then zero"
         );
         require(
-            rewardTokenAddress.balanceOf(address(this)) >= claimAmount,
+            address(this).balance >= claimAmount,
             "RewardManager operatorClaimReward: Reward Token balance insufficient"
         );
         operatorRewards[msg.sender] = 0;
-        rewardTokenAddress.safeTransfer(msg.sender, claimAmount);
+
         emit OperatorClaimReward(
             msg.sender,
             claimAmount
         );
-        return true;
+
+        (bool success, ) = payable(msg.sender).call{value: claimAmount}("");
+
+        return success;
     }
 
     function stakeHolderClaimReward(address chainBase) external returns (bool) {
@@ -92,17 +94,21 @@ contract RewardManager is RewardManagerStorage {
             "RewardManager operatorClaimReward: stake holder amount need more then zero"
         );
         require(
-            rewardTokenAddress.balanceOf(address(this)) >= stakeHolderAmount,
+            address(this).balance >= stakeHolderAmount,
             "RewardManager operatorClaimReward: Reward Token balance insufficient"
         );
+
         chainBaseStakeRewards[chainBase] -= stakeHolderAmount;
-        rewardTokenAddress.safeTransfer(msg.sender, stakeHolderAmount);
+
         emit StakeHolderClaimReward(
             msg.sender,
             chainBase,
             stakeHolderAmount
         );
-        return true;
+
+        (bool success, ) = payable(msg.sender).call{value: stakeHolderAmount}("");
+
+        return success;
     }
 
     function getStakeHolderAmount(address chainBase) external view returns (uint256) {

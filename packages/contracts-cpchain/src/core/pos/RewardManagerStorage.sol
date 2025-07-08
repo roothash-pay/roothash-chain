@@ -12,13 +12,9 @@ import "../../interfaces/ICpChainDepositManager.sol";
 
 
 abstract contract RewardManagerStorage is Initializable, OwnableUpgradeable, ReentrancyGuardUpgradeable, IRewardManager {
-    using SafeERC20 for IERC20;
-
     IDelegationManager public immutable delegationManager;
 
     ICpChainDepositManager public immutable cpChainDepositManager;
-
-    IERC20 public immutable rewardTokenAddress;
 
     uint256 public stakePercent;
 
@@ -29,10 +25,9 @@ abstract contract RewardManagerStorage is Initializable, OwnableUpgradeable, Ree
     mapping(address => uint256) public chainBaseStakeRewards;
     mapping(address => uint256) public operatorRewards;
 
-    constructor(IDelegationManager _delegationManager, ICpChainDepositManager _cpChainDepositManager, IERC20 _rewardTokenAddress) {
+    constructor(IDelegationManager _delegationManager, ICpChainDepositManager _cpChainDepositManager) {
         delegationManager = _delegationManager;
         cpChainDepositManager = _cpChainDepositManager;
-        rewardTokenAddress = _rewardTokenAddress;
     }
 
     uint256[100] private __gap;

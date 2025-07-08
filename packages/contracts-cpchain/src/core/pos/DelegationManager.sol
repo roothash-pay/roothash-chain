@@ -51,11 +51,11 @@ contract DelegationManager is Initializable, OwnableUpgradeable, ReentrancyGuard
 
     receive() external payable {}
 
-    function initialize(address initialOwner, IPauserRegistry _pauserRegistry, uint256 initialPausedStatus, uint256 _withdrawalDelayBlocks) external initializer {
+    function initialize(address initialOwner, IPauserRegistry _pauserRegistry, uint256 initialPausedStatus, uint256 _withdrawalDelayBlock) external initializer {
         _initializePauser(_pauserRegistry, initialPausedStatus);
         _DOMAIN_SEPARATOR = _calculateDomainSeparator();
         _transferOwnership(initialOwner);
-        _setStrategyWithdrawalDelayBlocks(_withdrawalDelayBlocks);
+        _setStrategyWithdrawalDelayBlocks(_withdrawalDelayBlock);
     }
 
     /*******************************************************************************
