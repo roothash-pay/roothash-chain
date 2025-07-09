@@ -2,13 +2,14 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@/access/Pausable.sol";
 
 import "./RewardManagerStorage.sol";
 import "../../interfaces/ICpChainBase.sol";
 import "../../interfaces/ICpChainDepositManager.sol";
 
 
-contract RewardManager is RewardManagerStorage {
+contract RewardManager is RewardManagerStorage, Pausable {
     using SafeERC20 for IERC20;
 
     modifier onlyRewardManager() {
@@ -30,11 +31,12 @@ contract RewardManager is RewardManagerStorage {
 
     receive() external payable {}
 
-    function initialize(address initialOwner, address _rewardManager, address _payFeeManager, uint256 _stakePercent) external initializer {
+    function initialize(address initialOwner, address _rewardManager, address _payFeeManager, uint256 _stakePercent, IPauserRegistry _pauserRegistry) external initializer {
         payFeeManager = _payFeeManager;
         rewardManager = _rewardManager;
         stakePercent = _stakePercent;
         _transferOwnership(initialOwner);
+        _initializePauser(_pauserRegistry, UNPAUSE_ALL);
     }
 
     function payFee(address chainBase, address operator, uint256 baseFee) external onlyPayFeeManager {

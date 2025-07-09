@@ -121,7 +121,8 @@ contract DeployerBasic is ExistingDeploymentParser {
                 executorMultisig,
                 executorMultisig,
                 executorMultisig,
-                REWARD_MANAGER_STAKE_PERCENTAGE
+                REWARD_MANAGER_STAKE_PERCENTAGE,
+                cpChainLayerPauserReg
             )
         );
 

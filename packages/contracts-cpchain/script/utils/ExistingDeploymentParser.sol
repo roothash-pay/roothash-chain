@@ -259,7 +259,8 @@ contract ExistingDeploymentParser is Script, Test {
             executorMultisig,
             executorMultisig,
             executorMultisig,
-            REWARD_MANAGER_STAKE_PERCENTAGE
+            REWARD_MANAGER_STAKE_PERCENTAGE,
+            cpChainLayerPauserReg
         );
 
         // DelegationManager

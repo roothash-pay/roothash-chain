@@ -67,7 +67,7 @@ contract CpChainBase is Initializable, ICpChainBase, Pausable {
         return newShares;
     }
 
-    function withdraw(address recipient, uint256 amountShares) external virtual override onlyStrategyManager {
+    function withdraw(address recipient, uint256 amountShares) external virtual override whenNotPaused onlyStrategyManager {
         uint256 priorTotalShares = totalShares;
         require(
             amountShares <= priorTotalShares,

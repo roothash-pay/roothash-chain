@@ -55,7 +55,7 @@ contract DelegationManager is Initializable, OwnableUpgradeable, ReentrancyGuard
         _initializePauser(_pauserRegistry, initialPausedStatus);
         _DOMAIN_SEPARATOR = _calculateDomainSeparator();
         _transferOwnership(initialOwner);
-        _setStrategyWithdrawalDelayBlocks(_withdrawalDelayBlock);
+        _setCpChainBaseWithdrawalDelayBlocks(_withdrawalDelayBlock);
     }
 
     /*******************************************************************************
@@ -153,7 +153,7 @@ contract DelegationManager is Initializable, OwnableUpgradeable, ReentrancyGuard
         return withdrawalRoot;
     }
 
-    function queueWithdrawals(QueuedWithdrawalParams[] calldata queuedWithdrawalParams) external returns (bytes32[] memory) {
+    function queueWithdrawals(QueuedWithdrawalParams[] calldata queuedWithdrawalParams) external whenNotPaused returns (bytes32[] memory) {
         bytes32[] memory withdrawalRoots = new bytes32[](queuedWithdrawalParams.length);
 
         address operator = delegatedTo[msg.sender];
@@ -169,11 +169,11 @@ contract DelegationManager is Initializable, OwnableUpgradeable, ReentrancyGuard
         return withdrawalRoots;
     }
 
-    function completeQueuedWithdrawal(Withdrawal calldata withdrawal) external nonReentrant {
+    function completeQueuedWithdrawal(Withdrawal calldata withdrawal) external whenNotPaused nonReentrant {
         _completeQueuedWithdrawal(withdrawal);
     }
 
-    function completeQueuedWithdrawals(Withdrawal[] calldata withdrawals) external nonReentrant {
+    function completeQueuedWithdrawals(Withdrawal[] calldata withdrawals) external whenNotPaused nonReentrant {
         for (uint256 i = 0; i < withdrawals.length; ++i) {
             _completeQueuedWithdrawal(withdrawals[i]);
         }
@@ -197,8 +197,8 @@ contract DelegationManager is Initializable, OwnableUpgradeable, ReentrancyGuard
         }
     }
 
-    function setStrategyWithdrawalDelayBlocks(uint256 withdrawalDelayBlock) external onlyOwner {
-        _setStrategyWithdrawalDelayBlocks(withdrawalDelayBlock);
+    function setCpChainBaseWithdrawalDelayBlocks(uint256 withdrawalDelayBlock) external onlyOwner {
+        _setCpChainBaseWithdrawalDelayBlocks(withdrawalDelayBlock);
     }
 
     /*******************************************************************************
@@ -340,13 +340,13 @@ contract DelegationManager is Initializable, OwnableUpgradeable, ReentrancyGuard
         cpChainDepositManager.withdrawSharesAsCp(withdrawer, shares);
     }
 
-    function _setStrategyWithdrawalDelayBlocks(uint256 _withdrawalDelayBlocks) internal {
+    function _setCpChainBaseWithdrawalDelayBlocks(uint256 _withdrawalDelayBlocks) internal {
         uint256 prevStrategyWithdrawalDelayBlock = chainBaseWithdrawalDelayBlock;
         uint256 newStrategyWithdrawalDelayBlock = _withdrawalDelayBlocks;
 
         require(
             newStrategyWithdrawalDelayBlock <= MAX_WITHDRAWAL_DELAY_BLOCKS,
-            "DelegationManager._setStrategyWithdrawalDelayBlocks: _withdrawalDelayBlocks cannot be > MAX_WITHDRAWAL_DELAY_BLOCKS"
+            "DelegationManager._setCpChainBaseWithdrawalDelayBlocks: _withdrawalDelayBlocks cannot be > MAX_WITHDRAWAL_DELAY_BLOCKS"
         );
 
         chainBaseWithdrawalDelayBlock  = newStrategyWithdrawalDelayBlock;
