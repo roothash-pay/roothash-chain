@@ -583,6 +583,7 @@ func (s *Driver) syncUnsafeBlocks(ctx context.Context) {
 				s.log.Warn("Failed to insert unsafe payload for EL sync", "id", payload.ExecutionPayload.ID(), "err", err)
 			}
 		}
+		s.log.Info("successfully synchronized a batch of blocks", "now", endHeight.String(), "latest", endBlock.NumberU64())
 
 		if startHeight.Cmp(endHeight) == 0 {
 			s.log.Info("successfully synchronized all old blocks")
