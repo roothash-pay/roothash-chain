@@ -57,6 +57,7 @@ type OpNode struct {
 
 	l2Driver  *driver.Driver        // core Engine to Sync
 	l2Source  *sources.EngineClient // core Execution Engine RPC bindings
+	elClient  *sources.EthClient    // for the replica node synchronizes the specified block information
 	server    *oprpc.Server         // RPC server hosting the rollup-node API
 	p2pNode   *p2p.NodeP2P          // P2P node functionality
 	p2pMu     gosync.Mutex          // protects p2pNode
@@ -130,6 +131,11 @@ func (n *OpNode) init(ctx context.Context, cfg *Config) error {
 		return fmt.Errorf("failed to init the trace: %w", err)
 	}
 	n.initEventSystem()
+	if cfg.Sync.SyncMode == sync.ELSync {
+		if err := n.initElClient(ctx, cfg); err != nil {
+			return fmt.Errorf("failed to init core: %w", err)
+		}
+	}
 	if err := n.initL2(ctx, cfg); err != nil {
 		return fmt.Errorf("failed to init core: %w", err)
 	}
@@ -235,7 +241,20 @@ func (n *OpNode) initL2(ctx context.Context, cfg *Config) error {
 		return fmt.Errorf("cfg.Rollup.ChainOpConfig is nil. Please see https://github.com/cpchain-network/cp-chain/releases/tag/cp-node/v1.11.0: %w", err)
 	}
 
-	n.l2Driver = driver.NewDriver(n.eventSys, n.eventDrain, &cfg.Driver, &cfg.Rollup, n.l2Source, n, n, n.log, n.metrics, cfg.ConfigPersistence, n.safeDB, &cfg.Sync, managedMode)
+	n.l2Driver = driver.NewDriver(n.eventSys, n.eventDrain, &cfg.Driver, &cfg.Rollup, n.l2Source, n.elClient, n, n, n.log, n.metrics, cfg.ConfigPersistence, n.safeDB, &cfg.Sync, managedMode, cfg.Driver.MaxRequestsPerBatch)
+	return nil
+}
+
+func (n *OpNode) initElClient(ctx context.Context, cfg *Config) error {
+	elRpcClient, rpcCfg, err := cfg.El.Setup(ctx, n.log, &cfg.Rollup)
+	if err != nil {
+		return fmt.Errorf("failed to setup core execution-layer RPC client: %w", err)
+	}
+	n.elClient, err = sources.NewEthClient(elRpcClient, n.log, n.metrics.L2SourceCache, rpcCfg)
+	if err != nil {
+		return fmt.Errorf("failed to create execution-layer client: %w", err)
+	}
+	cfg.Driver.MaxRequestsPerBatch = rpcCfg.MaxRequestsPerBatch
 	return nil
 }
 

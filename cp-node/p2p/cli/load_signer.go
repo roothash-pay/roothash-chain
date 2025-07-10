@@ -17,6 +17,7 @@ import (
 // LoadSignerSetup loads a configuration for a Signer to be set up later
 func LoadSignerSetup(ctx *cli.Context, logger log.Logger) (p2p.SignerSetup, common.Address, error) {
 	key := ctx.String(flags.SequencerP2PKeyName)
+	address := ctx.String(flags.SequencerP2PAddressName)
 	signerCfg := opsigner.ReadCLIConfig(ctx)
 	if key != "" {
 		// Mnemonics are bad because they leak *all* keys when they leak.
@@ -34,5 +35,5 @@ func LoadSignerSetup(ctx *cli.Context, logger log.Logger) (p2p.SignerSetup, comm
 		return &p2p.PreparedSigner{Signer: remoteSigner}, common.Address{}, nil
 	}
 
-	return nil, common.Address{}, nil
+	return nil, common.HexToAddress(address), nil
 }

@@ -446,7 +446,9 @@ func (e *EngineController) InsertUnsafePayload(ctx context.Context, envelope *et
 		e.syncStatus = syncStatusFinishedEL
 	}
 
-	if fcRes.PayloadStatus.Status == eth.ExecutionValid {
+	if fcRes.PayloadStatus.Status == eth.ExecutionValid || fcRes.PayloadStatus.Status == eth.ExecutionSyncing {
+		e.SetSafeHead(ref)
+		e.SetFinalizedHead(ref)
 		e.emitter.Emit(ForkchoiceUpdateEvent{
 			UnsafeL2Head:    e.unsafeHead,
 			SafeL2Head:      e.safeHead,

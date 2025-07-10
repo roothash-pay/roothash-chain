@@ -48,6 +48,7 @@ var (
 	PeerstorePathName       = "p2p.peerstore.path"
 	DiscoveryPathName       = "p2p.discovery.path"
 	SequencerP2PKeyName     = "p2p.sequencer.key"
+	SequencerP2PAddressName = "p2p.sequencer.address"
 	GossipMeshDName         = "p2p.gossip.mesh.d"
 	GossipMeshDloName       = "p2p.gossip.mesh.lo"
 	GossipMeshDhiName       = "p2p.gossip.mesh.dhi"
@@ -340,6 +341,14 @@ func P2PFlags(envPrefix string) []cli.Flag {
 			Required: false,
 			Value:    "",
 			EnvVars:  p2pEnv(envPrefix, "SEQUENCER_KEY"),
+			Category: P2PCategory,
+		},
+		&cli.StringFlag{
+			Name:     SequencerP2PAddressName,
+			Usage:    "Address for signing off on p2p application messages as sequencer.",
+			Required: true,
+			Value:    "",
+			EnvVars:  p2pEnv(envPrefix, "SEQUENCER_ADDRESS"),
 			Category: P2PCategory,
 		},
 		&cli.UintFlag{

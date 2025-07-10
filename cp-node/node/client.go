@@ -25,6 +25,12 @@ type L2EndpointSetup interface {
 	Check() error
 }
 
+type ELEndpointSetup interface {
+	// Setup a RPC client to a core execution engine to process rollup blocks with.
+	Setup(ctx context.Context, log log.Logger, rollupCfg *rollup.Config) (cl client.RPC, rpcCfg *sources.EthClientConfig, err error)
+	Check() error
+}
+
 type L1EndpointSetup interface {
 	// Setup a RPC client to a L1 node to pull rollup input-data from.
 	// The results of the RPC client may be trusted for faster processing, or strictly validated.
@@ -100,6 +106,60 @@ var _ L2EndpointSetup = (*PreparedL2Endpoints)(nil)
 
 func (p *PreparedL2Endpoints) Setup(ctx context.Context, log log.Logger, rollupCfg *rollup.Config, metrics opmetrics.RPCMetricer) (client.RPC, *sources.EngineClientConfig, error) {
 	return p.Client, sources.EngineClientDefaultConfig(rollupCfg), nil
+}
+
+type ElEndpointConfig struct {
+	// ElEngineAddr is the address of the core Engine JSON-RPC endpoint to use. The engine and eth
+	// namespaces must be enabled by the endpoint.
+	ElRpcAddr string
+
+	// RateLimit specifies a self-imposed rate-limit on L1 requests. 0 is no rate-limit.
+	RateLimit float64
+
+	// BatchSize specifies the maximum batch-size, which also applies as L1 rate-limit burst amount (if set).
+	BatchSize int
+}
+
+func (cfg *ElEndpointConfig) Check() error {
+	if cfg.ElRpcAddr == "" {
+		return errors.New("empty core execution-layer address")
+	}
+
+	return nil
+}
+
+func (cfg *ElEndpointConfig) Setup(ctx context.Context, log log.Logger, rollupCfg *rollup.Config) (client.RPC, *sources.EthClientConfig, error) {
+	if err := cfg.Check(); err != nil {
+		return nil, nil, err
+	}
+	opts := []client.RPCOption{
+		client.WithDialAttempts(10),
+	}
+	opts = append(opts, client.WithRateLimit(cfg.RateLimit, cfg.BatchSize))
+
+	elNode, err := client.NewRPC(ctx, log, cfg.ElRpcAddr, opts...)
+	if err != nil {
+		return nil, nil, err
+	}
+	cLCfg := sources.L2ClientDefaultConfig(rollupCfg, true)
+	cLCfg.MaxRequestsPerBatch = cfg.BatchSize
+	return elNode, &cLCfg.EthClientConfig, nil
+}
+
+// PreparedElEndpoints enables testing with in-process pre-setup RPC connections to core engines
+type PreparedElEndpoints struct {
+	Client client.RPC
+}
+
+func (p *PreparedElEndpoints) Check() error {
+	if p.Client == nil {
+		return errors.New("client cannot be nil")
+	}
+	return nil
+}
+
+func (p *PreparedElEndpoints) Setup(ctx context.Context, log log.Logger, rollupCfg *rollup.Config) (client.RPC, *sources.EthClientConfig, error) {
+	return p.Client, nil, nil
 }
 
 type L1EndpointConfig struct {

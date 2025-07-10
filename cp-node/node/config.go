@@ -22,6 +22,8 @@ import (
 type Config struct {
 	L2 L2EndpointSetup
 
+	El ELEndpointSetup
+
 	InteropConfig interop.Setup
 
 	Driver driver.Config

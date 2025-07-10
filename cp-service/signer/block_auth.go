@@ -63,7 +63,8 @@ func (a *OPStackP2PBlockAuthV1) Check(signer common.Address) error {
 	if a.Allowed == signer {
 		return nil
 	}
-	return errors.New("unrecognized signer")
+	return fmt.Errorf("unrecognized signer, allowed = %s, signer = %s",
+		a.Allowed.String(), signer.String())
 }
 
 func (a *OPStackP2PBlockAuthV1) Domain() [32]byte {

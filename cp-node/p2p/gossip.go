@@ -307,23 +307,13 @@ func BuildBlocksValidator(log log.Logger, cfg *rollup.Config, runCfg GossipRunti
 		}
 
 		var envelope eth.ExecutionPayloadEnvelope
+		var payload eth.ExecutionPayload
 
-		// [REJECT] if the block encoding is not valid
-		if blockVersion.HasParentBeaconBlockRoot() {
-			if err := envelope.UnmarshalSSZ(blockVersion, uint32(len(payloadBytes)), bytes.NewReader(payloadBytes)); err != nil {
-				log.Warn("invalid envelope payload", "err", err, "peer", id)
-				return pubsub.ValidationReject
-			}
-		} else {
-			var payload eth.ExecutionPayload
-			if err := payload.UnmarshalSSZ(blockVersion, uint32(len(payloadBytes)), bytes.NewReader(payloadBytes)); err != nil {
-				log.Warn("invalid execution payload", "err", err, "peer", id)
-				return pubsub.ValidationReject
-			}
-			envelope = eth.ExecutionPayloadEnvelope{ExecutionPayload: &payload}
+		if err := payload.UnmarshalSSZ(blockVersion, uint32(len(payloadBytes)), bytes.NewReader(payloadBytes)); err != nil {
+			log.Warn("invalid execution payload", "err", err, "peer", id)
+			return pubsub.ValidationReject
 		}
-
-		payload := envelope.ExecutionPayload
+		envelope = eth.ExecutionPayloadEnvelope{ExecutionPayload: &payload}
 
 		// rounding down to seconds is fine here.
 		now := uint64(time.Now().Unix())
@@ -341,65 +331,10 @@ func BuildBlocksValidator(log log.Logger, cfg *rollup.Config, runCfg GossipRunti
 		}
 
 		// [REJECT] if the `block_hash` in the `payload` is not valid
-		if actual, ok := envelope.CheckBlockHash(); !ok {
-			log.Warn("payload has bad block hash", "bad_hash", payload.BlockHash.String(), "actual", actual.String())
-			return pubsub.ValidationReject
-		}
-
-		// [REJECT] if a V1 Block has withdrawals
-		if !blockVersion.HasWithdrawals() && payload.Withdrawals != nil {
-			log.Warn("payload is on v1 topic, but has withdrawals", "bad_hash", payload.BlockHash.String())
-			return pubsub.ValidationReject
-		}
-
-		// [REJECT] if a >= V2 Block does not have withdrawals
-		if blockVersion.HasWithdrawals() && payload.Withdrawals == nil {
-			log.Warn("payload is on v2/v3 topic, but does not have withdrawals", "bad_hash", payload.BlockHash.String())
-			return pubsub.ValidationReject
-		}
-
-		// [REJECT] if a >= V2 Block has non-empty withdrawals
-		if blockVersion.HasWithdrawals() && len(*payload.Withdrawals) != 0 {
-			log.Warn("payload is on v2/v3 topic, but has non-empty withdrawals", "bad_hash", payload.BlockHash.String(), "withdrawal_count", len(*payload.Withdrawals))
-			return pubsub.ValidationReject
-		}
-
-		// [REJECT] if the block is on a topic <= V2 and has a blob gas value set
-		if !blockVersion.HasBlobProperties() && payload.BlobGasUsed != nil {
-			log.Warn("payload is on v1/v2 topic, but has blob gas used", "bad_hash", payload.BlockHash.String())
-			return pubsub.ValidationReject
-		}
-
-		// [REJECT] if the block is on a topic <= V2 and has an excess blob gas value set
-		if !blockVersion.HasBlobProperties() && payload.ExcessBlobGas != nil {
-			log.Warn("payload is on v1/v2 topic, but has excess blob gas", "bad_hash", payload.BlockHash.String())
-			return pubsub.ValidationReject
-		}
-
-		if blockVersion.HasBlobProperties() {
-			// [REJECT] if the block is on a topic >= V3 and has a blob gas used value that is not zero
-			if payload.BlobGasUsed == nil || *payload.BlobGasUsed != 0 {
-				log.Warn("payload is on v3 topic, but has non-zero blob gas used", "bad_hash", payload.BlockHash.String(), "blob_gas_used", payload.BlobGasUsed)
-				return pubsub.ValidationReject
-			}
-
-			// [REJECT] if the block is on a topic >= V3 and has an excess blob gas value that is not zero
-			if payload.ExcessBlobGas == nil || *payload.ExcessBlobGas != 0 {
-				log.Warn("payload is on v3 topic, but has non-zero excess blob gas", "bad_hash", payload.BlockHash.String(), "excess_blob_gas", payload.ExcessBlobGas)
-				return pubsub.ValidationReject
-			}
-		}
-
-		// [REJECT] if the block is on a topic >= V3 and the parent beacon block root is nil
-		if blockVersion.HasParentBeaconBlockRoot() && envelope.ParentBeaconBlockRoot == nil {
-			log.Warn("payload is on v3 topic, but has nil parent beacon block root", "bad_hash", payload.BlockHash.String())
-			return pubsub.ValidationReject
-		}
-
-		if blockVersion.HasWithdrawalsRoot() && payload.WithdrawalsRoot == nil {
-			log.Warn("payload is on v4 topic, but has nil withdrawals root", "bad_hash", payload.BlockHash.String())
-			return pubsub.ValidationReject
-		}
+		//if actual, ok := envelope.CheckBlockHash(); !ok {
+		//	log.Warn("payload has bad block hash", "bad_hash", payload.BlockHash.String(), "actual", actual.String())
+		//	return pubsub.ValidationReject
+		//}
 
 		seen, ok := blockHeightLRU.Get(uint64(payload.BlockNumber))
 		if !ok {

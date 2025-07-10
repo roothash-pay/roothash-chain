@@ -54,6 +54,11 @@ func NewConfig(ctx *cli.Context, log log.Logger) (*node.Config, error) {
 		return nil, fmt.Errorf("failed to load l2 endpoints info: %w", err)
 	}
 
+	elEndpoint, err := NewElEndpointConfig(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("failed to load l2 endpoints info: %w", err)
+	}
+
 	syncConfig, err := NewSyncConfig(ctx, log)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create the sync config: %w", err)
@@ -72,6 +77,7 @@ func NewConfig(ctx *cli.Context, log log.Logger) (*node.Config, error) {
 	conductorRPCEndpoint := ctx.String(flags.ConductorRpcFlag.Name)
 	cfg := &node.Config{
 		L2:            l2Endpoint,
+		El:            elEndpoint,
 		Rollup:        *rollupConfig,
 		Driver:        *driverConfig,
 		InteropConfig: NewSupervisorEndpointConfig(ctx),
@@ -142,6 +148,14 @@ func NewL2EndpointConfig(ctx *cli.Context, logger log.Logger) (*node.L2EndpointC
 		L2EngineAddr:        l2Addr,
 		L2EngineJWTSecret:   secret,
 		L2EngineCallTimeout: l2RpcTimeout,
+	}, nil
+}
+
+func NewElEndpointConfig(ctx *cli.Context) (*node.ElEndpointConfig, error) {
+	return &node.ElEndpointConfig{
+		ElRpcAddr: ctx.String(flags.ELRpcUrlFlag.Name),
+		RateLimit: ctx.Float64(flags.ELRPCRateLimit.Name),
+		BatchSize: ctx.Int(flags.ELRPCMaxBatchSize.Name),
 	}, nil
 }
 

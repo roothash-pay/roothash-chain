@@ -4,9 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math/big"
 	gosync "sync"
 	"time"
 
+	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/log"
 
@@ -18,6 +20,7 @@ import (
 	"github.com/cpchain-network/cp-chain/cp-node/rollup/sequencing"
 	"github.com/cpchain-network/cp-chain/cp-node/rollup/sync"
 	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/cpchain-network/cp-chain/cp-service/sources"
 )
 
 // Deprecated: use eth.SyncStatus instead.
@@ -54,6 +57,9 @@ type Driver struct {
 	l1SafeSig      chan eth.L1BlockRef
 	l1FinalizedSig chan eth.L1BlockRef
 
+	l2Payloads   []eth.ExecutionPayloadEnvelope
+	maxBatchSize uint
+
 	// Interface to signal the core block range to sync.
 	altSync AltSync
 
@@ -89,6 +95,10 @@ func (s *Driver) Start() error {
 		if err := s.sequencer.Init(s.driverCtx, !s.driverConfig.SequencerStopped); err != nil {
 			return fmt.Errorf("persist initial sequencer state: %w", err)
 		}
+	}
+
+	if s.SyncCfg.SyncMode == sync.ELSync {
+		s.syncUnsafeBlocks(s.driverCtx)
 	}
 
 	s.wg.Add(1)
@@ -230,12 +240,14 @@ func (s *Driver) eventLoop() {
 		case <-sequencerCh:
 			s.Emitter.Emit(sequencing.SequencerActionEvent{})
 		case <-altSyncTicker.C:
-			// Check if there is a gap in the current unsafe payload queue.
-			ctx, cancel := context.WithTimeout(s.driverCtx, time.Second*2)
-			err := s.checkForGapInUnsafeQueue(ctx)
-			cancel()
-			if err != nil {
-				s.log.Warn("failed to check for unsafe core blocks to sync", "err", err)
+			if s.SyncCfg.SyncMode == sync.CLSync {
+				// Check if there is a gap in the current unsafe payload queue.
+				ctx, cancel := context.WithTimeout(s.driverCtx, time.Second*2)
+				err := s.checkForGapInUnsafeQueue(ctx)
+				cancel()
+				if err != nil {
+					s.log.Warn("failed to check for unsafe core blocks to sync", "err", err)
+				}
 			}
 		case envelope := <-s.unsafeL2Payloads:
 			// If we are doing CL sync or done with engine syncing, fallback to the unsafe payload queue & CL P2P sync.
@@ -270,8 +282,6 @@ func (s *Driver) eventLoop() {
 			s.metrics.RecordPipelineReset()
 			close(respCh)
 		case <-s.driverCtx.Done():
-			fmt.Println("****333*****")
-
 			return
 		}
 	}
@@ -295,8 +305,9 @@ type SyncDeriver struct {
 
 	Config *rollup.Config
 
-	L1 L1Chain
-	L2 L2Chain
+	L1       L1Chain
+	L2       L2Chain
+	ELClient *sources.EthClient
 
 	Emitter event.Emitter
 
@@ -538,4 +549,56 @@ func (s *Driver) checkForGapInUnsafeQueue(ctx context.Context) error {
 		return s.altSync.RequestL2Range(ctx, start, end)
 	}
 	return nil
+}
+
+func (s *Driver) syncUnsafeBlocks(ctx context.Context) {
+	tickerSyncer := time.NewTicker(time.Second * 1)
+	for range tickerSyncer.C {
+		startBlock, err := s.L2.GetLatestBlock(ctx)
+		if err != nil && errors.Is(err, ethereum.NotFound) {
+			s.log.Error("failed to get latest block by l2 geth", "err", err)
+			continue
+		}
+		endBlock, err := s.ELClient.GetLatestBlock(ctx)
+		if err != nil && errors.Is(err, ethereum.NotFound) {
+			s.log.Error("failed to get latest block by el geth", "err", err)
+			continue
+		}
+		startHeight := big.NewInt(int64(startBlock.NumberU64()) + 1)
+		endHeight := clamp(startHeight, big.NewInt(int64(endBlock.NumberU64())), uint64(s.maxBatchSize))
+
+		payloads, err := s.ELClient.PayloadsByRange(ctx, startHeight, endHeight)
+		if err != nil {
+			s.log.Error("error querying blocks by range", "err", err)
+			continue
+		}
+
+		for _, payload := range payloads {
+			ref, err := derive.PayloadToBlockRef(s.Config, payload.ExecutionPayload)
+			if err != nil {
+				s.log.Info("Failed to turn execution payload into a block ref", "id", payload.ExecutionPayload.ID(), "err", err)
+				continue
+			}
+			if err := s.Engine.InsertUnsafePayload(ctx, &payload, ref); err != nil {
+				s.log.Warn("Failed to insert unsafe payload for EL sync", "id", payload.ExecutionPayload.ID(), "err", err)
+			}
+		}
+
+		if startHeight.Cmp(endHeight) == 0 {
+			s.log.Info("successfully synchronized all old blocks")
+			return
+		}
+	}
+}
+
+func clamp(start, end *big.Int, size uint64) *big.Int {
+	temp := new(big.Int)
+	count := temp.Sub(end, start).Uint64() + 1
+	if count <= size {
+		return end
+	}
+
+	// we re-use the allocated temp as the new end
+	temp.Add(start, big.NewInt(int64(size-1)))
+	return temp
 }

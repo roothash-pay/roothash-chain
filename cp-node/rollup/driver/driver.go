@@ -18,6 +18,7 @@ import (
 	"github.com/cpchain-network/cp-chain/cp-node/rollup/status"
 	"github.com/cpchain-network/cp-chain/cp-node/rollup/sync"
 	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/cpchain-network/cp-chain/cp-service/sources"
 )
 
 // aliases to not disrupt op-conductor code
@@ -65,6 +66,7 @@ type L2Chain interface {
 	L2BlockRefByLabel(ctx context.Context, label eth.BlockLabel) (eth.L2BlockRef, error)
 	L2BlockRefByHash(ctx context.Context, l2Hash common.Hash) (eth.L2BlockRef, error)
 	L2BlockRefByNumber(ctx context.Context, num uint64) (eth.L2BlockRef, error)
+	GetLatestBlock(ctx context.Context) (eth.BlockInfo, error)
 }
 
 type DerivationPipeline interface {
@@ -149,6 +151,7 @@ func NewDriver(
 	driverCfg *Config,
 	cfg *rollup.Config,
 	l2 L2Chain,
+	elClient *sources.EthClient,
 	altSync AltSync,
 	network Network,
 	log log.Logger,
@@ -157,6 +160,7 @@ func NewDriver(
 	safeHeadListener rollup.SafeHeadListener,
 	syncCfg *sync.Config,
 	managedMode bool,
+	batchSize int,
 ) *Driver {
 	driverCtx, driverCancel := context.WithCancel(context.Background())
 
@@ -196,6 +200,7 @@ func NewDriver(
 		SyncCfg:        syncCfg,
 		Config:         cfg,
 		L2:             l2,
+		ELClient:       elClient,
 		Log:            log,
 		Ctx:            driverCtx,
 		Drain:          drain.Drain,
@@ -232,6 +237,7 @@ func NewDriver(
 		driverCtx:        driverCtx,
 		driverCancel:     driverCancel,
 		log:              log,
+		maxBatchSize:     uint(batchSize),
 		sequencer:        sequencer,
 		network:          network,
 		metrics:          metrics,

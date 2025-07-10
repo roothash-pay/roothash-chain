@@ -272,6 +272,63 @@ func (s *EthClient) payloadCall(ctx context.Context, method string, id rpcBlockI
 	return envelope, nil
 }
 
+func (s *EthClient) PayloadsByRange(ctx context.Context, startHeight, endHeight *big.Int) ([]eth.ExecutionPayloadEnvelope, error) {
+	if startHeight.Cmp(endHeight) == 0 {
+		payload, err := s.PayloadByNumber(ctx, startHeight.Uint64())
+		if err != nil {
+			return nil, err
+		}
+		return []eth.ExecutionPayloadEnvelope{*payload}, nil
+	}
+
+	count := new(big.Int).Sub(endHeight, startHeight).Uint64() + 1
+	headers := make([]RPCBlock, count)
+	payloads := make([]eth.ExecutionPayloadEnvelope, count)
+	batchElems := make([]rpc.BatchElem, count)
+
+	for i := uint64(0); i < count; i++ {
+		height := new(big.Int).Add(startHeight, new(big.Int).SetUint64(i))
+		batchElems[i] = rpc.BatchElem{Method: "eth_getBlockByNumber", Args: []interface{}{toBlockNumArg(height), false}, Result: &headers[i]}
+	}
+
+	ctxwt, cancel := context.WithTimeout(context.Background(), 100*time.Second)
+	defer cancel()
+	err := s.client.BatchCallContext(ctxwt, batchElems)
+	if err != nil {
+		return nil, err
+	}
+	size := 0
+	for i, batchElem := range batchElems {
+		if batchElem.Error != nil {
+			if size == 0 {
+				return nil, batchElem.Error
+			} else {
+				break
+			}
+		} else if batchElem.Result == nil {
+			break
+		}
+		if i > 0 && headers[i].ParentHash.Hex() != headers[i-1].Hash.Hex() {
+			return nil, fmt.Errorf("queried header %s does not follow parent %s", headers[i].Hash, headers[i-1].Hash)
+		}
+		size = size + 1
+	}
+	headers = headers[:size]
+
+	for i, header := range headers {
+		payload, err := header.ExecutionPayloadEnvelope(s.trustRPC)
+		if err != nil {
+			return nil, err
+		}
+		if err = numberID(header.Number).CheckID(payload.ExecutionPayload.ID()); err != nil {
+			return nil, fmt.Errorf("fetched payload does not match requested ID: %w", err)
+		}
+		payloads[i] = *payload
+	}
+
+	return payloads, nil
+}
+
 // ChainID fetches the chain id of the internal RPC.
 func (s *EthClient) ChainID(ctx context.Context) (*big.Int, error) {
 	var id hexutil.Big
@@ -316,6 +373,23 @@ func (s *EthClient) InfoAndTxsByNumber(ctx context.Context, number uint64) (eth.
 func (s *EthClient) InfoAndTxsByLabel(ctx context.Context, label eth.BlockLabel) (eth.BlockInfo, types.Transactions, error) {
 	// can't hit the cache when querying the head due to reorgs / changes.
 	return s.blockCall(ctx, "eth_getBlockByNumber", label)
+}
+
+func (s *EthClient) GetLatestBlock(ctx context.Context) (eth.BlockInfo, error) {
+	var block *RPCBlock
+	err := s.client.CallContext(ctx, &block, "eth_getBlockByNumber", "latest", false)
+	if err != nil {
+		return nil, err
+	}
+	if block == nil {
+		return nil, ethereum.NotFound
+	}
+	info, _, err := block.Info(s.trustRPC, s.mustBePostMerge)
+	if err != nil {
+		return nil, err
+	}
+
+	return info, nil
 }
 
 func (s *EthClient) PayloadByHash(ctx context.Context, hash common.Hash) (*eth.ExecutionPayloadEnvelope, error) {

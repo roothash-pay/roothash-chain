@@ -76,6 +76,27 @@ var (
 		}(),
 		Category: RollupCategory,
 	}
+	ELRpcUrlFlag = &cli.StringFlag{
+		Name:     "el.rpc-url",
+		Usage:    "RPC URL for getting L2 information in execution-layer sync mode",
+		Value:    "127.0.0.1:9545",
+		EnvVars:  prefixEnvVars("EL_RPC_URL"),
+		Category: RollupCategory,
+	}
+	ELRPCRateLimit = &cli.Float64Flag{
+		Name:     "el.rpc-rate-limit",
+		Usage:    "Optional self-imposed global rate-limit on el RPC requests, specified in requests / second. Disabled if set to 0.",
+		EnvVars:  prefixEnvVars("L1_RPC_RATE_LIMIT"),
+		Value:    0,
+		Category: RollupCategory,
+	}
+	ELRPCMaxBatchSize = &cli.IntFlag{
+		Name:     "el.rpc-max-batch-size",
+		Usage:    "Maximum number of RPC requests to bundle, e.g. during el blocks receipt fetching. The el RPC rate limit counts this as N items, but allows it to burst at once.",
+		EnvVars:  prefixEnvVars("L1_RPC_MAX_BATCH_SIZE"),
+		Value:    20,
+		Category: RollupCategory,
+	}
 	RPCListenAddr = &cli.StringFlag{
 		Name:     "rpc.addr",
 		Usage:    "RPC listening address",
@@ -382,6 +403,9 @@ var optionalFlags = []cli.Flag{
 	SequencerMaxSafeLagFlag,
 	SequencerL1Confs,
 	SequencerRecoverMode,
+	ELRpcUrlFlag,
+	ELRPCRateLimit,
+	ELRPCMaxBatchSize,
 	L1EpochPollIntervalFlag,
 	RuntimeConfigReloadIntervalFlag,
 	RPCEnableAdmin,

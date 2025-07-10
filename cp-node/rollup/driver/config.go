@@ -24,4 +24,7 @@ type Config struct {
 	// RecoverMode forces the sequencer to select the next L1 Origin exactly, and create an empty block,
 	// to be compatible with verifiers forcefully generating the same block while catching up the sequencing window timeout.
 	RecoverMode bool `json:"recover_mode"`
+
+	// Maximum number of requests to make per batch
+	MaxRequestsPerBatch int `json:"max_requests_per_batch"`
 }
