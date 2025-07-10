@@ -2,13 +2,14 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@/access/Pausable.sol";
 
 import "./RewardManagerStorage.sol";
 import "../../interfaces/ICpChainBase.sol";
 import "../../interfaces/ICpChainDepositManager.sol";
 
 
-contract RewardManager is RewardManagerStorage {
+contract RewardManager is RewardManagerStorage, Pausable {
     using SafeERC20 for IERC20;
 
     modifier onlyRewardManager() {
@@ -23,23 +24,25 @@ contract RewardManager is RewardManagerStorage {
 
     constructor(
         IDelegationManager _delegationManager,
-        ICpChainDepositManager _cpChainDepositManager,
-        IERC20 _rewardTokenAddress
-    ) RewardManagerStorage(_delegationManager, _cpChainDepositManager, _rewardTokenAddress) {
+        ICpChainDepositManager _cpChainDepositManager
+    ) RewardManagerStorage(_delegationManager, _cpChainDepositManager) {
         _disableInitializers();
     }
 
-    function initialize(address initialOwner, address _rewardManager, address _payFeeManager, uint256 _stakePercent) external initializer {
+    receive() external payable {}
+
+    function initialize(address initialOwner, address _rewardManager, address _payFeeManager, uint256 _stakePercent, IPauserRegistry _pauserRegistry) external initializer {
         payFeeManager = _payFeeManager;
         rewardManager = _rewardManager;
         stakePercent = _stakePercent;
         _transferOwnership(initialOwner);
+        _initializePauser(_pauserRegistry, UNPAUSE_ALL);
     }
 
     function payFee(address chainBase, address operator, uint256 baseFee) external onlyPayFeeManager {
         uint256 totalShares = ICpChainBase(chainBase).totalShares();
 
-        uint256 operatorShares = delegationManager.operatorShares(operator, ICpChainBase(chainBase));
+        uint256 operatorShares = delegationManager.operatorShares(operator);
 
         require(
             totalShares > 0 && operatorShares > 0,
@@ -71,16 +74,19 @@ contract RewardManager is RewardManagerStorage {
             "RewardManager operatorClaimReward: operator claim amount need more then zero"
         );
         require(
-            rewardTokenAddress.balanceOf(address(this)) >= claimAmount,
+            address(this).balance >= claimAmount,
             "RewardManager operatorClaimReward: Reward Token balance insufficient"
         );
         operatorRewards[msg.sender] = 0;
-        rewardTokenAddress.safeTransfer(msg.sender, claimAmount);
+
         emit OperatorClaimReward(
             msg.sender,
             claimAmount
         );
-        return true;
+
+        (bool success, ) = payable(msg.sender).call{value: claimAmount}("");
+
+        return success;
     }
 
     function stakeHolderClaimReward(address chainBase) external returns (bool) {
@@ -90,17 +96,21 @@ contract RewardManager is RewardManagerStorage {
             "RewardManager operatorClaimReward: stake holder amount need more then zero"
         );
         require(
-            rewardTokenAddress.balanceOf(address(this)) >= stakeHolderAmount,
+            address(this).balance >= stakeHolderAmount,
             "RewardManager operatorClaimReward: Reward Token balance insufficient"
         );
+
         chainBaseStakeRewards[chainBase] -= stakeHolderAmount;
-        rewardTokenAddress.safeTransfer(msg.sender, stakeHolderAmount);
+
         emit StakeHolderClaimReward(
             msg.sender,
             chainBase,
             stakeHolderAmount
         );
-        return true;
+
+        (bool success, ) = payable(msg.sender).call{value: stakeHolderAmount}("");
+
+        return success;
     }
 
     function getStakeHolderAmount(address chainBase) external view returns (uint256) {
@@ -108,7 +118,7 @@ contract RewardManager is RewardManagerStorage {
     }
 
     function _stakeHolderAmount(address staker, address chainBase) internal view returns  (uint256) {
-        uint256 stakeHoldersShare = cpChainDepositManager.stakerCpChainBaseShares(staker, ICpChainBase(chainBase));
+        uint256 stakeHoldersShare = cpChainDepositManager.stakerCpChainBaseShares(staker);
         uint256 chainBaseShares = ICpChainBase(chainBase).totalShares();
         if (stakeHoldersShare == 0 ||chainBaseShares == 0) {
             return 0;

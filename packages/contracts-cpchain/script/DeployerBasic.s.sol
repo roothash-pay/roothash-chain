@@ -6,7 +6,7 @@ import "./utils/ExistingDeploymentParser.sol";
 /**
  * @notice Script used for the first deployment of CpChainLayer core contracts to Cp Chain
  * forge script script/DeployerBasic.s.sol --rpc-url http://127.0.0.1:8545 --private-key $PRIVATE_KEY --broadcast -vvvv
- * forge script script/DeployerBasic.s.sol --rpc-url $RPC_MANTA --private-key $PRIVATE_KEY --broadcast -vvvv
+ * forge script script/DeployerBasic.s.sol --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast -vvvv
  */
 contract DeployerBasic is ExistingDeploymentParser {
     function run() external virtual {
@@ -25,7 +25,7 @@ contract DeployerBasic is ExistingDeploymentParser {
         // Sanity Checks
         _verifyContractPointers();
         _verifyImplementations();
-        _verifyContractsInitialized({isInitialDeployment: true});
+        _verifyContractsInitialized();
         _verifyInitializationParams();
 
         logAndOutputContractAddresses("script/output/DeploymentBasic.config.json");
@@ -46,23 +46,37 @@ contract DeployerBasic is ExistingDeploymentParser {
         address unpauser = executorMultisig;
         cpChainLayerPauserReg = new PauserRegistry(pausers, unpauser);
 
-        /**
-         * Deploy upgradeable proxy contracts that **will point** to the implementations. Since the implementation contracts are
-         * not yet deployed, we give these proxies an empty contract as the initial implementation, to act as if they have no code.
-         */
-        emptyContract = new EmptyContract();
-        TransparentUpgradeableProxy delegationManagerProxyInstance = new TransparentUpgradeableProxy(address(emptyContract), executorMultisig, "");
-        delegationManager = DelegationManager(address(delegationManagerProxyInstance));
-        delegationManagerProxyAdmin = ProxyAdmin(getProxyAdminAddress(address(delegationManagerProxyInstance)));
-        TransparentUpgradeableProxy cpChainDepositManagerProxyInstance = new TransparentUpgradeableProxy(address(emptyContract), executorMultisig, "");
-        cpChainDepositManager = CpChainDepositManager(address(cpChainDepositManagerProxyInstance));
-        cpChainDepositManagerProxyAdmin = ProxyAdmin(getProxyAdminAddress(address(cpChainDepositManagerProxyInstance)));
-        delegationManagerImplementation = new DelegationManager(cpChainDepositManager);
-        cpChainDepositManagerImplementation = new CpChainDepositManager(delegationManager);
 
-        // Upgrade the proxy contracts to point to the implementations
-        ICpChainBase[] memory initializeChainBasesToSetDelayBlocks = new ICpChainBase[](0);
-        uint256[] memory initializeWithdrawalDelayBlocks = new uint256[](0);
+        emptyContract = new EmptyContract();
+
+        // Deploy and upgrade chainBase
+        TransparentUpgradeableProxy chainBaseBaseProxyInstance = new TransparentUpgradeableProxy(address(emptyContract), executorMultisig, "");
+        cpChainBase = CpChainBase(address(chainBaseBaseProxyInstance));
+        chainBaseBaseProxyAdmin = ProxyAdmin(getProxyAdminAddress(address(chainBaseBaseProxyInstance)));
+
+        TransparentUpgradeableProxy delegationManagerProxyInstance = new TransparentUpgradeableProxy(address(emptyContract), executorMultisig, "");
+        delegationManager = DelegationManager(payable(address(delegationManagerProxyInstance)));
+        delegationManagerProxyAdmin = ProxyAdmin(getProxyAdminAddress(address(delegationManagerProxyInstance)));
+
+        TransparentUpgradeableProxy cpChainDepositManagerProxyInstance = new TransparentUpgradeableProxy(address(emptyContract), executorMultisig, "");
+        cpChainDepositManager = CpChainDepositManager(payable(address(cpChainDepositManagerProxyInstance)));
+        cpChainDepositManagerProxyAdmin = ProxyAdmin(getProxyAdminAddress(address(cpChainDepositManagerProxyInstance)));
+
+        TransparentUpgradeableProxy rewardManagerProxyInstance = new TransparentUpgradeableProxy(address(emptyContract), executorMultisig, "");
+        rewardManager = RewardManager(payable(address(rewardManagerProxyInstance)));
+        rewardManagerProxyAdmin =  ProxyAdmin(getProxyAdminAddress(address(rewardManagerProxyInstance)));
+
+        TransparentUpgradeableProxy slashingManagerProxyInstance = new TransparentUpgradeableProxy(address(emptyContract), executorMultisig, "");
+        slashingManager = SlashingManager(payable(address(slashingManagerProxyInstance)));
+        slashingManagerProxyAdmin =  ProxyAdmin(getProxyAdminAddress(address(slashingManagerProxyInstance)));
+
+
+        delegationManagerImplementation = new DelegationManager(cpChainDepositManager, cpChainBase, slashingManager);
+        cpChainDepositManagerImplementation = new CpChainDepositManager(delegationManager, cpChainBase);
+        cpChainBaseImplementation = new CpChainBase(cpChainDepositManager);
+        rewardManagerImplementation = new RewardManager(delegationManager, cpChainDepositManager);
+        slashingManagerImplementation = new SlashingManager();
+
 
         // DelegationManager
         delegationManagerProxyAdmin.upgradeAndCall(
@@ -73,9 +87,7 @@ contract DeployerBasic is ExistingDeploymentParser {
                 executorMultisig, // initialOwner
                 cpChainLayerPauserReg,
                 DELEGATION_MANAGER_INIT_PAUSED_STATUS,
-                DELEGATION_MANAGER_MIN_WITHDRAWAL_DELAY_BLOCKS,
-                initializeChainBasesToSetDelayBlocks,
-                initializeWithdrawalDelayBlocks
+                0
             )
         );
         // CpChainDepositManager
@@ -84,69 +96,49 @@ contract DeployerBasic is ExistingDeploymentParser {
             address(cpChainDepositManagerImplementation),
             abi.encodeWithSelector(
                 CpChainDepositManager.initialize.selector,
-                msg.sender, //initialOwner, set to executorMultisig later after whitelisting strategies
-                msg.sender, //initial whitelister, set to STRATEGY_MANAGER_WHITELISTER later
-                cpChainLayerPauserReg,
-                STRATEGY_MANAGER_INIT_PAUSED_STATUS
+                msg.sender //initialOwner, set to executorMultisig later after whitelisting strategies
             )
         );
 
-        // Deploy ChainBases
-        cpChainBaseImplementation = new CpChainBase(cpChainDepositManager);
-        // whitelist params
-        ICpChainBase[] memory strategiesToWhitelist = new ICpChainBase[](numChainBasesToDeploy);
-        bool[] memory thirdPartyTransfersForbiddenValues = new bool[](numChainBasesToDeploy);
-
-        for (uint256 i = 0; i < numChainBasesToDeploy; i++) {
-            CpTokenConfig memory chainBaseConfig = strategiesToDeploy[i];
-
-            // Deploy and upgrade chainBase
-            TransparentUpgradeableProxy chainBaseBaseProxyInstance = new TransparentUpgradeableProxy(address(emptyContract), executorMultisig, "");
-            CpChainBase chainBase = CpChainBase(address(chainBaseBaseProxyInstance));
-            chainBaseBaseProxyAdmin = ProxyAdmin(getProxyAdminAddress(address(chainBaseBaseProxyInstance)));
-            chainBaseBaseProxyAdmin.upgradeAndCall(
-                ITransparentUpgradeableProxy(payable(address(chainBase))),
-                address(cpChainBaseImplementation),
-                abi.encodeWithSelector(
-                    CpChainBase.initialize.selector,
-                    IERC20(chainBaseConfig.tokenAddress),
-                    cpChainLayerPauserReg,
-                    STRATEGY_MAX_PER_DEPOSIT,
-                    STRATEGY_MAX_TOTAL_DEPOSITS
-                )
-            );
-
-            strategiesToWhitelist[i] = chainBase;
-            thirdPartyTransfersForbiddenValues[i] = false;
-
-            deployedStrategyArray.push(chainBase);
-        }
+        // CpChainBase
+        chainBaseBaseProxyAdmin.upgradeAndCall(
+            ITransparentUpgradeableProxy(payable(address(cpChainBase))),
+            address(cpChainBaseImplementation),
+            abi.encodeWithSelector(
+                CpChainBase.initialize.selector,
+                cpChainLayerPauserReg,
+                CPCHAINBASE_MIN_DEPOSIT,
+                CPCHAINBASE_MAX_DEPOSIT
+            )
+        );
 
         // Deploy RewardManager proxy and implementation
-        rewardManagerImplementation = new RewardManager(
-            delegationManager,
-            cpChainDepositManager,
-            IERC20(REWARD_MANAGER_RWARD_TOKEN_ADDRESS)
-        );
-        rewardManager = RewardManager(
-            address(
-                new TransparentUpgradeableProxy(
-                    address(rewardManagerImplementation),
-                    address(cpChainLayerProxyAdmin),
-                    abi.encodeWithSelector(
-                        RewardManager.initialize.selector,
-                        executorMultisig,
-                        executorMultisig,
-                        executorMultisig,
-                        REWARD_MANAGER_STAKE_PERCENTAGE
-                    )
-                )
+        rewardManagerProxyAdmin.upgradeAndCall(
+            ITransparentUpgradeableProxy(payable(address(rewardManager))),
+            address(rewardManagerImplementation),
+            abi.encodeWithSelector(
+                RewardManager.initialize.selector,
+                executorMultisig,
+                executorMultisig,
+                executorMultisig,
+                REWARD_MANAGER_STAKE_PERCENTAGE,
+                cpChainLayerPauserReg
             )
         );
 
-        // Add strategies to whitelist and set whitelister to STRATEGY_MANAGER_WHITELISTER
-        cpChainDepositManager.addChainBasesToDepositWhitelist(strategiesToWhitelist, thirdPartyTransfersForbiddenValues);
-        cpChainDepositManager.setStrategyWhitelister(STRATEGY_MANAGER_WHITELISTER);
+
+        slashingManagerProxyAdmin.upgradeAndCall(
+            ITransparentUpgradeableProxy(payable(address(slashingManager))),
+            address(slashingManagerImplementation),
+            abi.encodeWithSelector(
+                SlashingManager.initialize.selector,
+                executorMultisig,
+                delegationManager,
+                executorMultisig,
+                1000,
+                executorMultisig
+            )
+        );
 
         // Transfer ownership
         cpChainDepositManager.transferOwnership(executorMultisig);

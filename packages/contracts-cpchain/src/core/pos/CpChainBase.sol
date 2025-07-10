@@ -67,7 +67,7 @@ contract CpChainBase is Initializable, ICpChainBase, Pausable {
         return newShares;
     }
 
-    function withdraw(address recipient, uint256 amountShares) external virtual override onlyStrategyManager {
+    function withdraw(address recipient, uint256 amountShares) external virtual override whenNotPaused onlyStrategyManager {
         uint256 priorTotalShares = totalShares;
         require(
             amountShares <= priorTotalShares,
@@ -122,7 +122,7 @@ contract CpChainBase is Initializable, ICpChainBase, Pausable {
     }
 
     function shares(address user) public view virtual returns (uint256) {
-        return cpChainDepositManager.stakerCpChainBaseShares(user, ICpChainBase(address(this)));
+        return cpChainDepositManager.stakerCpChainBaseShares(user);
     }
 
     function setDepositLimits(uint256 newMinDeposit, uint256 newMaxDeposit) external onlyStrategyManager {

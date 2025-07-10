@@ -6,7 +6,7 @@ import "./DeployerBasic.s.sol";
 /**
  * @notice Script used for the first deployment of CpChainLayer core contracts to Cp Chain
  * forge script script/DeployerCpChainLayer.s.sol --rpc-url http://127.0.0.1:8545 --private-key $PRIVATE_KEY --broadcast -vvvv
- * forge script script/DeployerCpChainLayer.s.sol --rpc-url $RPC_MANTA --private-key $PRIVATE_KEY --broadcast -vvvv
+ * forge script script/DeployerCpChainLayer.s.sol --rpc-url $RPC_URL --private-key $PRIVATE_KEY --broadcast -vvvv
  *
  * Script for dev environment, exact same as DeployerBasic.s.sol but with an EOAowner
  * instead of multisig addresses for permissions.
@@ -27,7 +27,6 @@ contract DeployerCpChainLayer is DeployerBasic {
         operationsMultisig = EOAowner;
         pauserMultisig = EOAowner;
         communityMultisig = EOAowner;
-        STRATEGY_MANAGER_WHITELISTER = EOAowner;
 
         // START RECORDING TRANSACTIONS FOR DEPLOYMENT
         vm.startBroadcast();
@@ -42,7 +41,7 @@ contract DeployerCpChainLayer is DeployerBasic {
         // Sanity Checks
         _verifyContractPointers();
         _verifyImplementations();
-        _verifyContractsInitialized({isInitialDeployment: true});
+        _verifyContractsInitialized();
         _verifyInitializationParams(); // override to check contract.owner() is EOAowner instead
 
         logAndOutputContractAddresses("script/output/DeploymentOutput.config.json");

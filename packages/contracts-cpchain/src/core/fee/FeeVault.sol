@@ -23,7 +23,7 @@ abstract contract FeeVault {
         MIN_WITHDRAWAL_AMOUNT = _minWithdrawalAmount;
     }
 
-    receive() external payable { }
+    receive() external payable {}
 
     function minWithdrawalAmount() public view returns (uint256 amount_) {
         amount_ = MIN_WITHDRAWAL_AMOUNT;
@@ -44,8 +44,8 @@ abstract contract FeeVault {
 
         emit Withdrawal(value, RECIPIENT, msg.sender);
 
-        bool success = SafeCall.send(RECIPIENT, 210000, value);
+        (bool success, ) = payable(RECIPIENT).call{value: value}("");
 
-        require(success, "FeeVault: failed to send ETH to L2 fee recipient");
+        require(success, "FeeVault: failed to send Cp to fee recipient");
     }
 }

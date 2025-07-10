@@ -31,13 +31,11 @@ interface IDelegationManager is ISignatureUtils {
         address withdrawer;
         uint256 nonce;
         uint32 startBlock;
-        ICpChainBase[] strategies;
-        uint256[] shares;
+        uint256 shares;
     }
 
     struct QueuedWithdrawalParams {
-        ICpChainBase[] strategies;
-        uint256[] shares;
+        uint256 shares;
         address withdrawer;
     }
 
@@ -47,9 +45,9 @@ interface IDelegationManager is ISignatureUtils {
 
     event OperatorNodeUrlUpdated(address indexed operator, string metadataURI);
 
-    event OperatorSharesIncreased(address indexed operator, address staker, ICpChainBase chainBase, uint256 shares);
+    event OperatorSharesIncreased(address indexed operator, address staker,  uint256 shares);
 
-    event OperatorSharesDecreased(address indexed operator, address staker, ICpChainBase chainBase, uint256 shares);
+    event OperatorSharesDecreased(address indexed operator, address staker,  uint256 shares);
 
     event StakerDelegated(address indexed staker, address indexed operator);
 
@@ -59,50 +57,35 @@ interface IDelegationManager is ISignatureUtils {
 
     event WithdrawalQueued(bytes32 withdrawalRoot, Withdrawal withdrawal);
 
-    event WithdrawalCompleted(address operator, address staker, ICpChainBase chainBase, uint256 shares);
+    event WithdrawalCompleted(address operator, address staker,  uint256 shares);
 
     event WithdrawalMigrated(bytes32 oldWithdrawalRoot, bytes32 newWithdrawalRoot);
 
     event MinWithdrawalDelayBlocksSet(uint256 previousValue, uint256 newValue);
 
-    event StrategyWithdrawalDelayBlocksSet(ICpChainBase chainBase, uint256 previousValue, uint256 newValue);
+    event StrategyWithdrawalDelayBlocksSet( uint256 previousValue, uint256 newValue);
 
-    function registerAsOperator(
-        OperatorDetails calldata registeringOperatorDetails,
-        string calldata metadataURI
-    ) external;
+    function registerAsOperator(OperatorDetails calldata registeringOperatorDetails, string calldata metadataURI) external;
 
     function modifyOperatorDetails(OperatorDetails calldata newOperatorDetails) external;
 
     function updateOperatorNodeUrl(string calldata metadataURI) external;
 
-    function delegateTo(
-        address operator,
-        SignatureWithExpiry memory approverSignatureAndExpiry,
-        bytes32 approverSalt
-    ) external;
+    function delegateTo(address operator, SignatureWithExpiry memory approverSignatureAndExpiry, bytes32 approverSalt) external;
 
-    function delegateToBySignature(
-        address staker,
-        address operator,
-        SignatureWithExpiry memory stakerSignatureAndExpiry,
-        SignatureWithExpiry memory approverSignatureAndExpiry,
-        bytes32 approverSalt
-    ) external;
+    function delegateToBySignature(address staker, address operator, SignatureWithExpiry memory stakerSignatureAndExpiry, SignatureWithExpiry memory approverSignatureAndExpiry, bytes32 approverSalt) external;
 
-    function undelegate(address staker) external returns (bytes32[] memory withdrawalRoot);
+    function undelegate(address staker) external returns (bytes32 withdrawalRoot);
 
-    function queueWithdrawals(
-        QueuedWithdrawalParams[] calldata queuedWithdrawalParams
-    ) external returns (bytes32[] memory);
+    function slashingStakingShares(address staker, uint256 shares) external;
+
+    function queueWithdrawals(QueuedWithdrawalParams[] calldata queuedWithdrawalParams) external returns (bytes32[] memory);
 
     function completeQueuedWithdrawal(Withdrawal calldata withdrawal) external;
 
     function completeQueuedWithdrawals(Withdrawal[] calldata withdrawals) external;
 
-    function increaseDelegatedShares(address staker, ICpChainBase chainBase, uint256 shares) external;
-
-    function decreaseDelegatedShares(address staker, ICpChainBase chainBase, uint256 shares) external;
+    function increaseDelegatedShares(address staker, uint256 shares) external;
 
     function delegatedTo(address staker) external view returns (address);
 
@@ -114,11 +97,11 @@ interface IDelegationManager is ISignatureUtils {
 
     function stakerOptOutWindowBlocks(address operator) external view returns (uint256);
 
-    function getOperatorShares(address operator, ICpChainBase[] memory strategies) external view returns (uint256[] memory);
+    function getOperatorShares(address operator) external view returns (uint256);
 
-    function getWithdrawalDelay(ICpChainBase[] calldata strategies) external view returns (uint256);
+    function operatorShares(address operator) external view returns (uint256);
 
-    function operatorShares(address operator, ICpChainBase chainBase) external view returns (uint256);
+    function getStakerSharesOfOperator(address operator) external view returns (address[] memory, uint256[] memory);
 
     function isDelegated(address staker) external view returns (bool);
 
@@ -127,10 +110,6 @@ interface IDelegationManager is ISignatureUtils {
     function stakerNonce(address staker) external view returns (uint256);
 
     function delegationApproverSaltIsSpent(address _delegationApprover, bytes32 salt) external view returns (bool);
-
-    function minWithdrawalDelayBlocks() external view returns (uint256);
-
-    function chainBaseWithdrawalDelayBlocks(ICpChainBase chainBase) external view returns (uint256);
 
     function calculateCurrentStakerDelegationDigestHash(address staker, address operator, uint256 expiry) external view returns (bytes32);
 
