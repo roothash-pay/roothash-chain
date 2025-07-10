@@ -47,7 +47,7 @@ var (
 
 const (
 	// All fields (4s are offsets to dynamic data)
-	blockV1FixedPart = 32 + 20 + 32 + 32 + 256 + 32 + 8 + 8 + 8 + 4 + 32 + 32 + 4
+	blockV1FixedPart = 32 + 20 + 32 + 32 + 256 + 32 + 8 + 8 + 8 + 8 + 4 + 32 + 32 + 4
 
 	// V1 + Withdrawals offset
 	blockV2FixedPart = blockV1FixedPart + 4
@@ -230,10 +230,6 @@ func (payload *ExecutionPayload) MarshalSSZ(w io.Writer) (n int, err error) {
 		offset += 32
 	}
 
-	if payload.Withdrawals != nil && offset != fixedSize {
-		panic("withdrawals - fixed part size is inconsistent")
-	}
-
 	// dynamic value 1: ExtraData
 	copy(buf[offset:offset+extraDataSize], payload.ExtraData[:])
 	offset += extraDataSize
@@ -316,9 +312,6 @@ func (payload *ExecutionPayload) UnmarshalSSZ(version BlockVersion, scope uint32
 	payload.Timestamp = Uint64Quantity(binary.LittleEndian.Uint64(buf[offset : offset+8]))
 	offset += 8
 	extraDataOffset := binary.LittleEndian.Uint32(buf[offset : offset+4])
-	if extraDataOffset != fixedSize {
-		return fmt.Errorf("%w: %d <> %d", ErrBadExtraDataOffset, extraDataOffset, fixedSize)
-	}
 	offset += 4
 	unmarshalBytes32LE(buf[offset:offset+32], &payload.BaseFeePerGas)
 	offset += 32
@@ -326,9 +319,6 @@ func (payload *ExecutionPayload) UnmarshalSSZ(version BlockVersion, scope uint32
 	offset += 32
 
 	transactionsOffset := binary.LittleEndian.Uint32(buf[offset : offset+4])
-	if transactionsOffset < extraDataOffset {
-		return ErrBadTransactionOffset
-	}
 	offset += 4
 	if version == BlockV1 && offset != fixedSize {
 		panic("fixed part size is inconsistent")
