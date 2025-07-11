@@ -93,7 +93,7 @@ var (
 	ELRPCMaxBatchSize = &cli.IntFlag{
 		Name:     "el.rpc-max-batch-size",
 		Usage:    "Maximum number of RPC requests to bundle, e.g. during el blocks receipt fetching. The el RPC rate limit counts this as N items, but allows it to burst at once.",
-		EnvVars:  prefixEnvVars("L1_RPC_MAX_BATCH_SIZE"),
+		EnvVars:  prefixEnvVars("EL_RPC_MAX_BATCH_SIZE"),
 		Value:    20,
 		Category: RollupCategory,
 	}
