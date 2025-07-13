@@ -282,13 +282,12 @@ func (s *EthClient) PayloadsByRange(ctx context.Context, startHeight, endHeight 
 	}
 
 	count := new(big.Int).Sub(endHeight, startHeight).Uint64() + 1
-	headers := make([]RPCBlock, count)
-	payloads := make([]eth.ExecutionPayloadEnvelope, count)
+	headers := make([]*RPCBlock, count)
 	batchElems := make([]rpc.BatchElem, count)
 
 	for i := uint64(0); i < count; i++ {
 		height := new(big.Int).Add(startHeight, new(big.Int).SetUint64(i))
-		batchElems[i] = rpc.BatchElem{Method: "eth_getBlockByNumber", Args: []interface{}{toBlockNumArg(height), false}, Result: &headers[i]}
+		batchElems[i] = rpc.BatchElem{Method: "eth_getBlockByNumber", Args: []interface{}{numberID(height.Uint64()).Arg(), true}, Result: &headers[i]}
 	}
 
 	ctxwt, cancel := context.WithTimeout(context.Background(), 100*time.Second)
@@ -315,6 +314,7 @@ func (s *EthClient) PayloadsByRange(ctx context.Context, startHeight, endHeight 
 	}
 	headers = headers[:size]
 
+	payloads := make([]eth.ExecutionPayloadEnvelope, len(headers))
 	for i, header := range headers {
 		payload, err := header.ExecutionPayloadEnvelope(s.trustRPC)
 		if err != nil {
