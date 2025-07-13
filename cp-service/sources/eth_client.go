@@ -307,8 +307,21 @@ func (s *EthClient) PayloadsByRange(ctx context.Context, startHeight, endHeight 
 		} else if batchElem.Result == nil {
 			break
 		}
-		if i > 0 && headers[i].ParentHash.Hex() != headers[i-1].Hash.Hex() {
-			return nil, fmt.Errorf("queried header %s does not follow parent %s", headers[i].Hash, headers[i-1].Hash)
+		if headers[i] == nil {
+			if size == 0 {
+				return nil, fmt.Errorf("block at height %d is nil", startHeight.Uint64()+uint64(i))
+			}
+			break
+		}
+
+		if i > 0 {
+			if headers[i-1] == nil {
+				break
+			}
+			if headers[i].ParentHash.Hex() != headers[i-1].Hash.Hex() {
+				return nil, fmt.Errorf("queried header %s does not follow parent %s",
+					headers[i].Hash, headers[i-1].Hash)
+			}
 		}
 		size = size + 1
 	}
