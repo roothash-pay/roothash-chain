@@ -3,6 +3,7 @@ package derive
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -91,6 +92,10 @@ func (ba *FetchingAttributesBuilder) PreparePayloadAttributes(ctx context.Contex
 	var withdrawals *types.Withdrawals
 	if ba.rollupCfg.IsCanyon(nextL2Time) {
 		withdrawals = &types.Withdrawals{}
+	}
+
+	if nextL2Time < uint64(time.Now().Unix())-60 {
+		nextL2Time = uint64(time.Now().Unix())
 	}
 
 	r := &eth.PayloadAttributes{
