@@ -211,23 +211,6 @@ func FindL2Heads(ctx context.Context, cfg *rollup.Config, l2 L2Chain, lgr log.Lo
 		if err != nil {
 			return nil, fmt.Errorf("failed to fetch core block by hash %v: %w", n.ParentHash, err)
 		}
-
-		// Check the L1 origin relation
-		if parent.L1Origin != n.L1Origin {
-			// sanity check that the L1 origin block number is coherent
-			if parent.L1Origin.Number+1 != n.L1Origin.Number {
-				return nil, fmt.Errorf("l2 parent %s of %s has L1 origin %s that is not before %s", parent, n, parent.L1Origin, n.L1Origin)
-			}
-			// sanity check that the later sequence number is 0, if it changed between the core blocks
-			if n.SequenceNumber != 0 {
-				return nil, fmt.Errorf("l2 block %s has parent %s with different L1 origin %s, but non-zero sequence number %d", n, parent, parent.L1Origin, n.SequenceNumber)
-			}
-		} else {
-			if parent.SequenceNumber+1 != n.SequenceNumber {
-				return nil, fmt.Errorf("sequence number inconsistency %d <> %d between l2 blocks %s and %s", parent.SequenceNumber, n.SequenceNumber, parent, n)
-			}
-		}
-
 		n = parent
 
 		// once we found the block at seq nr 0 that is more than a full seq window behind the common chain post-reorg, then use the parent block as safe head.
