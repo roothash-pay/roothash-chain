@@ -566,6 +566,10 @@ func (s *Driver) syncUnsafeBlocks(ctx context.Context) {
 		}
 		startHeight := big.NewInt(int64(startBlock.NumberU64()) + 1)
 		endHeight := clamp(startHeight, big.NewInt(int64(endBlock.NumberU64())), uint64(s.maxBatchSize))
+		if startHeight.Cmp(endHeight) >= 0 {
+			s.log.Info("successfully synchronized all old blocks")
+			return
+		}
 
 		payloads, err := s.ELClient.PayloadsByRange(ctx, startHeight, endHeight)
 		if err != nil {
@@ -585,10 +589,6 @@ func (s *Driver) syncUnsafeBlocks(ctx context.Context) {
 		}
 		s.log.Info("successfully synchronized a batch of blocks", "now", endHeight.String(), "latest", endBlock.NumberU64())
 
-		if startHeight.Cmp(endHeight) == 0 {
-			s.log.Info("successfully synchronized all old blocks")
-			return
-		}
 	}
 }
 

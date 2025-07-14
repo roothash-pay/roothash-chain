@@ -282,13 +282,12 @@ func (s *EthClient) PayloadsByRange(ctx context.Context, startHeight, endHeight 
 	}
 
 	count := new(big.Int).Sub(endHeight, startHeight).Uint64() + 1
-	headers := make([]RPCBlock, count)
-	payloads := make([]eth.ExecutionPayloadEnvelope, count)
+	headers := make([]*RPCBlock, count)
 	batchElems := make([]rpc.BatchElem, count)
 
 	for i := uint64(0); i < count; i++ {
 		height := new(big.Int).Add(startHeight, new(big.Int).SetUint64(i))
-		batchElems[i] = rpc.BatchElem{Method: "eth_getBlockByNumber", Args: []interface{}{toBlockNumArg(height), false}, Result: &headers[i]}
+		batchElems[i] = rpc.BatchElem{Method: "eth_getBlockByNumber", Args: []interface{}{numberID(height.Uint64()).Arg(), true}, Result: &headers[i]}
 	}
 
 	ctxwt, cancel := context.WithTimeout(context.Background(), 100*time.Second)
@@ -308,13 +307,27 @@ func (s *EthClient) PayloadsByRange(ctx context.Context, startHeight, endHeight 
 		} else if batchElem.Result == nil {
 			break
 		}
-		if i > 0 && headers[i].ParentHash.Hex() != headers[i-1].Hash.Hex() {
-			return nil, fmt.Errorf("queried header %s does not follow parent %s", headers[i].Hash, headers[i-1].Hash)
+		if headers[i] == nil {
+			if size == 0 {
+				return nil, fmt.Errorf("block at height %d is nil", startHeight.Uint64()+uint64(i))
+			}
+			break
+		}
+
+		if i > 0 {
+			if headers[i-1] == nil {
+				break
+			}
+			if headers[i].ParentHash.Hex() != headers[i-1].Hash.Hex() {
+				return nil, fmt.Errorf("queried header %s does not follow parent %s",
+					headers[i].Hash, headers[i-1].Hash)
+			}
 		}
 		size = size + 1
 	}
 	headers = headers[:size]
 
+	payloads := make([]eth.ExecutionPayloadEnvelope, len(headers))
 	for i, header := range headers {
 		payload, err := header.ExecutionPayloadEnvelope(s.trustRPC)
 		if err != nil {
