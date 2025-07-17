@@ -12,8 +12,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/minio/sha256-simd"
-
 	"github.com/cpchain-network/cp-chain/cp-service/testutils"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/stretchr/testify/require"
@@ -51,7 +49,7 @@ func TestDownloadArtifacts_MockArtifacts(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, fs)
 
-		info, err := fs.Stat("WETH98.sol/WETH98.json")
+		info, err := fs.Stat("WrappedCP.sol.sol.sol/WrappedCP.sol.sol.json")
 		require.NoError(t, err)
 		require.Greater(t, info.Size(), int64(0))
 	})

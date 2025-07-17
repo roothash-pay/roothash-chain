@@ -89,7 +89,7 @@ contract CpChainDepositManager is Initializable, OwnableUpgradeable, ReentrancyG
 
     // ================= internal function =================
     function _depositIntoCpChain(address staker, uint256 amount) internal returns (uint256 shares) {
-        shares = cpChainBase.deposit(amount);
+        shares = cpChainBase.deposit{value: amount}(amount);
 
         _addShares(staker, shares);
 
