@@ -1,4 +1,4 @@
-# OP Stack Smart Contracts
+# CpChain POS Contracts
 
 For more information, check out the [book][book].
 
