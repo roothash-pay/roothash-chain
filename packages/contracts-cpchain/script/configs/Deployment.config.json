@@ -1,13 +1,13 @@
 {
   "chainInfo": {
-    "chainId": 31337
+    "chainId": 86606
   },
   "multisig_addresses": {
-    "pauserMultisig": "0xee2E207D30383430a815390431298EBa3c1C8c2d",
-    "communityMultisig": "0xee2E207D30383430a815390431298EBa3c1C8c2d",
-    "operationsMultisig": "0xee2E207D30383430a815390431298EBa3c1C8c2d",
-    "executorMultisig": "0xee2E207D30383430a815390431298EBa3c1C8c2d",
-    "timelock": "0xee2E207D30383430a815390431298EBa3c1C8c2d"
+    "pauserMultisig": "0x45Bd8ea16cFEB0D937a2D98cBEb0300e3E689Fe7",
+    "communityMultisig": "0x45Bd8ea16cFEB0D937a2D98cBEb0300e3E689Fe7",
+    "operationsMultisig": "0x45Bd8ea16cFEB0D937a2D98cBEb0300e3E689Fe7",
+    "executorMultisig": "0x45Bd8ea16cFEB0D937a2D98cBEb0300e3E689Fe7",
+    "timelock": "0x45Bd8ea16cFEB0D937a2D98cBEb0300e3E689Fe7"
   },
   "cpChainBase": {
     "MIN_DEPOSIT": 115792089237316195423570985008687907853269984665640564039457584007913129639935,
@@ -27,7 +27,7 @@
     "MAX_RETROACTIVE_LENGTH": 7776000,
     "MAX_FUTURE_LENGTH": 2592000,
     "GENESIS_REWARDS_TIMESTAMP": 1710979200,
-    "rewards_updater_address": "0xee2E207D30383430a815390431298EBa3c1C8c2d",
+    "rewards_updater_address": "0x45Bd8ea16cFEB0D937a2D98cBEb0300e3E689Fe7",
     "activation_delay": 7200,
     "calculation_interval_seconds": 604800,
     "global_operator_commission_bips": 1000,

@@ -1,28 +1,28 @@
 {
   "addresses": {
-    "cpChainBase": "0x66Db6d191cd163F56197b767928A507dF8b47AA7",
-    "cpChainBaseImplementation": "0x00BBf6C4102a769076EC39ab0535c5635f2fDD6F",
-    "cpChainDepositManager": "0x1CfD8455F189c56a4FBd81EB7D4118DB04616BA8",
-    "cpChainDepositManagerImplementation": "0x8476FC408B2dF4d03E9705FC2768d9179B62800c",
-    "cpChainLayerPauserReg": "0x82B769500E34362a76DF81150e12C746093D954F",
-    "cpChainLayerProxyAdmin": "0x7ef8E99980Da5bcEDcF7C10f41E55f759F6A174B",
-    "delegationManager": "0xbD3afEF4b26918cDb922F9D80aeA9b8e64524432",
-    "delegationManagerImplementation": "0x973Adb9DE34C974C3A421A870203C5be9059E9Fa",
-    "emptyContract": "0x77c7E3905c21177Be97956c6620567596492C497",
-    "rewardManager": "0x3200B3E272007a8685B0C66c84eb4c03e7E29ed1",
-    "rewardManagerImplementation": "0x239745750870104a7EC6126c89156D773088286c",
-    "slashingManager": "0x591b594f01ae53BFf6Fb44C5dA0a16a62c2f3f6c",
-    "slashingManagerImplementation": "0x781da48Ea17664D0b53d7645D50C5dAe93d27887"
+    "cpChainBase": "0x0D27b9ba978156619eEa82b8daD9Cb85FF774399",
+    "cpChainBaseImplementation": "0x840864CF77Ff5850FF2806Bf4e131CDe2875FBAa",
+    "cpChainDepositManager": "0xA948236C92268609d55869f065714814eCb0b56A",
+    "cpChainDepositManagerImplementation": "0x81504fafef4197BEc03ccef02201438CB97E9670",
+    "cpChainLayerPauserReg": "0xc8bcBF86689549cdcDd7BcDa490d700E802cCF20",
+    "cpChainLayerProxyAdmin": "0xFa3B72bcFFde0eA207d5dA89527E1174543314fE",
+    "delegationManager": "0x17291b3D29DFfC8232233993a8c7fc59abE24ad0",
+    "delegationManagerImplementation": "0x572977b99292d985cc39f1574Ae429b61A375813",
+    "emptyContract": "0x5576cA7b329F2931cDC7D14f11362d03a5760E4E",
+    "rewardManager": "0x608E048dFD6172F50D9E86c734E9Ee41Fb1D76Fa",
+    "rewardManagerImplementation": "0xC3d05d397Dc34d99f93d41A06976Af2Cf32D5cc0",
+    "slashingManager": "0xe5dE0e7f8d0c44190c8Aa512B4E999d7ec7F65F7",
+    "slashingManagerImplementation": "0x6B762b4b11cE10726690Dd69bd28982AD81e2390"
   },
   "chainInfo": {
-    "chainId": 31337,
-    "deploymentBlock": 0
+    "chainId": 86606,
+    "deploymentBlock": 176813
   },
   "parameters": {
-    "communityMultisig": "0x976EA74026E726554dB657fA54763abd0C3a0aa9",
-    "executorMultisig": "0x976EA74026E726554dB657fA54763abd0C3a0aa9",
-    "operationsMultisig": "0x976EA74026E726554dB657fA54763abd0C3a0aa9",
-    "pauserMultisig": "0x976EA74026E726554dB657fA54763abd0C3a0aa9",
+    "communityMultisig": "0x45Bd8ea16cFEB0D937a2D98cBEb0300e3E689Fe7",
+    "executorMultisig": "0x45Bd8ea16cFEB0D937a2D98cBEb0300e3E689Fe7",
+    "operationsMultisig": "0x45Bd8ea16cFEB0D937a2D98cBEb0300e3E689Fe7",
+    "pauserMultisig": "0x45Bd8ea16cFEB0D937a2D98cBEb0300e3E689Fe7",
     "timelock": "0x0000000000000000000000000000000000000000"
   }
 }

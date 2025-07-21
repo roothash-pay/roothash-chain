@@ -48,7 +48,7 @@ contract CpChainBase is Initializable, ICpChainBase, Pausable {
         _initializePauser(_pauserRegistry, UNPAUSE_ALL);
     }
 
-    function deposit(uint256 amount) external virtual override onlyStrategyManager returns (uint256 newShares) {
+    function deposit(uint256 amount) external virtual payable override onlyStrategyManager returns (uint256 newShares) {
         require(amount >= minDeposit, "CpChainBase: deposit token must more than min deposit amount");
         require(amount <= maxDeposit, "CpChainBase: deposit token must less than max deposit amount");
 

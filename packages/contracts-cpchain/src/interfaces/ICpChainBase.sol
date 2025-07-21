@@ -13,7 +13,7 @@ interface ICpChainBase {
         uint256 newValue
     );
 
-    function deposit(uint256 amount) external returns (uint256);
+    function deposit(uint256 amount) external payable returns (uint256);
 
     function withdraw(address recipient, uint256 amountShares) external;
 
