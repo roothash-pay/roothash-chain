@@ -71,7 +71,10 @@ contract RewardManager is RewardManagerStorage, Pausable {
 
         uint256 stakeFee = (operatorTotalFee * stakePercent) / 100;
 
-        chainBaseStakeRewards[chainBase] += stakeFee;
+
+        _updateStakerReward(chainBase, stakeFee, totalShares);
+
+       
 
         uint256 operatorFee = operatorTotalFee - stakeFee;
 
@@ -110,13 +113,13 @@ contract RewardManager is RewardManagerStorage, Pausable {
             "RewardManager operatorClaimReward: Reward Token balance insufficient"
         );
 
-        chainBaseStakeRewards[chainBase] -= stakeHolderAmount;
-
         emit StakeHolderClaimReward(msg.sender, chainBase, stakeHolderAmount);
+
 
         (bool success, ) = payable(msg.sender).call{value: stakeHolderAmount}(
             ""
         );
+
 
         return success;
     }
@@ -127,20 +130,32 @@ contract RewardManager is RewardManagerStorage, Pausable {
         return _stakeHolderAmount(msg.sender, chainBase);
     }
 
+    function _updateStakerReward(
+        address chainBase,
+        uint256 stakeFee,
+        uint256 totalShares
+    ) internal {
+        uint256 length = ICpChainBase(chainBase).stakerListLength();
+
+        for (uint256 i = 0; i < length; i++) {
+            address staker = ICpChainBase(chainBase).stakerListFind(i);
+            uint256 shares = cpChainDepositManager.getDeposits(
+                ICpChainBase(chainBase).stakerListFind(i)
+            );
+
+            stakerRewards[chainBase][staker] +=
+                (shares * stakeFee) /
+                totalShares;
+        }
+    }
+
     function _stakeHolderAmount(
         address staker,
         address chainBase
     ) internal view returns (uint256) {
-        uint256 stakeHoldersShare = cpChainDepositManager
-            .stakerCpChainBaseShares(staker);
-        uint256 chainBaseShares = ICpChainBase(chainBase).totalShares();
-        if (stakeHoldersShare == 0 || chainBaseShares == 0) {
-            return 0;
-        }
-        return
-            (chainBaseStakeRewards[chainBase] * stakeHoldersShare) /
-            chainBaseShares;
+        return stakerRewards[chainBase][staker];
     }
+
 
     function updateStakePercent(
         uint256 _stakePercent
