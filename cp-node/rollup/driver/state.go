@@ -575,6 +575,9 @@ func (s *Driver) syncUnsafeBlocks(ctx context.Context) {
 			s.log.Error("failed to get latest block by el geth", "err", err)
 			continue
 		}
+		if startBlock == nil || endBlock == nil {
+			continue
+		}
 		startHeight := big.NewInt(int64(startBlock.NumberU64()) + 1)
 		endHeight := clamp(startHeight, big.NewInt(int64(endBlock.NumberU64())), uint64(s.maxBatchSize))
 		if startHeight.Cmp(endHeight) >= 0 {
