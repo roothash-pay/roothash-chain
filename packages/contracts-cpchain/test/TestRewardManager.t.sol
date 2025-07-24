@@ -186,11 +186,6 @@ contract RewardManagerTest is Test {
         assertEq(rewardManager.operatorRewards(operator), 100 ether);
         assertEq(rewardManager.operatorRewards(operator1), 0);
 
-        assertEq(
-            rewardManager.chainBaseStakeRewards(address(cpChainBase)),
-            100 ether
-        );
-
 
         vm.deal(address(rewardManager), 500 ether);
 

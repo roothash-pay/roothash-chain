@@ -69,12 +69,11 @@ contract RewardManager is RewardManagerStorage, Pausable {
 
         uint256 operatorTotalFee = (baseFee * operatorShares) / totalShares;
 
-        uint256 stakeFee = (operatorTotalFee * stakePercent) / 100;
 
+        uint256 stakeFee = (operatorTotalFee * stakePercent) / 100;
 
         _updateStakerReward(chainBase, stakeFee, totalShares);
 
-       
 
         uint256 operatorFee = operatorTotalFee - stakeFee;
 
@@ -147,6 +146,7 @@ contract RewardManager is RewardManagerStorage, Pausable {
                 (shares * stakeFee) /
                 totalShares;
         }
+
     }
 
     function _stakeHolderAmount(
@@ -155,7 +155,6 @@ contract RewardManager is RewardManagerStorage, Pausable {
     ) internal view returns (uint256) {
         return stakerRewards[chainBase][staker];
     }
-
 
     function updateStakePercent(
         uint256 _stakePercent
