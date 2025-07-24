@@ -209,16 +209,6 @@ func (n *OpNode) initL2(ctx context.Context, cfg *Config) error {
 		return fmt.Errorf("failed to create Engine client: %w", err)
 	}
 
-	b, err := n.l2Source.GetLatestBlock(ctx)
-	if err != nil {
-		n.log.Info("====1111=========")
-		n.log.Error(err.Error())
-		n.log.Info("=======1111======")
-	}
-	n.log.Info("=============")
-	n.log.Info("block", "number", b.NumberU64())
-	n.log.Info("=============")
-
 	if err := cfg.Rollup.ValidateL2Config(ctx, n.l2Source, cfg.Sync.SyncMode == sync.ELSync); err != nil {
 		return err
 	}
