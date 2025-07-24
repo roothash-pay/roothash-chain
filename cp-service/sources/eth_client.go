@@ -390,7 +390,7 @@ func (s *EthClient) InfoAndTxsByLabel(ctx context.Context, label eth.BlockLabel)
 
 func (s *EthClient) GetLatestBlock(ctx context.Context) (eth.BlockInfo, error) {
 	var block *RPCBlock
-	err := s.client.CallContext(ctx, &block, "eth_getBlockByNumber", "latest", false)
+	err := s.client.CallContext(ctx, &block, "eth_getBlockByNumber", "latest", true)
 	if err != nil {
 		return nil, err
 	}
