@@ -18,8 +18,10 @@ contract CpChainBase is Initializable, ICpChainBase, Pausable {
 
 
     uint256 internal constant MAX_STAKER_NUMBERS = 32;
+
     address[] stakerList;
 
+    mapping(address => bool) public stakerExistInList;
 
     ICpChainDepositManager public cpChainDepositManager;
 
@@ -68,20 +70,13 @@ contract CpChainBase is Initializable, ICpChainBase, Pausable {
         _initializePauser(_pauserRegistry, UNPAUSE_ALL);
     }
 
-    function deposit(
-
-        uint256 amount,
-        address staker
-
-    )
+    function deposit(uint256 amount, address staker)
         external
         payable
         virtual
         override
         onlyStrategyManager
-
         onlyStakerNumbersLessThanMaxLimit
-
         returns (uint256 newShares)
     {
         require(
@@ -108,11 +103,13 @@ contract CpChainBase is Initializable, ICpChainBase, Pausable {
 
         totalShares = (priorTotalShares + newShares);
 
-        unchecked {
-            stakerNumbers = stakerNumbers + 1;
+        if (!stakerExistInList[staker]) {
+            unchecked {
+                stakerNumbers = stakerNumbers + 1;
+            }
+            stakerList.push(staker);
+            stakerExistInList[staker] = true;
         }
-
-        stakerList.push(staker);
 
         return newShares;
     }
@@ -140,16 +137,15 @@ contract CpChainBase is Initializable, ICpChainBase, Pausable {
 
     function deleteStaker(address staker) public onlyStrategyManager {
         uint256 length = stakerList.length;
-
         for (uint256 i = 0; i < length; i++) {
             if (stakerList[i] == staker) {
                 stakerList[i] = stakerList[stakerNumbers - 1];
-
                 stakerList.pop();
+                stakerNumbers = stakerNumbers - 1;
+                stakerExistInList[staker] = false;
                 break;
             }
         }
-        stakerNumbers = stakerNumbers - 1;
     }
 
 
