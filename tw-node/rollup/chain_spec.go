@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/cpchain-network/cp-chain/cp-node/params"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
 	"github.com/ethereum/go-ethereum/log"
+	"github.com/roothash-pay/theweb3-chain/tw-node/params"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 // maxChannelBankSize is the amount of memory space, in number of bytes,

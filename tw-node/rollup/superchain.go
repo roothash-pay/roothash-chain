@@ -6,8 +6,8 @@ import (
 
 	"github.com/ethereum/go-ethereum/params"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
 	"github.com/ethereum/go-ethereum/superchain"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 var OPStackSupport = params.ProtocolVersionV0{Build: [8]byte{}, Major: 9, Minor: 0, Patch: 0, PreRelease: 0}.Encode()

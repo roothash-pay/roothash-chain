@@ -5,18 +5,18 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	"github.com/cpchain-network/cp-chain/cp-service/ioutil"
-	"github.com/cpchain-network/cp-chain/cp-service/retry"
-	"github.com/cpchain-network/cp-chain/cp-service/sources/batching"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/ioutil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/retry"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources/batching"
 	"github.com/urfave/cli/v2"
 
-	"github.com/cpchain-network/cp-chain/common/foundry"
-	"github.com/cpchain-network/cp-chain/common/genesis"
-	"github.com/cpchain-network/cp-chain/cp-service/jsonutil"
-	oplog "github.com/cpchain-network/cp-chain/cp-service/log"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/roothash-pay/theweb3-chain/common/foundry"
+	"github.com/roothash-pay/theweb3-chain/common/genesis"
+	"github.com/roothash-pay/theweb3-chain/tw-service/jsonutil"
+	oplog "github.com/roothash-pay/theweb3-chain/tw-service/log"
 )
 
 var (

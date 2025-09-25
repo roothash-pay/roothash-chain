@@ -6,8 +6,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/rawdb"
 	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/l2"
-	"github.com/roothash-pay/theweb3-chain/cp-program/host/kvstore"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/l2"
+	"github.com/roothash-pay/theweb3-chain/tw-program/host/kvstore"
 )
 
 type l2KeyValueStore struct {

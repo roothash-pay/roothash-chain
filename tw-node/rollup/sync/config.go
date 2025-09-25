@@ -7,10 +7,10 @@ import (
 
 type Mode int
 
-// There are two kinds of sync mode that the cp-node does:
-//  1. In consensus-layer (CL) sync, the cp-node fully drives the execution client and imports unsafe blocks &
+// There are two kinds of sync mode that the tw-node does:
+//  1. In consensus-layer (CL) sync, the tw-node fully drives the execution client and imports unsafe blocks &
 //     fetches unsafe blocks that it has missed.
-//  2. In execution-layer (EL) sync, the cp-node tells the execution client to sync towards the tip of the chain.
+//  2. In execution-layer (EL) sync, the tw-node tells the execution client to sync towards the tip of the chain.
 //     It will consolidate the chain as usual. This allows execution clients to snap sync if they are capable of it.
 const (
 	CLSync Mode = iota
@@ -65,7 +65,7 @@ type Config struct {
 	// SyncMode is defined above.
 	SyncMode Mode `json:"syncmode"`
 	// SkipSyncStartCheck skip the sanity check of consistency of L1 origins of the unsafe core blocks when determining the sync-starting point.
-	// This defers the L1-origin verification, and is recommended to use in when utilizing --syncmode=execution-layer on cp-node and --syncmode=snap on op-geth
+	// This defers the L1-origin verification, and is recommended to use in when utilizing --syncmode=execution-layer on tw-node and --syncmode=snap on op-geth
 	// Warning: This will be removed when we implement proper checkpoints.
 	// Note: We probably need to detect the condition that snap sync has not complete when we do a restart prior to running sync-start if we are doing
 	// snap sync with a genesis finalization data.

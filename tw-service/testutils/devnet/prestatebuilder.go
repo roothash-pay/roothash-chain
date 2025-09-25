@@ -3,7 +3,7 @@ package devnet
 import (
 	"context"
 
-	"github.com/cpchain-network/cp-chain/common/proofs/prestate"
+	"github.com/roothash-pay/theweb3-chain/common/proofs/prestate"
 )
 
 type mockPreStateBuilder struct {

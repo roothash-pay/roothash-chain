@@ -17,7 +17,7 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/ethereum/go-ethereum/triedb"
 	"github.com/hashicorp/golang-lru/v2/simplelru"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 // historicalCacheSize is the number of cached eip-2935 historical block lookups

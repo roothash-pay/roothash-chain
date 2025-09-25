@@ -1,18 +1,18 @@
-# `cp-supervisor`
+# `tw-supervisor`
 
-Issues: [monorepo](https://github.com/cpchain-network/cp-chain/issues?q=is%3Aissue%20state%3Aopen%20label%3AA-cp-supervisor)
+Issues: [monorepo](https://github.com/roothash-pay/theweb3-chain/issues?q=is%3Aissue%20state%3Aopen%20label%3AA-tw-supervisor)
 
-Pull requests: [monorepo](https://github.com/cpchain-network/cp-chain/pulls?q=is%3Aopen+is%3Apr+label%3AA-cp-supervisor)
+Pull requests: [monorepo](https://github.com/roothash-pay/theweb3-chain/pulls?q=is%3Aopen+is%3Apr+label%3AA-tw-supervisor)
 
 User docs:
-- [cp-supervisor](https://docs.optimism.io/stack/interop/cp-supervisor)
+- [tw-supervisor](https://docs.optimism.io/stack/interop/tw-supervisor)
 
 Specs:
 - [interop specs]
 
-`cp-supervisor` is a service to monitor chains, and quickly determine
+`tw-supervisor` is a service to monitor chains, and quickly determine
 cross-chain message safety, for native interoperability.
-The `cp-supervisor` functions as a [superchain backend], implementing the [interop specs].
+The `tw-supervisor` functions as a [superchain backend], implementing the [interop specs].
 
 [superchain backend]: https://github.com/ethereum-optimism/design-docs/blob/main/protocol/superchain-backend.md
 [interop specs]: https://github.com/ethereum-optimism/specs/tree/main/specs/interop
@@ -23,14 +23,14 @@ The `cp-supervisor` functions as a [superchain backend], implementing the [inter
 ## Quickstart
 
 ```bash
-make cp-supervisor
+make tw-supervisor
 
 # Key configurables:
 # datadir: where to store indexed interop data
 # dependency-set: where to find chain dependencies (this format is changing, and may be fully onchain in a later iteration)
 # l2-rpcs: core RPC endpoints to fetch data from (optional, can also be added using the `admin_addL2RPC in the admin-RPC)
-./bin/cp-supervisor \
-  --datadir="./cp-supervisor-data" \
+./bin/tw-supervisor \
+  --datadir="./tw-supervisor-data" \
   --dependency-set="./my-network-configs/dependency-set.json" \
   --l2-rpcs="ws://example1:8545,ws://example2:8545" \
   --rpc.enable-admin \
@@ -42,21 +42,21 @@ make cp-supervisor
 ### Build from source
 
 ```bash
-# from cp-supervisor dir:
-make cp-supervisor
-./bin/cp-supervisor --help
+# from tw-supervisor dir:
+make tw-supervisor
+./bin/tw-supervisor --help
 ```
 
 ### Run from source
 
 ```bash
-# from cp-supervisor dir:
+# from tw-supervisor dir:
 go run ./cmd --help
 ```
 
 ### Build docker image
 
-See `cp-supervisor` docker-bake target.
+See `tw-supervisor` docker-bake target.
 
 ## Overview
 
@@ -70,7 +70,7 @@ There are 3 stages of block safety:
 
 **Pre-interop**, the only dependency is DA (data availability), i.e. the batch data to derive the chain from.
 **Post-interop**, other L2s may be a dependency also.
-The cp-supervisor tracks these dependencies, to maintain a global view of cross-chain message safety.
+The tw-supervisor tracks these dependencies, to maintain a global view of cross-chain message safety.
 
 New blocks are considered `local unsafe`: sufficient to process the block locally, without guarantees.
 Once the L2 dependencies are met we consider it `cross unsafe`: still missing DA, but forming a valid messaging graph.
@@ -96,7 +96,7 @@ flowchart TD
 
 ### Control flow
 
-cp-nodes, or any compatible consensus-layer L2 node can interact with cp-supervisor in two modes:
+tw-nodes, or any compatible consensus-layer L2 node can interact with tw-supervisor in two modes:
 
 #### Managed Mode
 
@@ -106,18 +106,18 @@ This is done to give the supervisor a clear picture of the data across multiple 
 Managed nodes can be thought of integral to the supervisor. There must be *at least* one managed node per chain connected
 to a supervisor for it to supply accurate data.
 
-The Supervisor subscribes to events from the cp-node in order to react appropriately.
-In turn, cp-supervisor sends signals to the cp-node to manage its derivation pipeline or maintain databases:
+The Supervisor subscribes to events from the tw-node in order to react appropriately.
+In turn, tw-supervisor sends signals to the tw-node to manage its derivation pipeline or maintain databases:
 
-| cp-node event | cp-supervisor control |
+| tw-node event | tw-supervisor control |
 |-------|---------|
 | When new unsafe blocks are added  | Supervisor fetches receipts for database indexing |
 | When a new safe block is derived from an L1 block | Supervisor records the L1:L2 derivation information to the database |
 | When an L1 block is fully derived | Supervisor provides the next L1 block |
 | When the node resets is derivation pipeline | Supervisor provides a reset signal targeting blocks known in the database |
 
-Additionally, the supervisor sends control signals to the cp-node triggered by *database updates* in order to inform the node of cross-safety levels:
-| database event | cp-supervisor control |
+Additionally, the supervisor sends control signals to the tw-node triggered by *database updates* in order to inform the node of cross-safety levels:
+| database event | tw-supervisor control |
 |-------|---------|
 | New cross-unsafe head  | Supervisor sends the head to the node, where it is recorded as the cross-unsafe head |
 | New cross-safe head  | Supervisor sends the head to the node, where it is recorded as the cross-safe head |
@@ -130,7 +130,7 @@ In this way, all managed nodes are guaranteed to share the same L1 chain, and th
 #### Standard Mode
 (Standard mode is in development)
 
-In standard mode, an `cp-node` continues to handle derivation and L1 discovery as it would without a supervisor.
+In standard mode, an `tw-node` continues to handle derivation and L1 discovery as it would without a supervisor.
 However, it calls out to the supervisor periodically to update its cross-heads. Standard nodes do not affect the supervisor's data in any way.
 
 In this way, standard nodes can optimistically follow cross-safety without requiring the larger infrastructure of multiple nodes and a supervisor.
@@ -142,8 +142,8 @@ In this way, standard nodes can optimistically follow cross-safety without requi
 sequenceDiagram
 autonumber
 
-participant super as cp-supervisor
-participant node as cp-node (managed)
+participant super as tw-supervisor
+participant node as tw-node (managed)
 participant geth as op-geth
 
 super ->> node: RPC connection established
@@ -168,8 +168,8 @@ super ->> node: Next L1 Provided
 sequenceDiagram
 autonumber
 
-participant super as cp-supervisor
-participant node as cp-node (managed)
+participant super as tw-supervisor
+participant node as tw-node (managed)
 participant p2p as p2p
 
 p2p ->> node: New unsafe block from gossip network
@@ -181,7 +181,7 @@ Note over super: Index log events for unsafe block
 
 ### Databases
 
-The cp-supervisor maintains a few databases:
+The tw-supervisor maintains a few databases:
 - Log database (`events` kind): per chain, we maintain a running list of log-events,
   separated by block-seals.
   I.e. this persists the cross-L2 dependency information.
@@ -192,7 +192,7 @@ The cp-supervisor maintains a few databases:
   became cross-safe, given all the L2 data available, at which L1 block.
   I.e. this persists the merged results of verifying both DA and cross-L2 dependencies.
 
-Additionally, the cp-supervisor tracks `cross unsafe` in memory, not persisting it to a database:
+Additionally, the tw-supervisor tracks `cross unsafe` in memory, not persisting it to a database:
 it can quickly reproduce this after data-loss by verifying if cross-L2 dependencies
 are met by `unsafe` data, starting from the latest known `cross safe` block.
 
@@ -212,7 +212,7 @@ The database can be searched with binary lookups, and written with O(1) appends.
 flowchart TD
     user-->opnode
     user-->opgeth
-    opnode[cp-node]==block checks==>frontend[frontend RPC]
+    opnode[tw-node]==block checks==>frontend[frontend RPC]
     opgeth[op-geth]==tx-pool checks==>frontend
 
     frontend<==>backend
@@ -273,7 +273,7 @@ and requires dependencies on DA to be consolidated with the dependencies on cros
 
 ### Optimization target
 
-The `cp-supervisor` implementation optimizes safe determination of cross-chain message safety,
+The `tw-supervisor` implementation optimizes safe determination of cross-chain message safety,
 with fast feedback to readers.
 
 Data is indexed fast and optimistically to have a minimum level of feedback about a message or block.
@@ -282,20 +282,20 @@ follow up with asynchronous full verification of the safety.
 
 ### Vision
 
-The `cp-supervisor` is actively changing.
+The `tw-supervisor` is actively changing.
 The most immediate changes are that to the architecture and data flow, as outlined in [design-doc 171].
 
 Full support for chain reorgs (detecting them, and resolving them) is the
 next priority after the above architecture and data changes.
 
-Further background on the design-choices of cp-supervisor can be found in the
+Further background on the design-choices of tw-supervisor can be found in the
 [superchain backend design-doc](https://github.com/ethereum-optimism/design-docs/blob/main/protocol/superchain-backend.md).
 
 ## Design principles
 
 - Each indexing or safety kind of change is encapsulated in its own asynchronous job.
 - Increments in indexing and safety are propagated, such that other follow-up work can be triggered without delay.
-- A read-only subset of the API is served, sufficient for nodes to stay in sync, assuming a healthy cp-supervisor.
+- A read-only subset of the API is served, sufficient for nodes to stay in sync, assuming a healthy tw-supervisor.
 - Databases are rewound trivially by dropping trailing information.
 - Databases can be copied at any time, for convenient snapshots.
 

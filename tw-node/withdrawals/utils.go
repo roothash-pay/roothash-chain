@@ -14,9 +14,9 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient/gethclient"
 
-	"github.com/cpchain-network/cp-chain/cp-node/bindings"
-	bindingspreview "github.com/cpchain-network/cp-chain/cp-node/bindings/preview"
-	"github.com/cpchain-network/cp-chain/cp-service/predeploys"
+	"github.com/roothash-pay/theweb3-chain/tw-node/bindings"
+	bindingspreview "github.com/roothash-pay/theweb3-chain/tw-node/bindings/preview"
+	"github.com/roothash-pay/theweb3-chain/tw-service/predeploys"
 )
 
 var MessagePassedTopic = crypto.Keccak256Hash([]byte("MessagePassed(uint256,address,address,uint256,uint256,bytes,bytes32)"))

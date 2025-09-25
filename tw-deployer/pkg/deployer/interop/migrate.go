@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/cpchain-network/cp-chain/common/script"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/opcm"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/lmittmann/w3"
+	"github.com/roothash-pay/theweb3-chain/common/script"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/opcm"
 )
 
 type InteropMigrationInput struct {

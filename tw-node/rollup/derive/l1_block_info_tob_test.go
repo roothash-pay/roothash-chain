@@ -3,11 +3,11 @@ package derive
 import (
 	"testing"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	"github.com/cpchain-network/cp-chain/cp-service/testutils"
-	"github.com/cpchain-network/cp-chain/cp-service/testutils/fuzzerutils"
 	fuzz "github.com/google/gofuzz"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testutils"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testutils/fuzzerutils"
 	"github.com/stretchr/testify/require"
 )
 

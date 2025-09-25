@@ -6,20 +6,20 @@ comment:
   behavior: default
   require_changes: true
   flags:
-    - contracts-cpchain-tests
+    - contracts-theweb3Chain-tests
 
 ignore:
   - "op-e2e"
   - "**/*.t.sol"
-  - "packages/contracts-cpchain/test/**/*.sol"
-  - "packages/contracts-cpchain/scripts/**/*.sol"
-  - "packages/contracts-cpchain/src/vendor/**/*.sol"
-  - "packages/contracts-cpchain/src/interfaces/**/*.sol"
+  - "packages/contracts-theweb3Chain/test/**/*.sol"
+  - "packages/contracts-theweb3Chain/scripts/**/*.sol"
+  - "packages/contracts-theweb3Chain/src/vendor/**/*.sol"
+  - "packages/contracts-theweb3Chain/src/interfaces/**/*.sol"
   # TODO: add coverage for MIPS64 back once tests are merged in
-  - "packages/contracts-cpchain/src/cannon/MIPS64.sol"
-  - "packages/contracts-cpchain/src/cannon/libraries/MIPS64Instructions.sol"
-  - "packages/contracts-cpchain/src/cannon/libraries/MIPS64State.sol"
-  - "packages/contracts-cpchain/src/cannon/libraries/MIPS64Syscalls.sol"
+  - "packages/contracts-theweb3Chain/src/cannon/MIPS64.sol"
+  - "packages/contracts-theweb3Chain/src/cannon/libraries/MIPS64Instructions.sol"
+  - "packages/contracts-theweb3Chain/src/cannon/libraries/MIPS64State.sol"
+  - "packages/contracts-theweb3Chain/src/cannon/libraries/MIPS64Syscalls.sol"
 
 coverage:
   status:
@@ -33,10 +33,10 @@ coverage:
         threshold: 5%
         informational: false
         flags:
-          - contracts-cpchain-tests
+          - contracts-theweb3Chain-tests
 
 flag_management:
   individual_flags:
-    - name: contracts-cpchain-tests
+    - name: contracts-theweb3Chain-tests
       paths:
-        - packages/contracts-cpchain/src
+        - packages/contracts-theweb3Chain/src

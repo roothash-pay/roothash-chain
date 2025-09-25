@@ -3,12 +3,12 @@ package config
 import (
 	"errors"
 
-	oplog "github.com/cpchain-network/cp-chain/cp-service/log"
-	opmetrics "github.com/cpchain-network/cp-chain/cp-service/metrics"
-	"github.com/cpchain-network/cp-chain/cp-service/oppprof"
-	oprpc "github.com/cpchain-network/cp-chain/cp-service/rpc"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/backend/depset"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/backend/syncnode"
+	oplog "github.com/roothash-pay/theweb3-chain/tw-service/log"
+	opmetrics "github.com/roothash-pay/theweb3-chain/tw-service/metrics"
+	"github.com/roothash-pay/theweb3-chain/tw-service/oppprof"
+	oprpc "github.com/roothash-pay/theweb3-chain/tw-service/rpc"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/backend/depset"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/backend/syncnode"
 )
 
 var (

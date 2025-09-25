@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
 	"github.com/ethereum/go-ethereum/log"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 type GetL1SyncStatus func(ctx context.Context) (eth.L1BlockRef, error)

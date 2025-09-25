@@ -5,16 +5,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-node/p2p/store"
+	"github.com/roothash-pay/theweb3-chain/tw-node/p2p/store"
 
-	"github.com/cpchain-network/cp-chain/cp-node/metrics"
-	"github.com/cpchain-network/cp-chain/cp-node/p2p/gating/mocks"
-	"github.com/cpchain-network/cp-chain/cp-service/clock"
-	"github.com/cpchain-network/cp-chain/cp-service/testlog"
 	log "github.com/ethereum/go-ethereum/log"
 	"github.com/libp2p/go-libp2p/core/network"
 	"github.com/libp2p/go-libp2p/core/peer"
 	"github.com/multiformats/go-multiaddr"
+	"github.com/roothash-pay/theweb3-chain/tw-node/metrics"
+	"github.com/roothash-pay/theweb3-chain/tw-node/p2p/gating/mocks"
+	"github.com/roothash-pay/theweb3-chain/tw-service/clock"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testlog"
 	"github.com/stretchr/testify/require"
 )
 

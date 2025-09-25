@@ -10,10 +10,10 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	ethTypes "github.com/ethereum/go-ethereum/core/types"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	"github.com/cpchain-network/cp-chain/cp-service/predeploys"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/backend/depset"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/types"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/predeploys"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/backend/depset"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/types"
 )
 
 var logProcessorChainID = eth.ChainIDFromUInt64(4)

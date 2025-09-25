@@ -12,8 +12,8 @@ import (
 	"github.com/libp2p/go-libp2p/p2p/protocol/ping"
 	"github.com/stretchr/testify/require"
 
-	"github.com/cpchain-network/cp-chain/cp-service/clock"
-	"github.com/cpchain-network/cp-chain/cp-service/testlog"
+	"github.com/roothash-pay/theweb3-chain/tw-service/clock"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testlog"
 )
 
 func TestPingService(t *testing.T) {

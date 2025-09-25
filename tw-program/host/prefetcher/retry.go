@@ -7,10 +7,10 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/log"
-	"github.com/roothash-pay/theweb3-chain/cp-node/rollup"
-	hosttypes "github.com/roothash-pay/theweb3-chain/cp-program/host/types"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
-	"github.com/roothash-pay/theweb3-chain/cp-service/retry"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	hosttypes "github.com/roothash-pay/theweb3-chain/tw-program/host/types"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/retry"
 )
 
 const maxAttempts = math.MaxInt // Succeed or die trying

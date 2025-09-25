@@ -17,7 +17,7 @@ git clone https://github.com/roothash-pay/theweb3-chain --recurse-submodules
 STATES_DIR="${SCRIPTS_DIR}/../temp/states"
 LOGS_DIR="${SCRIPTS_DIR}/../temp/logs"
 REPO_DIR="${TMP_DIR}/optimism"
-BIN_DIR="${REPO_DIR}/cp-program/bin/"
+BIN_DIR="${REPO_DIR}/tw-program/bin/"
 VERSIONS_FILE="${STATES_DIR}/versions.json"
 
 mkdir -p "${STATES_DIR}" "${LOGS_DIR}"
@@ -26,7 +26,7 @@ mkdir -p "${STATES_DIR}" "${LOGS_DIR}"
 cd "${REPO_DIR}"
 
 VERSIONS_JSON="[]"
-VERSIONS=$(git tag --list 'cp-program/v*' --sort taggerdate)
+VERSIONS=$(git tag --list 'tw-program/v*' --sort taggerdate)
 
 for VERSION in ${VERSIONS}
 do

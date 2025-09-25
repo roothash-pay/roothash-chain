@@ -8,7 +8,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/cpchain-network/cp-chain/common/genesis"
+	"github.com/roothash-pay/theweb3-chain/common/genesis"
 )
 
 type L1Config struct {

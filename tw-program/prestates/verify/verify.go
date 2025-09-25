@@ -7,7 +7,7 @@ import (
 	"os"
 	"slices"
 
-	"github.com/roothash-pay/theweb3-chain/cp-program/prestates"
+	"github.com/roothash-pay/theweb3-chain/tw-program/prestates"
 )
 
 func main() {

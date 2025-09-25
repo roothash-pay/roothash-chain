@@ -5,13 +5,13 @@ import (
 	"github.com/urfave/cli/v2"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/engine"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/sync"
-	openum "github.com/cpchain-network/cp-chain/cp-service/enum"
-	opflags "github.com/cpchain-network/cp-chain/cp-service/flags"
-	oplog "github.com/cpchain-network/cp-chain/cp-service/log"
-	"github.com/cpchain-network/cp-chain/cp-service/oppprof"
-	"github.com/cpchain-network/cp-chain/cp-service/sources"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/engine"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/sync"
+	openum "github.com/roothash-pay/theweb3-chain/tw-service/enum"
+	opflags "github.com/roothash-pay/theweb3-chain/tw-service/flags"
+	oplog "github.com/roothash-pay/theweb3-chain/tw-service/log"
+	"github.com/roothash-pay/theweb3-chain/tw-service/oppprof"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources"
 )
 
 // Flags
@@ -108,7 +108,7 @@ var (
 		Name:     "rpc.port",
 		Usage:    "RPC listening port",
 		EnvVars:  prefixEnvVars("RPC_PORT"),
-		Value:    9545, // Note: cp-service/rpc/cli.go uses 8545 as the default.
+		Value:    9545, // Note: tw-service/rpc/cli.go uses 8545 as the default.
 		Category: OperationsCategory,
 	}
 	RPCEnableAdmin = &cli.BoolFlag{
@@ -362,7 +362,7 @@ var (
 		Usage: "Interop RPC listening port, to serve supervisor syncing." +
 			"Applies only to Interop-enabled networks.",
 		EnvVars:  prefixEnvVars("INTEROP_RPC_PORT"),
-		Value:    9645, // Note: cp-service/rpc/cli.go uses 8545 as the default.
+		Value:    9645, // Note: tw-service/rpc/cli.go uses 8545 as the default.
 		Category: InteropCategory,
 	}
 	InteropJWTSecret = &cli.StringFlag{

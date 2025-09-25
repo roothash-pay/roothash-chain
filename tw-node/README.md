@@ -1,10 +1,10 @@
-# `cp-node`
+# `tw-node`
 
 Issues:
-[monorepo](https://github.com/cpchain-network/cp-chain/issues?q=is%3Aissue%20state%3Aopen%20label%3AA-cp-node)
+[monorepo](https://github.com/roothash-pay/theweb3-chain/issues?q=is%3Aissue%20state%3Aopen%20label%3AA-tw-node)
 
 Pull requests:
-[monorepo](https://github.com/cpchain-network/cp-chain/pulls?q=is%3Aopen+is%3Apr+label%3AA-cp-node)
+[monorepo](https://github.com/roothash-pay/theweb3-chain/pulls?q=is%3Aopen+is%3Apr+label%3AA-tw-node)
 
 User docs:
 
@@ -14,7 +14,7 @@ Specs:
 
 - [rollup-node spec]
 
-The cp-node implements the [rollup-node spec].
+The tw-node implements the [rollup-node spec].
 It functions as a Consensus Layer client of an OP Stack chain.
 This builds, relays and verifies the canonical chain of blocks.
 The blocks are processed by an execution layer client, like [op-geth].
@@ -25,7 +25,7 @@ The blocks are processed by an execution layer client, like [op-geth].
 ## Quickstart
 
 ```bash
-just cp-node
+just tw-node
 
 # Network selection:
 # - Join any of the pre-configured networks with the `--network` flag.
@@ -37,7 +37,7 @@ just cp-node
 # - core engine API, to apply new blocks to
 # - P2P TCP port, to expose publicly, to retrieve and relay the latest core blocks
 # - P2P UDP port, to expose publicly, to discover other nodes to peer with
-# - RPC port, to serve RPC of the cp-node
+# - RPC port, to serve RPC of the tw-node
 #
 # Other:
 # - Sync mode: how to interact with the execution-engine,
@@ -45,8 +45,8 @@ just cp-node
 #   - consensus-layer (block by block sync)
 #   - execution-layer (e.g. snap-sync)
 #
-# Tip: every CLI flag has an env-var equivalent (run `cp-node --help` for more information)
-./bin/cp-node \
+# Tip: every CLI flag has an env-var equivalent (run `tw-node --help` for more information)
+./bin/tw-node \
   --network=op-sepolia \
   --l1=ws://localhost:8546 \
   --l1.beacon=http://localhost:4000 \
@@ -72,22 +72,22 @@ just cp-node
 ### Build from source
 
 ```bash
-# from cp-node dir:
-just cp-node
+# from tw-node dir:
+just tw-node
 
-./bin/cp-node --help
+./bin/tw-node --help
 ```
 
 ### Run from source
 
 ```bash
-# from cp-node dir:
+# from tw-node dir:
 go run ./cmd --help
 ```
 
 ### Build docker image
 
-See `cp-node` docker-bake target.
+See `tw-node` docker-bake target.
 
 ## Implementation overview
 
@@ -98,13 +98,13 @@ See `cp-node` docker-bake target.
 
 ## Product
 
-The cp-node **builds**, **relays** and **verifies** the canonical chain of blocks.
+The tw-node **builds**, **relays** and **verifies** the canonical chain of blocks.
 
-The cp-node does not store critical data:
-the cp-node can recover from any existing L2 chain pre-state
+The tw-node does not store critical data:
+the tw-node can recover from any existing L2 chain pre-state
 that is sufficiently synced such that available input data can complete the sync.
 
-The cp-node **builds** blocks:
+The tw-node **builds** blocks:
 either from scratch as a sequencer, or from block-inputs (made available through L1) as verifier.
 
 The block **relay** is a happy-path: the P2P sync is optional, and does not affect the ability to verify.
@@ -118,7 +118,7 @@ The blocks are **verified**: only valid L2 blocks that can be reproduced from L1
 
 **Safely and reliably sync the canonical chain**
 
-The cp-node implements the three core product features as following:
+The tw-node implements the three core product features as following:
 
 - Block **building**: extend the chain at a throughput rate and latency that is safe to relay and verify.
 - Block **relaying**: while keeping throughput high and latency low, prevent single points of failure.
@@ -131,35 +131,35 @@ and design-choices should aim to improve the trade-off.
 
 ### Vision
 
-The cp-node is changing in two ways:
+The tw-node is changing in two ways:
 
 - [Reliability](#reliability): improve the reliability with improved processing, testing and syncing.
 - [Interoperability](#interoperability): cross-chain messaging support.
 
 #### Reliability
 
-- Parallel derivation processes: [Issue 10864](https://github.com/cpchain-network/cp-chain/issues/10864)
-- Event tests: [Issue 13163](https://github.com/cpchain-network/cp-chain/issues/13163)
-- Improving P2P sync: [Issue 11779](https://github.com/cpchain-network/cp-chain/issues/11779)
+- Parallel derivation processes: [Issue 10864](https://github.com/roothash-pay/theweb3-chain/issues/10864)
+- Event tests: [Issue 13163](https://github.com/roothash-pay/theweb3-chain/issues/13163)
+- Improving P2P sync: [Issue 11779](https://github.com/roothash-pay/theweb3-chain/issues/11779)
 
 #### Interoperability
 
 The OP Stack is make chains natively interoperable:
 messages between chains form safety dependencies, and verified asynchronously.
-Asynchronous verification entails that the cp-node reorgs away a block
+Asynchronous verification entails that the tw-node reorgs away a block
 if and when the block is determined to be invalid.
 
-The [cp-supervisor] specializes in this dependency verification work.
+The [tw-supervisor] specializes in this dependency verification work.
 
-The cp-node encapsulates all the single-chain concerns:
-it prepares the local safety data-points (DA confirmation and block contents) for the cp-supervisor.
+The tw-node encapsulates all the single-chain concerns:
+it prepares the local safety data-points (DA confirmation and block contents) for the tw-supervisor.
 
-The cp-supervisor then verifies the cross-chain safety, and promotes the block safety level accordingly,
-which the cp-node then follows.
+The tw-supervisor then verifies the cross-chain safety, and promotes the block safety level accordingly,
+which the tw-node then follows.
 
 See [Interop specs] and [Interop design-docs] for more information about interoperability.
 
-[cp-supervisor]: ../cp-supervisor/README.md
+[tw-supervisor]: ../tw-supervisor/README.md
 
 ### User stories
 
@@ -177,7 +177,7 @@ As _a proof dev_ I want _reusable state-transition code_ so that I _don't reimpl
 
 - Encapsulate the state-transition:
   - Use interfaces to abstract file-IO / concurrency / etc. away from state-transition logic.
-  - Ensure code-sharing with action-tests and cp-program.
+  - Ensure code-sharing with action-tests and tw-program.
 - No critical database:
   - Persisting data is ok, but it should be recoverable from external data without too much work.
   - The best chain "sync" is no sync.
@@ -188,18 +188,18 @@ As _a proof dev_ I want _reusable state-transition code_ so that I _don't reimpl
 
 ## Failure modes
 
-This is a brief overview of what might fail, and how the cp-node responds.
+This is a brief overview of what might fail, and how the tw-node responds.
 
 ### L1 downtime
 
-When the L1 data-source is temporarily unavailable the cp-node `safe`/`finalized` progression halts.
+When the L1 data-source is temporarily unavailable the tw-node `safe`/`finalized` progression halts.
 Blocks may continue to sync through the happy-path if P2P connectivity is undisrupted.
 
 ### No batch confirmation
 
 As per the [rollup-node spec] the sequencing-window ensures that after a bounded period of L1 blocks
 the verifier will infer blocks, to ensure liveness of blocks with deposited transactions.
-The cp-node will continue to process the happy-path in the mean time,
+The tw-node will continue to process the happy-path in the mean time,
 which may have to be reorged out if it does not match the blocks that is inferred after sequencing window expiry.
 
 ### L1 reorg
@@ -208,13 +208,13 @@ L1 reorgs are detected passively during traversal: upon traversal to block `N+1`
 if the next canonical block has a parent-hash that does not match the
 current block `N` we know the remote L1 chain view has diverged.
 
-When this happens, the cp-node assumes the local view is wrong, and resets itself to follow that of the remote node,
+When this happens, the tw-node assumes the local view is wrong, and resets itself to follow that of the remote node,
 dropping any non-canonical blocks in the process.
 
 ### No L1 finality
 
 When L1 does not finalize for an extended period of time,
-the cp-node is also unable to finalize the L2 chain for the same time.
+the tw-node is also unable to finalize the L2 chain for the same time.
 
 Note that the `safe` block in the execution-layer is bootstrapped from the `finalized` block:
 some verification work may repeat after a restart.
@@ -228,14 +228,14 @@ The `unsafe` part of the chain will no longer progress optimistically ahead of t
 
 The `safe` blocks will continue to be derived from L1 however, providing a higher-latency access to the latest chain.
 
-The cp-node may pick back up the latest `unsafe` blocks after recovering its P2P connectivity,
+The tw-node may pick back up the latest `unsafe` blocks after recovering its P2P connectivity,
 and buffering `unsafe` blocks until the `safe` blocks progress meets the first known buffered `unsafe` block.
 
 ### Restarts and resyncing
 
 After a restart, or detection of missing chain data,
-the cp-node dynamically determines what L1 data is required to continue, based on the syncing state of execution-engine.
-If the sync-state is far behind, the cp-node may need archived blob data to sync from the original L1 inputs.
+the tw-node dynamically determines what L1 data is required to continue, based on the syncing state of execution-engine.
+If the sync-state is far behind, the tw-node may need archived blob data to sync from the original L1 inputs.
 
 A faster alternative may be to bootstrap through the execution-layer sync mode,
 where the execution-engine may perform an optimized long-range sync, such as snap-sync.
@@ -254,10 +254,10 @@ back in a normal state.
 
 <!-- describe testing methods and approach to test coverage -->
 
-- Unit tests: encapsulated functionality, fuzz tests, etc. in the cp-node Go packages.
+- Unit tests: encapsulated functionality, fuzz tests, etc. in the tw-node Go packages.
 - `op-e2e` action tests: in-progress Go testing, focused on the onchain aspects,
   e.g. state-transition edge-cases. This applies primarily to the derivation pipeline.
-- `op-e2e` system tests: in-process Go testing, focused on the offchain aspects of the cp-node,
+- `op-e2e` system tests: in-process Go testing, focused on the offchain aspects of the tw-node,
   e.g. background work, P2P integration, general service functionality.
 - Local devnet tests: full end to end testing, but set up on minimal resources.
 - Kurtosis tests: new automated devnet-like testing. Work in progress.

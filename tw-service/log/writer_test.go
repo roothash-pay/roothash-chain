@@ -9,8 +9,8 @@ import (
 
 	"github.com/ethereum/go-ethereum/log"
 
-	. "github.com/cpchain-network/cp-chain/cp-service/log"
-	"github.com/cpchain-network/cp-chain/cp-service/testlog"
+	. "github.com/roothash-pay/theweb3-chain/tw-service/log"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testlog"
 )
 
 var _ io.Writer = (*Writer)(nil)

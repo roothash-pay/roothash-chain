@@ -10,12 +10,12 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/log"
-	"github.com/roothash-pay/theweb3-chain/cp-node/rollup"
-	"github.com/roothash-pay/theweb3-chain/cp-node/rollup/derive"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/l2/engineapi"
-	l2Types "github.com/roothash-pay/theweb3-chain/cp-program/client/l2/types"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
-	"github.com/roothash-pay/theweb3-chain/cp-service/predeploys"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/derive"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/l2/engineapi"
+	l2Types "github.com/roothash-pay/theweb3-chain/tw-program/client/l2/types"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/predeploys"
 )
 
 var (

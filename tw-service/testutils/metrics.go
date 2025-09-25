@@ -3,7 +3,7 @@ package testutils
 import (
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 // TestDerivationMetrics implements the metrics used in the derivation pipeline as no-op operations.

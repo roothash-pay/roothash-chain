@@ -6,9 +6,9 @@ import (
 	"math"
 	"strings"
 
-	opservice "github.com/cpchain-network/cp-chain/cp-service"
-	openum "github.com/cpchain-network/cp-chain/cp-service/enum"
-	"github.com/cpchain-network/cp-chain/cp-service/flags"
+	opservice "github.com/roothash-pay/theweb3-chain/tw-service"
+	openum "github.com/roothash-pay/theweb3-chain/tw-service/enum"
+	"github.com/roothash-pay/theweb3-chain/tw-service/flags"
 	"github.com/urfave/cli/v2"
 )
 

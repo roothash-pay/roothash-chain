@@ -7,8 +7,8 @@ import (
 	"os"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/roothash-pay/theweb3-chain/cp-program/verify"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-program/verify"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 var opMainnetChainID = eth.ChainIDFromUInt64(10)

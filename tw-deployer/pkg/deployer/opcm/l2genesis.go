@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/common/genesis"
-	"github.com/cpchain-network/cp-chain/common/script"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/roothash-pay/theweb3-chain/common/genesis"
+	"github.com/roothash-pay/theweb3-chain/common/script"
 )
 
 var (

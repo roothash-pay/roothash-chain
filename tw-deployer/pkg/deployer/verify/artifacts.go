@@ -6,8 +6,8 @@ import (
 	"path"
 	"strings"
 
-	"github.com/cpchain-network/cp-chain/common/foundry"
 	"github.com/ethereum/go-ethereum/accounts/abi"
+	"github.com/roothash-pay/theweb3-chain/common/foundry"
 )
 
 type contractArtifact struct {

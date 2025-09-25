@@ -8,7 +8,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/rawdb"
 	"github.com/ethereum/go-ethereum/ethdb"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 var codePrefixedKeyLength = common.HashLength + len(rawdb.CodePrefix)

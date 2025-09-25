@@ -5,8 +5,8 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/cpchain-network/cp-chain/cp-service/testutils"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testutils"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

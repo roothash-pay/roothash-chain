@@ -34,7 +34,7 @@ import (
 	"github.com/ethereum/go-ethereum/crypto/kzg4844"
 	"github.com/ethereum/go-ethereum/params"
 
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 var (

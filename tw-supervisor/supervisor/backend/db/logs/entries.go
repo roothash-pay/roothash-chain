@@ -6,7 +6,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/types"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/types"
 )
 
 // searchCheckpoint is both a checkpoint for searching, as well as a checkpoint for sealing blocks.

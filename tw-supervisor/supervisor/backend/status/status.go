@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/event"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/backend/superevents"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/types"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/event"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/backend/superevents"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/types"
 )
 
 var ErrStatusTrackerNotReady = fmt.Errorf("supervisor status tracker not ready")

@@ -7,11 +7,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-node/p2p/monitor/mocks"
-	clock2 "github.com/cpchain-network/cp-chain/cp-service/clock"
-	"github.com/cpchain-network/cp-chain/cp-service/testlog"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/libp2p/go-libp2p/core/peer"
+	"github.com/roothash-pay/theweb3-chain/tw-node/p2p/monitor/mocks"
+	clock2 "github.com/roothash-pay/theweb3-chain/tw-service/clock"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testlog"
 	"github.com/stretchr/testify/require"
 )
 

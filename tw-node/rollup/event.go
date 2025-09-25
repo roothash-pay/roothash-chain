@@ -1,8 +1,8 @@
 package rollup
 
 import (
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/event"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/event"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 // L1TemporaryErrorEvent identifies a temporary issue with the L1 data.

@@ -8,8 +8,8 @@ import (
 	"io"
 
 	"github.com/andybalholm/brotli"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
 	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 const (

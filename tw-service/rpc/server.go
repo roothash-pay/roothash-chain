@@ -9,7 +9,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/cpchain-network/cp-chain/cp-service/httputil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/httputil"
 )
 
 // Server is a convenience util, that wraps an httputil.HTTPServer and provides an RPC Handler

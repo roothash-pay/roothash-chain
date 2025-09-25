@@ -5,25 +5,25 @@ ARG VERSION=v0.0.0
 RUN apk add --no-cache make gcc musl-dev linux-headers git jq bash
 
 # build op-node with the shared go.mod & go.sum files
-COPY ./cp-node /app/cp-node
-COPY ./cp-service /app/cp-service
+COPY ./tw-node /app/tw-node
+COPY ./tw-service /app/tw-service
 COPY ./common /app/common
-COPY ./cp-supervisor /app/cp-supervisor
-COPY ./cp-deployer /app/cp-deployer
+COPY ./tw-supervisor /app/tw-supervisor
+COPY ./tw-deployer /app/tw-deployer
 
 COPY ./go.mod /app/go.mod
 COPY ./go.sum /app/go.sum
 
-WORKDIR /app/cp-node
+WORKDIR /app/tw-node
 
 RUN go mod tidy
 
 ARG TARGETOS TARGETARCH
 
-RUN go build -o bin/cp-node ./cmd/main.go
+RUN go build -o bin/tw-node ./cmd/main.go
 
 FROM alpine:3.21
 
-COPY --from=builder /app/cp-node/bin/cp-node /usr/local/bin
+COPY --from=builder /app/tw-node/bin/tw-node /usr/local/bin
 
-CMD ["cp-node"]
+CMD ["tw-node"]

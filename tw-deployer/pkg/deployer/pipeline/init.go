@@ -5,8 +5,8 @@ import (
 	"crypto/rand"
 	"fmt"
 
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/standard"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/state"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/standard"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/state"
 
 	"github.com/ethereum/go-ethereum/common"
 )

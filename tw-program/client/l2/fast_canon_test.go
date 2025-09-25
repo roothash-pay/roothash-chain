@@ -9,9 +9,9 @@ import (
 	"github.com/ethereum/go-ethereum/core/rawdb"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/log"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/l2/test"
-	"github.com/roothash-pay/theweb3-chain/cp-service/testlog"
-	"github.com/roothash-pay/theweb3-chain/cp-service/testutils"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/l2/test"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testlog"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testutils"
 	"github.com/stretchr/testify/require"
 )
 

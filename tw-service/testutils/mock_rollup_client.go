@@ -3,9 +3,9 @@ package testutils
 import (
 	"context"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 	"github.com/stretchr/testify/mock"
 )
 

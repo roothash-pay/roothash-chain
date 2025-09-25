@@ -4,8 +4,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/cpchain-network/cp-chain/cp-service/ioutil"
-	"github.com/cpchain-network/cp-chain/cp-service/jsonutil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/ioutil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/jsonutil"
 )
 
 func Write[X Serializable](outputPath string, x X, perm os.FileMode) error {

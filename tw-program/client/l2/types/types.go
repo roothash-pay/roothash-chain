@@ -2,7 +2,7 @@ package types
 
 import (
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 // OracleHinter is an optional interfaces that can be implemented by an Oracle to provide hints

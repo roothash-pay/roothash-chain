@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/roothash-pay/theweb3-chain/cp-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
@@ -13,11 +13,11 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/log"
 
-	hosttypes "github.com/roothash-pay/theweb3-chain/cp-program/host/types"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
-	"github.com/roothash-pay/theweb3-chain/cp-service/retry"
-	"github.com/roothash-pay/theweb3-chain/cp-service/testlog"
-	"github.com/roothash-pay/theweb3-chain/cp-service/testutils"
+	hosttypes "github.com/roothash-pay/theweb3-chain/tw-program/host/types"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/retry"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testlog"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testutils"
 )
 
 func TestRetryingL1Source(t *testing.T) {

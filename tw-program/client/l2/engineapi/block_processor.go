@@ -13,8 +13,8 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/ethereum/go-ethereum/params"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
-	"github.com/roothash-pay/theweb3-chain/cp-service/predeploys"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/predeploys"
 )
 
 var (

@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-service/retry"
+	"github.com/roothash-pay/theweb3-chain/tw-service/retry"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"

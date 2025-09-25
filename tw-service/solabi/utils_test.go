@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"testing"
 
-	"github.com/cpchain-network/cp-chain/cp-service/solabi"
+	"github.com/roothash-pay/theweb3-chain/tw-service/solabi"
 	"github.com/stretchr/testify/require"
 )
 

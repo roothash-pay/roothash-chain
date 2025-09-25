@@ -5,12 +5,12 @@ import (
 	"errors"
 	"io"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rlp"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 // Batch format

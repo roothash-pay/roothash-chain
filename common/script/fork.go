@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/cpchain-network/cp-chain/common/script/forking"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/roothash-pay/theweb3-chain/common/script/forking"
 )
 
 // ForkOption modifies a ForkConfig, and can be used by Host internals,

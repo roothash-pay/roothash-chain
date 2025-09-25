@@ -9,9 +9,9 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/urfave/cli/v2"
 
-	"github.com/cpchain-network/cp-chain/cp-node/flags"
-	"github.com/cpchain-network/cp-chain/cp-node/p2p"
-	opsigner "github.com/cpchain-network/cp-chain/cp-service/signer"
+	"github.com/roothash-pay/theweb3-chain/tw-node/flags"
+	"github.com/roothash-pay/theweb3-chain/tw-node/p2p"
+	opsigner "github.com/roothash-pay/theweb3-chain/tw-service/signer"
 )
 
 // LoadSignerSetup loads a configuration for a Signer to be set up later

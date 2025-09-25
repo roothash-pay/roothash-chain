@@ -16,7 +16,7 @@ import (
 	ethTypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 func FuzzRoundtripIdentifierJSONMarshal(f *testing.F) {
@@ -86,7 +86,7 @@ func TestHashing(t *testing.T) {
 	payloadHash := keccak256("payloadHash", []byte("example payload")) // aka msgHash
 	logHash := keccak256("logHash", id.Origin[:], payloadHash[:])
 	x := PayloadHashToLogHash(payloadHash, id.Origin)
-	require.Equal(t, logHash, x, "check cp-supervisor version of log-hashing matches intermediate value")
+	require.Equal(t, logHash, x, "check tw-supervisor version of log-hashing matches intermediate value")
 
 	var idPacked []byte
 	idPacked = append(idPacked, make([]byte, 12)...)

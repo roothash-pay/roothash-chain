@@ -1,4 +1,4 @@
-package cp_service
+package tw_service
 
 func FormatVersion(version string, gitCommit string, gitDate string, meta string) string {
 	v := version

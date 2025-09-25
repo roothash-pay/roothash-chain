@@ -6,10 +6,10 @@ import (
 	"os"
 	"path"
 
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/state"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/state"
 
-	op_service "github.com/cpchain-network/cp-chain/cp-service"
-	oplog "github.com/cpchain-network/cp-chain/cp-service/log"
+	op_service "github.com/roothash-pay/theweb3-chain/tw-service"
+	oplog "github.com/roothash-pay/theweb3-chain/tw-service/log"
 	"github.com/urfave/cli/v2"
 )
 
@@ -56,11 +56,11 @@ func NewDeploymentTarget(s string) (DeploymentTarget, error) {
 func GetDefaultCacheDir() string {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		fallbackDir := ".cp-deployer/cache"
+		fallbackDir := ".tw-deployer/cache"
 		log.Printf("error getting user home directory: %v, using fallback directory: %s\n", err, fallbackDir)
 		return fallbackDir
 	}
-	return path.Join(homeDir, ".cp-deployer/cache")
+	return path.Join(homeDir, ".tw-deployer/cache")
 }
 
 var (
@@ -116,7 +116,7 @@ var (
 		Value:   string(DeploymentTargetLive),
 	}
 	OpProgramSvcUrlFlag = &cli.StringFlag{
-		Name:    "cp-program-svc-url",
+		Name:    "tw-program-svc-url",
 		Usage:   "URL of the OP Program SVC",
 		EnvVars: PrefixEnvVar("OP_PROGRAM_SVC_URL"),
 	}

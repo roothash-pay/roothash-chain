@@ -14,7 +14,7 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/cpchain-network/cp-chain/cp-service/retry"
+	"github.com/roothash-pay/theweb3-chain/tw-service/retry"
 )
 
 var httpRegex = regexp.MustCompile("^http(s)?://")

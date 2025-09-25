@@ -5,8 +5,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-node/chaincfg"
 	pubsub "github.com/libp2p/go-libp2p-pubsub"
+	"github.com/roothash-pay/theweb3-chain/tw-node/chaincfg"
 	"github.com/stretchr/testify/suite"
 )
 

@@ -3,15 +3,15 @@ package inspect
 import (
 	"fmt"
 
-	"github.com/cpchain-network/cp-chain/common/genesis"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/pipeline"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/state"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
+	"github.com/roothash-pay/theweb3-chain/common/genesis"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/pipeline"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/state"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
 
-	"github.com/cpchain-network/cp-chain/cp-service/ioutil"
-	"github.com/cpchain-network/cp-chain/cp-service/jsonutil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/ioutil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/jsonutil"
 	"github.com/urfave/cli/v2"
 )
 
@@ -40,7 +40,7 @@ func GenesisCLI(cliCtx *cli.Context) error {
 
 func GenesisAndRollup(globalState *state.State, chainID common.Hash) (*core.Genesis, *rollup.Config, error) {
 	if globalState.AppliedIntent == nil {
-		return nil, nil, fmt.Errorf("chain state is not applied - run cp-deployer apply")
+		return nil, nil, fmt.Errorf("chain state is not applied - run tw-deployer apply")
 	}
 
 	chainIntent, err := globalState.AppliedIntent.Chain(chainID)

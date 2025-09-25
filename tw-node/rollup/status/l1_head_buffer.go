@@ -3,7 +3,7 @@ package status
 import (
 	"sync"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 // l1HeadBuffer is a thread-safe cache for L1 block references, which contains a series blocks with a valid chain of parent hashes.

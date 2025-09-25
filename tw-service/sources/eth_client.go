@@ -1,6 +1,6 @@
 // Package sources exports a number of clients used to access ethereum chain data.
 //
-// There are a number of these exported clients used by the cp-node:
+// There are a number of these exported clients used by the tw-node:
 // [L1Client] wraps an RPC client to retrieve L1 ethereum data.
 // [L2Client] wraps an RPC client to retrieve core ethereum data.
 // [RollupClient] wraps an RPC client to retrieve rollup data.
@@ -25,10 +25,10 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/cpchain-network/cp-chain/cp-service/apis"
-	"github.com/cpchain-network/cp-chain/cp-service/client"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	"github.com/cpchain-network/cp-chain/cp-service/sources/caching"
+	"github.com/roothash-pay/theweb3-chain/tw-service/apis"
+	"github.com/roothash-pay/theweb3-chain/tw-service/client"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources/caching"
 )
 
 type EthClientConfig struct {

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/types"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/types"
 )
 
 // FirstRevision is the revision that is used when the first entry is added to the DB.

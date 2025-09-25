@@ -12,11 +12,11 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/roothash-pay/theweb3-chain/cp-node/rollup/derive"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/l1/test"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
-	"github.com/roothash-pay/theweb3-chain/cp-service/testlog"
-	"github.com/roothash-pay/theweb3-chain/cp-service/testutils"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/derive"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/l1/test"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testlog"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testutils"
 )
 
 var _ derive.L1Fetcher = (*OracleL1Client)(nil)

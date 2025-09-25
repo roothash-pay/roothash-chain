@@ -4,13 +4,13 @@ import (
 	"os"
 
 	"github.com/ethereum/go-ethereum/log"
-	"github.com/roothash-pay/theweb3-chain/cp-program/host"
-	"github.com/roothash-pay/theweb3-chain/cp-program/host/config"
-	"github.com/roothash-pay/theweb3-chain/cp-program/host/flags"
-	"github.com/roothash-pay/theweb3-chain/cp-program/host/subcmds"
-	"github.com/roothash-pay/theweb3-chain/cp-program/host/version"
-	opservice "github.com/roothash-pay/theweb3-chain/cp-service"
-	oplog "github.com/roothash-pay/theweb3-chain/cp-service/log"
+	"github.com/roothash-pay/theweb3-chain/tw-program/host"
+	"github.com/roothash-pay/theweb3-chain/tw-program/host/config"
+	"github.com/roothash-pay/theweb3-chain/tw-program/host/flags"
+	"github.com/roothash-pay/theweb3-chain/tw-program/host/subcmds"
+	"github.com/roothash-pay/theweb3-chain/tw-program/host/version"
+	opservice "github.com/roothash-pay/theweb3-chain/tw-service"
+	oplog "github.com/roothash-pay/theweb3-chain/tw-service/log"
 	"github.com/urfave/cli/v2"
 )
 
@@ -42,7 +42,7 @@ func run(args []string, action ConfigAction) error {
 	app := cli.NewApp()
 	app.Version = VersionWithMeta
 	app.Flags = flags.Flags
-	app.Name = "cp-program"
+	app.Name = "tw-program"
 	app.Usage = "Optimism Fault Proof Program"
 	app.Description = "The Optimism Fault Proof Program fault proof program that runs through the rollup state-transition to verify an core output from L1 inputs."
 	app.Commands = []*cli.Command{

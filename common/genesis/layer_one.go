@@ -4,15 +4,15 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/cpchain-network/cp-chain/common/foundry"
+	"github.com/roothash-pay/theweb3-chain/common/foundry"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/cpchain-network/cp-chain/common/genesis/beacondeposit"
-	"github.com/cpchain-network/cp-chain/cp-service/predeploys"
+	"github.com/roothash-pay/theweb3-chain/common/genesis/beacondeposit"
+	"github.com/roothash-pay/theweb3-chain/tw-service/predeploys"
 )
 
 // PrecompileCount represents the number of precompile addresses

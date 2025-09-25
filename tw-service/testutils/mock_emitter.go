@@ -1,7 +1,7 @@
 package testutils
 
 import (
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/event"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/event"
 	"github.com/stretchr/testify/mock"
 )
 

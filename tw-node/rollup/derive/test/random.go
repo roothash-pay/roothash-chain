@@ -5,12 +5,12 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/derive"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	"github.com/cpchain-network/cp-chain/cp-service/testutils"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/trie"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/derive"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testutils"
 )
 
 // RandomL2Block returns a random block whose first transaction is a random pre-Ecotone upgrade

@@ -3,7 +3,7 @@ package pipeline
 import (
 	"github.com/holiman/uint256"
 
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/state"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/state"
 )
 
 // PrefundL1DevGenesis pre-funds accounts in the L1 dev genesis for testing purposes

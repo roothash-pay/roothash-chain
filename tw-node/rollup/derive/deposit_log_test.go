@@ -8,9 +8,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/cpchain-network/cp-chain/cp-service/testutils"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testutils"
 )
 
 func TestUnmarshalLogEvent(t *testing.T) {

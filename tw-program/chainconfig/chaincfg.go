@@ -8,14 +8,14 @@ import (
 	"os"
 	"strings"
 
-	"github.com/roothash-pay/theweb3-chain/cp-service/superutil"
-	"github.com/roothash-pay/theweb3-chain/cp-supervisor/supervisor/backend/depset"
+	"github.com/roothash-pay/theweb3-chain/tw-service/superutil"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/backend/depset"
 
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/params"
-	"github.com/roothash-pay/theweb3-chain/cp-node/chaincfg"
-	"github.com/roothash-pay/theweb3-chain/cp-node/rollup"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-node/chaincfg"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 var (

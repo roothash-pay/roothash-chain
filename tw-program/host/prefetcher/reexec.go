@@ -7,10 +7,10 @@ import (
 
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/l2"
-	hostcommon "github.com/roothash-pay/theweb3-chain/cp-program/host/common"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
-	"github.com/roothash-pay/theweb3-chain/cp-service/retry"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/l2"
+	hostcommon "github.com/roothash-pay/theweb3-chain/tw-program/host/common"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/retry"
 )
 
 type ProgramExecutor interface {

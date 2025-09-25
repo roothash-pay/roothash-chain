@@ -5,7 +5,7 @@ package mocks
 import (
 	context "context"
 
-	eth "github.com/cpchain-network/cp-chain/cp-service/eth"
+	eth "github.com/roothash-pay/theweb3-chain/tw-service/eth"
 
 	mock "github.com/stretchr/testify/mock"
 )

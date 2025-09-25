@@ -27,8 +27,8 @@ import (
 	"github.com/btcsuite/btcd/blockchain"
 	"github.com/btcsuite/btcd/chaincfg/chainhash"
 
-	"github.com/cpchain-network/cp-chain/cp-node/p2p/store"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-node/p2p/store"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
 )
 
 // force to use the new chainhash module, and not the legacy chainhash package btcd module

@@ -3,7 +3,7 @@ package engine
 import (
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 // BuildSealedEvent is emitted by the engine when a payload finished building,

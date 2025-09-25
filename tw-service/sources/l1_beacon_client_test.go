@@ -17,14 +17,14 @@ import (
 
 	"github.com/ethereum/go-ethereum/crypto/kzg4844"
 
-	client_mocks "github.com/cpchain-network/cp-chain/cp-service/client/mocks"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	"github.com/cpchain-network/cp-chain/cp-service/sources/mocks"
+	client_mocks "github.com/roothash-pay/theweb3-chain/tw-service/client/mocks"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources/mocks"
 )
 
-//go:generate mockery --srcpkg=github.com/cpchain-network/cp-chain/cp-service/apis --name BlobSideCarsClient --with-expecter=true
+//go:generate mockery --srcpkg=github.com/roothash-pay/theweb3-chain/tw-service/apis --name BlobSideCarsClient --with-expecter=true
 
-//go:generate mockery --srcpkg=github.com/cpchain-network/cp-chain/cp-service/apis --name BeaconClient --with-expecter=true
+//go:generate mockery --srcpkg=github.com/roothash-pay/theweb3-chain/tw-service/apis --name BeaconClient --with-expecter=true
 
 func makeTestBlobSidecar(index uint64) (eth.IndexedBlobHash, *eth.BlobSidecar) {
 	blob := kzg4844.Blob{}

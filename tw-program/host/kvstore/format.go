@@ -8,7 +8,7 @@ import (
 	"slices"
 
 	"github.com/ethereum/go-ethereum/log"
-	"github.com/roothash-pay/theweb3-chain/cp-program/host/types"
+	"github.com/roothash-pay/theweb3-chain/tw-program/host/types"
 )
 
 const formatFilename = "kvformat"

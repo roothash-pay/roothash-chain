@@ -7,7 +7,6 @@ import (
 	"math/rand"
 
 	"github.com/consensys/gnark-crypto/ecc/bls12-381/fr"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
@@ -15,6 +14,7 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/ethereum/go-ethereum/trie"
 	"github.com/holiman/uint256"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 func RandomBool(rng *rand.Rand) bool {

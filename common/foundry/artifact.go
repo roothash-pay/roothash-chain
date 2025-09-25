@@ -8,10 +8,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/cpchain-network/cp-chain/common/solc"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/roothash-pay/theweb3-chain/common/solc"
 )
 
 // Artifact represents a foundry compilation artifact.

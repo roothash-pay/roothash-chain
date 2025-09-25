@@ -4,12 +4,12 @@ import (
 	"context"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-service/client"
-	"github.com/cpchain-network/cp-chain/cp-service/retry"
-	"github.com/cpchain-network/cp-chain/cp-service/sources"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/roothash-pay/theweb3-chain/tw-service/client"
+	"github.com/roothash-pay/theweb3-chain/tw-service/retry"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources"
 )
 
 // DefaultDialTimeout is a default timeout for dialing a client.

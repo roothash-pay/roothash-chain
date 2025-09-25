@@ -1,8 +1,8 @@
 package constants
 
 import (
-	"github.com/cpchain-network/cp-chain/common/types"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/roothash-pay/theweb3-chain/common/types"
 )
 
 var (

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/cpchain-network/cp-chain/common/foundry"
-	"github.com/cpchain-network/cp-chain/common/script/addresses"
 	"github.com/holiman/uint256"
+	"github.com/roothash-pay/theweb3-chain/common/foundry"
+	"github.com/roothash-pay/theweb3-chain/common/script/addresses"
 
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"

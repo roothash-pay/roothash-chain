@@ -3,9 +3,9 @@ package broadcaster
 import (
 	"context"
 
-	"github.com/cpchain-network/cp-chain/common/script"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/roothash-pay/theweb3-chain/common/script"
 )
 
 type Broadcaster interface {

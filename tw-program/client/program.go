@@ -8,13 +8,13 @@ import (
 
 	"github.com/ethereum/go-ethereum/ethdb/memorydb"
 	"github.com/ethereum/go-ethereum/log"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/boot"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/claim"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/interop"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/l1"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/l2"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/tasks"
-	oplog "github.com/roothash-pay/theweb3-chain/cp-service/log"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/boot"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/claim"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/interop"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/l1"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/l2"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/tasks"
+	oplog "github.com/roothash-pay/theweb3-chain/tw-service/log"
 )
 
 var errInvalidConfig = errors.New("invalid config")

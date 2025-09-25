@@ -3,12 +3,12 @@ package txintent
 import (
 	"context"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	"github.com/cpchain-network/cp-chain/cp-service/plan"
-	"github.com/cpchain-network/cp-chain/cp-service/txplan"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/plan"
+	"github.com/roothash-pay/theweb3-chain/tw-service/txplan"
 )
 
 type Call interface {

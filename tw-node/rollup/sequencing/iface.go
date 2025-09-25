@@ -6,7 +6,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/event"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/event"
 )
 
 type SequencerIface interface {

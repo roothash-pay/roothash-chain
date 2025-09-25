@@ -4,10 +4,10 @@ import (
 	"context"
 	"sync"
 
-	"github.com/cpchain-network/cp-chain/cp-node/p2p/store"
-	"github.com/cpchain-network/cp-chain/cp-service/clock"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/libp2p/go-libp2p/core/peer"
+	"github.com/roothash-pay/theweb3-chain/tw-node/p2p/store"
+	"github.com/roothash-pay/theweb3-chain/tw-service/clock"
 )
 
 type ScoreBook interface {

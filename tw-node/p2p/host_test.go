@@ -25,12 +25,12 @@ import (
 	"github.com/ethereum/go-ethereum/p2p/enode"
 	"github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/cpchain-network/cp-chain/cp-node/metrics"
-	"github.com/cpchain-network/cp-chain/cp-node/p2p/store"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	"github.com/cpchain-network/cp-chain/cp-service/testlog"
-	"github.com/cpchain-network/cp-chain/cp-service/testutils"
+	"github.com/roothash-pay/theweb3-chain/tw-node/metrics"
+	"github.com/roothash-pay/theweb3-chain/tw-node/p2p/store"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testlog"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testutils"
 )
 
 func TestingConfig(t *testing.T) *Config {

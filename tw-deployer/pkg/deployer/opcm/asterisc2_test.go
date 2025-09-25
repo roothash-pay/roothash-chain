@@ -4,8 +4,8 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/opcm"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/opcm"
 	"github.com/stretchr/testify/require"
 )
 

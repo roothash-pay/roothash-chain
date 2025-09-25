@@ -5,8 +5,8 @@ import (
 	"errors"
 	"io"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
 	"github.com/ethereum/go-ethereum/log"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 // ChannelAssembler assembles frames into a raw channel. It replaces the ChannelBank since Holocene.

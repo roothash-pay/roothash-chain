@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	opservice "github.com/cpchain-network/cp-chain/cp-service"
+	opservice "github.com/roothash-pay/theweb3-chain/tw-service"
 
 	"github.com/stretchr/testify/require"
 	"github.com/urfave/cli/v2"

@@ -5,11 +5,11 @@ import (
 	"io"
 	"sync"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	"github.com/cpchain-network/cp-chain/cp-service/sources/batching"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources/batching"
 )
 
 type receiptsBatchCall = batching.IterativeBatchCall[common.Hash, *types.Receipt]

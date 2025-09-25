@@ -7,13 +7,13 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/broadcaster"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/testutil"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/env"
-	"github.com/cpchain-network/cp-chain/cp-service/testlog"
-	"github.com/cpchain-network/cp-chain/cp-service/testutils/devnet"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/broadcaster"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/testutil"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/env"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testlog"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testutils/devnet"
 	"github.com/stretchr/testify/require"
 )
 

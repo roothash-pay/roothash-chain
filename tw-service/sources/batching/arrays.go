@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/cpchain-network/cp-chain/cp-service/sources/batching/rpcblock"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources/batching/rpcblock"
 )
 
 // ReadArray uses batch calls to load all entries from an array.

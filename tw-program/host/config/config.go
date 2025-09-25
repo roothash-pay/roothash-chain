@@ -7,23 +7,23 @@ import (
 	"os"
 	"slices"
 
-	"github.com/roothash-pay/theweb3-chain/cp-service/superutil"
-	"github.com/roothash-pay/theweb3-chain/cp-supervisor/supervisor/backend/depset"
+	"github.com/roothash-pay/theweb3-chain/tw-service/superutil"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/backend/depset"
 
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/roothash-pay/theweb3-chain/cp-node/chaincfg"
-	"github.com/roothash-pay/theweb3-chain/cp-program/chainconfig"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/boot"
-	"github.com/roothash-pay/theweb3-chain/cp-program/host/types"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-node/chaincfg"
+	"github.com/roothash-pay/theweb3-chain/tw-program/chainconfig"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/boot"
+	"github.com/roothash-pay/theweb3-chain/tw-program/host/types"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/params"
-	"github.com/roothash-pay/theweb3-chain/cp-node/rollup"
-	"github.com/roothash-pay/theweb3-chain/cp-program/host/flags"
-	"github.com/roothash-pay/theweb3-chain/cp-service/sources"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-program/host/flags"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources"
 	"github.com/urfave/cli/v2"
 )
 

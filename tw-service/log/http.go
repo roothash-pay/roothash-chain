@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-service/httputil"
 	"github.com/ethereum/go-ethereum/log"
+	"github.com/roothash-pay/theweb3-chain/tw-service/httputil"
 )
 
 func NewLoggingMiddleware(lgr log.Logger, next http.Handler) http.Handler {

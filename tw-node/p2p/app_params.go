@@ -3,7 +3,7 @@ package p2p
 import (
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
 )
 
 type ApplicationScoreParams struct {

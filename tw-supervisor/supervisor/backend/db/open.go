@@ -3,11 +3,11 @@ package db
 import (
 	"fmt"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
 	"github.com/ethereum/go-ethereum/log"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/backend/db/fromda"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/backend/db/logs"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/backend/db/fromda"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/backend/db/logs"
 )
 
 func OpenLogDB(logger log.Logger, chainID eth.ChainID, dataDir string, m logs.Metrics) (*logs.DB, error) {

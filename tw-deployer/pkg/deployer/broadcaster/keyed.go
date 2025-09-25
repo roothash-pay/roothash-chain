@@ -9,17 +9,17 @@ import (
 
 	"github.com/holiman/uint256"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 
-	"github.com/cpchain-network/cp-chain/common/script"
-	opcrypto "github.com/cpchain-network/cp-chain/cp-service/crypto"
-	"github.com/cpchain-network/cp-chain/cp-service/txmgr"
-	"github.com/cpchain-network/cp-chain/cp-service/txmgr/metrics"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/hashicorp/go-multierror"
+	"github.com/roothash-pay/theweb3-chain/common/script"
+	opcrypto "github.com/roothash-pay/theweb3-chain/tw-service/crypto"
+	"github.com/roothash-pay/theweb3-chain/tw-service/txmgr"
+	"github.com/roothash-pay/theweb3-chain/tw-service/txmgr/metrics"
 )
 
 const (

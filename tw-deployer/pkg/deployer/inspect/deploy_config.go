@@ -3,12 +3,12 @@ package inspect
 import (
 	"fmt"
 
-	"github.com/cpchain-network/cp-chain/common/genesis"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/pipeline"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/state"
-	"github.com/cpchain-network/cp-chain/cp-service/ioutil"
-	"github.com/cpchain-network/cp-chain/cp-service/jsonutil"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/roothash-pay/theweb3-chain/common/genesis"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/pipeline"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/state"
+	"github.com/roothash-pay/theweb3-chain/tw-service/ioutil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/jsonutil"
 	"github.com/urfave/cli/v2"
 )
 

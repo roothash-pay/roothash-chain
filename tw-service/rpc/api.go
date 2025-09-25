@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	oplog "github.com/cpchain-network/cp-chain/cp-service/log"
 	"github.com/ethereum/go-ethereum/log"
+	oplog "github.com/roothash-pay/theweb3-chain/tw-service/log"
 )
 
 type CommonAdminAPI struct {

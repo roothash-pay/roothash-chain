@@ -4,12 +4,12 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/broadcaster"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/testutil"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/env"
-	"github.com/cpchain-network/cp-chain/cp-service/testlog"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/log"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/broadcaster"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/testutil"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/env"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testlog"
 	"github.com/stretchr/testify/require"
 )
 

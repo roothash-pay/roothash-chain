@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 // isDepositTx checks an opaqueTx to determine if it is a Deposit Transaction

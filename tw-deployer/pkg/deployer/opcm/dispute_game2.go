@@ -5,7 +5,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/cpchain-network/cp-chain/common/script"
+	"github.com/roothash-pay/theweb3-chain/common/script"
 )
 
 type DeployDisputeGame2Input struct {

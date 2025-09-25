@@ -7,7 +7,7 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/cpchain-network/cp-chain/cp-service/locks"
+	"github.com/roothash-pay/theweb3-chain/tw-service/locks"
 )
 
 var ErrNotReady = errors.New("not ready for reads (forgot to register a dependency or eval func/val?)")

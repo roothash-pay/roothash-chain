@@ -8,7 +8,7 @@ import (
 
 	"github.com/urfave/cli/v2"
 
-	opservice "github.com/cpchain-network/cp-chain/cp-service"
+	opservice "github.com/roothash-pay/theweb3-chain/tw-service"
 )
 
 const (

@@ -6,9 +6,9 @@ import (
 
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/event"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/sync"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/event"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/sync"
 )
 
 // ResetEngineRequestEvent requests the EngineResetDeriver to walk

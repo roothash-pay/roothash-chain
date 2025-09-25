@@ -6,9 +6,9 @@ import (
 	"errors"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/boot"
-	"github.com/roothash-pay/theweb3-chain/cp-program/host/config"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/boot"
+	"github.com/roothash-pay/theweb3-chain/tw-program/host/config"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 type LocalPreimageSource struct {

@@ -3,8 +3,8 @@ package chainconfig
 import (
 	"testing"
 
-	"github.com/roothash-pay/theweb3-chain/cp-program/chainconfig/test"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-program/chainconfig/test"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 	"github.com/stretchr/testify/require"
 )
 

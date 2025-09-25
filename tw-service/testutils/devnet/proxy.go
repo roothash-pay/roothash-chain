@@ -10,8 +10,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-service/retry"
 	"github.com/ethereum/go-ethereum/log"
+	"github.com/roothash-pay/theweb3-chain/tw-service/retry"
 )
 
 type jsonRPCReq struct {

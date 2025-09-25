@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/cpchain-network/cp-chain/cp-service/jsonutil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/jsonutil"
 
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/opcm"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/standard"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/state"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/opcm"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/standard"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/state"
 )
 
 func DeployImplementations(env *Env, intent *state.Intent, st *state.State) error {

@@ -5,8 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/cpchain-network/cp-chain/cp-service/ioutil"
-	"github.com/cpchain-network/cp-chain/cp-service/jsonutil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/ioutil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/jsonutil"
 	"github.com/stretchr/testify/require"
 )
 

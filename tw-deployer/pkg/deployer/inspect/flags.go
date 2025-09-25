@@ -3,9 +3,9 @@ package inspect
 import (
 	"fmt"
 
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer"
 
-	op_service "github.com/cpchain-network/cp-chain/cp-service"
+	op_service "github.com/roothash-pay/theweb3-chain/tw-service"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/urfave/cli/v2"

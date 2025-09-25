@@ -1,9 +1,9 @@
 package opcm
 
 import (
-	"github.com/cpchain-network/cp-chain/common/script"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/params"
+	"github.com/roothash-pay/theweb3-chain/common/script"
 )
 
 type DeploySuperchain2Input struct {

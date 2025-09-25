@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/standard"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/standard"
 )
 
 type schemeUnmarshaler func(string) (*Locator, error)

@@ -1,10 +1,10 @@
 cff-version: 1.2.0
 message: If you use this software in your work, please cite it using the following metadata
-title: The CpChain Monorepo
+title: The theweb3Chain Monorepo
 authors:
-- name: The CpChain Collective
+- name: The theweb3Chain Collective
 version: 1.0.0
 year: 2020
-url: https://github.com/cpchain-network/cp-chain
-repository: https://github.com/cpchain-network/cp-chain
+url: https://github.com/roothash-pay/theweb3-chain
+repository: https://github.com/roothash-pay/theweb3-chain
 license: MIT

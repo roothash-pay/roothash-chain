@@ -11,10 +11,10 @@ import (
 
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/cpchain-network/cp-chain/cp-service/cliapp"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/config"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/backend/depset"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/backend/syncnode"
+	"github.com/roothash-pay/theweb3-chain/tw-service/cliapp"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/config"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/backend/depset"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/backend/syncnode"
 )
 
 var (
@@ -95,7 +95,7 @@ func configForArgs(t *testing.T, cliArgs []string) *config.Config {
 func dryRunWithArgs(cliArgs []string) (log.Logger, *config.Config, error) {
 	cfg := new(config.Config)
 	var logger log.Logger
-	fullArgs := append([]string{"cp-supervisor"}, cliArgs...)
+	fullArgs := append([]string{"tw-supervisor"}, cliArgs...)
 	testErr := errors.New("dry-run")
 	err := run(context.Background(), fullArgs, func(ctx context.Context, config *config.Config, log log.Logger) (cliapp.Lifecycle, error) {
 		logger = log

@@ -4,19 +4,19 @@ import (
 	"context"
 	"os"
 
-	"github.com/cpchain-network/cp-chain/cp-supervisor/config"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/config"
 	"github.com/urfave/cli/v2"
 
 	"github.com/ethereum/go-ethereum/log"
 
-	opservice "github.com/cpchain-network/cp-chain/cp-service"
-	"github.com/cpchain-network/cp-chain/cp-service/cliapp"
-	"github.com/cpchain-network/cp-chain/cp-service/ctxinterrupt"
-	oplog "github.com/cpchain-network/cp-chain/cp-service/log"
-	"github.com/cpchain-network/cp-chain/cp-service/metrics/doc"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/flags"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/metrics"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor"
+	opservice "github.com/roothash-pay/theweb3-chain/tw-service"
+	"github.com/roothash-pay/theweb3-chain/tw-service/cliapp"
+	"github.com/roothash-pay/theweb3-chain/tw-service/ctxinterrupt"
+	oplog "github.com/roothash-pay/theweb3-chain/tw-service/log"
+	"github.com/roothash-pay/theweb3-chain/tw-service/metrics/doc"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/flags"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/metrics"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor"
 )
 
 var (
@@ -39,9 +39,9 @@ func run(ctx context.Context, args []string, fn supervisor.MainFn) error {
 	app := cli.NewApp()
 	app.Flags = cliapp.ProtectFlags(flags.Flags)
 	app.Version = opservice.FormatVersion(Version, GitCommit, GitDate, "")
-	app.Name = "cp-supervisor"
-	app.Usage = "cp-supervisor monitors cross-core interop messaging"
-	app.Description = "The cp-supervisor monitors cross-core interop messaging by pre-fetching events and then resolving the cross-core dependencies to answer safety queries."
+	app.Name = "tw-supervisor"
+	app.Usage = "tw-supervisor monitors cross-core interop messaging"
+	app.Description = "The tw-supervisor monitors cross-core interop messaging by pre-fetching events and then resolving the cross-core dependencies to answer safety queries."
 	app.Action = cliapp.LifecycleCmd(supervisor.Main(app.Version, fn))
 	app.Commands = []*cli.Command{
 		{

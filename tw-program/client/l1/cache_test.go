@@ -7,9 +7,9 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/l1/test"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
-	"github.com/roothash-pay/theweb3-chain/cp-service/testutils"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/l1/test"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testutils"
 	"github.com/stretchr/testify/require"
 )
 

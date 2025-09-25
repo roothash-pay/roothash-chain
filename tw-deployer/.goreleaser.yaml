@@ -3,7 +3,7 @@
 
 version: 2
 
-project_name: cp-deployer
+project_name: tw-deployer
 
 before:
   hooks:
@@ -12,8 +12,8 @@ before:
 
 builds:
   - id: main
-    main: ./cmd/cp-deployer
-    binary: cp-deployer
+    main: ./cmd/tw-deployer
+    binary: tw-deployer
     env:
       - CGO_ENABLED=0
     goos:
@@ -32,8 +32,8 @@ builds:
     ldflags:
       - -X main.GitCommit={{ .FullCommit }}
       - -X main.GitDate={{ .CommitDate }}
-      - -X github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/version.Version={{ .Version }}
-      - -X github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/version.Meta=
+      - -X github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/version.Version={{ .Version }}
+      - -X github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/version.Meta=
 
 archives:
   - format: tar.gz
@@ -51,13 +51,13 @@ dockers:
     goarch: amd64
     dockerfile: Dockerfile.default
     image_templates:
-      - "us-docker.pkg.dev/oplabs-tools-artifacts/images/cp-deployer:{{ .Tag }}"
+      - "us-docker.pkg.dev/oplabs-tools-artifacts/images/tw-deployer:{{ .Tag }}"
   - id: minimal
     goos: linux
     goarch: amd64
     dockerfile: Dockerfile.minimal
     image_templates:
-      - "us-docker.pkg.dev/oplabs-tools-artifacts/images/cp-deployer:{{ .Tag }}-minimal"
+      - "us-docker.pkg.dev/oplabs-tools-artifacts/images/tw-deployer:{{ .Tag }}-minimal"
 
 changelog:
   sort: asc
@@ -73,5 +73,5 @@ release:
   make_latest: false
 
 monorepo:
-  tag_prefix: cp-deployer/
-  dir: cp-deployer
+  tag_prefix: tw-deployer/
+  dir: tw-deployer

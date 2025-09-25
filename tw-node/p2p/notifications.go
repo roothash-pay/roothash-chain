@@ -4,7 +4,7 @@ import (
 	"github.com/libp2p/go-libp2p/core/network"
 	ma "github.com/multiformats/go-multiaddr"
 
-	"github.com/cpchain-network/cp-chain/cp-node/metrics"
+	"github.com/roothash-pay/theweb3-chain/tw-node/metrics"
 
 	"github.com/ethereum/go-ethereum/log"
 )

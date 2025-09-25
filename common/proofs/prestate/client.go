@@ -11,7 +11,7 @@ import (
 	"path/filepath"
 )
 
-// These constants should be in sync with cp-program/chainconfig/chaincfg.go
+// These constants should be in sync with tw-program/chainconfig/chaincfg.go
 const (
 	InteropDepSetName    = "depsets.json"
 	rollupConfigSuffix   = "-rollup.json"

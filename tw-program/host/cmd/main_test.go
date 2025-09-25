@@ -11,16 +11,16 @@ import (
 
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/params"
-	"github.com/roothash-pay/theweb3-chain/cp-node/chaincfg"
-	"github.com/roothash-pay/theweb3-chain/cp-node/rollup"
-	"github.com/roothash-pay/theweb3-chain/cp-program/chainconfig"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/boot"
-	"github.com/roothash-pay/theweb3-chain/cp-program/host/config"
-	"github.com/roothash-pay/theweb3-chain/cp-program/host/types"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
-	oplog "github.com/roothash-pay/theweb3-chain/cp-service/log"
-	"github.com/roothash-pay/theweb3-chain/cp-service/sources"
-	"github.com/roothash-pay/theweb3-chain/cp-supervisor/supervisor/backend/depset"
+	"github.com/roothash-pay/theweb3-chain/tw-node/chaincfg"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-program/chainconfig"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/boot"
+	"github.com/roothash-pay/theweb3-chain/tw-program/host/config"
+	"github.com/roothash-pay/theweb3-chain/tw-program/host/types"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	oplog "github.com/roothash-pay/theweb3-chain/tw-service/log"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/backend/depset"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
@@ -496,7 +496,7 @@ func configForArgs(t *testing.T, cliArgs []string) *config.Config {
 func runWithArgs(cliArgs []string) (log.Logger, *config.Config, error) {
 	cfg := new(config.Config)
 	var logger log.Logger
-	fullArgs := append([]string{"cp-program"}, cliArgs...)
+	fullArgs := append([]string{"tw-program"}, cliArgs...)
 	err := run(fullArgs, func(log log.Logger, config *config.Config) error {
 		logger = log
 		cfg = config

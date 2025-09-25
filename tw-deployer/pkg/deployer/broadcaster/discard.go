@@ -3,7 +3,7 @@ package broadcaster
 import (
 	"context"
 
-	"github.com/cpchain-network/cp-chain/common/script"
+	"github.com/roothash-pay/theweb3-chain/common/script"
 )
 
 type discardBroadcaster struct {

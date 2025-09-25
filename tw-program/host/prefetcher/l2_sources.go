@@ -7,12 +7,12 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/roothash-pay/theweb3-chain/cp-node/rollup"
-	"github.com/roothash-pay/theweb3-chain/cp-program/host/common"
-	"github.com/roothash-pay/theweb3-chain/cp-program/host/types"
-	"github.com/roothash-pay/theweb3-chain/cp-service/client"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
-	"github.com/roothash-pay/theweb3-chain/cp-service/retry"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-program/host/common"
+	"github.com/roothash-pay/theweb3-chain/tw-program/host/types"
+	"github.com/roothash-pay/theweb3-chain/tw-service/client"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/retry"
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/log"

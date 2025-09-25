@@ -10,11 +10,11 @@ import (
 	gethevent "github.com/ethereum/go-ethereum/event"
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/event"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/backend/depset"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/backend/superevents"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/types"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/event"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/backend/depset"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/backend/superevents"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/types"
 )
 
 type mockSyncControl struct {

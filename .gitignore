@@ -20,10 +20,10 @@ cache
 !op-chain-ops/foundry/testdata/srcmaps/cache
 !op-chain-ops/foundry/testdata/srcmaps/artifacts
 
-!cp-deployer/pkg/deployer/artifacts
+!tw-deployer/pkg/deployer/artifacts
 
 
-packages/contracts-cpchain/deployments/anvil
+packages/contracts-theweb3Chain/deployments/anvil
 
 # vim
 *.sw*

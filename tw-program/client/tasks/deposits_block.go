@@ -12,11 +12,11 @@ import (
 	"github.com/ethereum/go-ethereum/ethdb/memorydb"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/params"
-	"github.com/roothash-pay/theweb3-chain/cp-node/rollup"
-	"github.com/roothash-pay/theweb3-chain/cp-node/rollup/interop/managed"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/l1"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/l2"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/interop/managed"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/l1"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/l2"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 var errBadFCUResult = errors.New("bad FCU result")

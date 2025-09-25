@@ -7,9 +7,9 @@ import (
 	"path"
 	"strings"
 
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/state"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/state"
 
-	op_service "github.com/cpchain-network/cp-chain/cp-service"
+	op_service "github.com/roothash-pay/theweb3-chain/tw-service"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/urfave/cli/v2"
@@ -69,7 +69,7 @@ func InitCLI() func(ctx *cli.Context) error {
 			return err
 		}
 
-		fmt.Printf("Successfully initialized cp-deployer intent in directory: %s\n", outdir)
+		fmt.Printf("Successfully initialized tw-deployer intent in directory: %s\n", outdir)
 		return nil
 	}
 }

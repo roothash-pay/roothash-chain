@@ -12,11 +12,11 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/derive"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/engine"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/event"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/derive"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/engine"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/event"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 // sealingDuration defines the expected time it takes to seal the block
@@ -595,8 +595,8 @@ func (d *Sequencer) Init(ctx context.Context, active bool) error {
 // forceStart skips all the checks, and just starts the sequencer
 func (d *Sequencer) forceStart() error {
 	if d.latestHead == (eth.L2BlockRef{}) {
-		// This happens if sequencing is activated on cp-node startup.
-		// The op-conductor check and choice of sequencing with this pre-state already happened before cp-node startup.
+		// This happens if sequencing is activated on tw-node startup.
+		// The op-conductor check and choice of sequencing with this pre-state already happened before tw-node startup.
 		d.log.Info("Starting sequencing, without known pre-state")
 		d.asyncGossip.Clear() // if we are starting from an unknown pre-state, just clear gossip out of caution.
 	} else {

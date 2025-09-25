@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/urfave/cli/v2"
 
-	"github.com/cpchain-network/cp-chain/cp-service/ctxinterrupt"
+	"github.com/roothash-pay/theweb3-chain/tw-service/ctxinterrupt"
 )
 
 var mockInterruptErr = errors.New("mock interrupt")

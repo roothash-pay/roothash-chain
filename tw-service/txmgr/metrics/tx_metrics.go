@@ -3,9 +3,9 @@ package metrics
 import (
 	"math/big"
 
-	"github.com/cpchain-network/cp-chain/cp-service/metrics"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/params"
+	"github.com/roothash-pay/theweb3-chain/tw-service/metrics"
 
 	"github.com/prometheus/client_golang/prometheus"
 )

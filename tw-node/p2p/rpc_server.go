@@ -7,9 +7,8 @@ import (
 	"net"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-node/p2p/gating"
+	"github.com/roothash-pay/theweb3-chain/tw-node/p2p/gating"
 
-	"github.com/cpchain-network/cp-chain/cp-node/p2p/store"
 	decredSecp "github.com/decred/dcrd/dcrec/secp256k1/v4"
 	pubsub "github.com/libp2p/go-libp2p-pubsub"
 	"github.com/libp2p/go-libp2p-testing/netutil"
@@ -19,6 +18,7 @@ import (
 	"github.com/libp2p/go-libp2p/core/network"
 	"github.com/libp2p/go-libp2p/core/peer"
 	"github.com/libp2p/go-libp2p/core/peerstore"
+	"github.com/roothash-pay/theweb3-chain/tw-node/p2p/store"
 
 	gcrypto "github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/log"

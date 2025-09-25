@@ -1,4 +1,4 @@
-// Package metrics provides a set of metrics for the cp-node.
+// Package metrics provides a set of metrics for the tw-node.
 package metrics
 
 import (
@@ -7,11 +7,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-node/p2p/store"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/event"
-	ophttp "github.com/cpchain-network/cp-chain/cp-service/httputil"
-	"github.com/cpchain-network/cp-chain/cp-service/metrics"
 	"github.com/ethereum/go-ethereum/params"
+	"github.com/roothash-pay/theweb3-chain/tw-node/p2p/store"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/event"
+	ophttp "github.com/roothash-pay/theweb3-chain/tw-service/httputil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/metrics"
 
 	pb "github.com/libp2p/go-libp2p-pubsub/pb"
 	libp2pmetrics "github.com/libp2p/go-libp2p/core/metrics"
@@ -21,7 +21,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 const Namespace = "op_node"
@@ -73,7 +73,7 @@ type Metricer interface {
 	ReportProtocolVersions(local, engine, recommended, required params.ProtocolVersion)
 }
 
-// Metrics tracks all the metrics for the cp-node.
+// Metrics tracks all the metrics for the tw-node.
 type Metrics struct {
 	Info *prometheus.GaugeVec
 	Up   prometheus.Gauge

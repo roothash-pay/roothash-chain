@@ -7,8 +7,8 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	gethrpc "github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	supervisortypes "github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/types"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	supervisortypes "github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/types"
 )
 
 type InteropAPI struct {

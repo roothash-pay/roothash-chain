@@ -7,8 +7,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/cpchain-network/cp-chain/cp-service/signer"
-	"github.com/cpchain-network/cp-chain/cp-service/testlog"
+	"github.com/roothash-pay/theweb3-chain/tw-service/signer"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testlog"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"

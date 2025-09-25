@@ -3,7 +3,7 @@ package apis
 import (
 	"context"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 // BeaconClient is a thin wrapper over the Beacon APIs.

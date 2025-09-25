@@ -8,14 +8,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-service/testutils"
-	"github.com/cpchain-network/cp-chain/cp-service/testutils/devnet"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testutils"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testutils/devnet"
 
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/opcm"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/standard"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/testutil"
-	"github.com/cpchain-network/cp-chain/cp-service/testlog"
 	"github.com/ethereum/go-ethereum/ethclient"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/opcm"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/standard"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/testutil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testlog"
 	"github.com/stretchr/testify/require"
 )
 

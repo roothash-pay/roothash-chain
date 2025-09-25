@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/cpchain-network/cp-chain/cp-service/sources/batching"
-	"github.com/cpchain-network/cp-chain/cp-service/sources/batching/rpcblock"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources/batching"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources/batching/rpcblock"
 )
 
 var (

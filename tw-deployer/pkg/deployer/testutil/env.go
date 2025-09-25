@@ -8,10 +8,10 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/cpchain-network/cp-chain/common/foundry"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/artifacts"
-	op_service "github.com/cpchain-network/cp-chain/cp-service"
-	"github.com/cpchain-network/cp-chain/cp-service/testutils"
+	"github.com/roothash-pay/theweb3-chain/common/foundry"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/artifacts"
+	op_service "github.com/roothash-pay/theweb3-chain/tw-service"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testutils"
 	"github.com/stretchr/testify/require"
 )
 
@@ -20,7 +20,7 @@ func LocalArtifacts(t *testing.T) (*artifacts.Locator, foundry.StatDirFs) {
 	require.Truef(t, ok, "failed to get test filename")
 	monorepoDir, err := op_service.FindMonorepoRoot(testFilename)
 	require.NoError(t, err)
-	artifactsDir := path.Join(monorepoDir, "packages", "contracts-cpchain", "forge-artifacts")
+	artifactsDir := path.Join(monorepoDir, "packages", "contracts-theweb3Chain", "forge-artifacts")
 	artifactsURL, err := url.Parse(fmt.Sprintf("file://%s", artifactsDir))
 	require.NoError(t, err)
 	loc := &artifacts.Locator{

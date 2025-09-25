@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/finality"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/finality"
 	"math/big"
 	gosync "sync"
 	"time"
@@ -13,15 +13,15 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/clsync"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/derive"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/engine"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/event"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/sequencing"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/sync"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	"github.com/cpchain-network/cp-chain/cp-service/sources"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/clsync"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/derive"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/engine"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/event"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/sequencing"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/sync"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources"
 )
 
 // Deprecated: use eth.SyncStatus instead.
@@ -328,8 +328,8 @@ type SyncDeriver struct {
 
 	Drain func() error
 
-	// When in interop, and managed by an cp-supervisor,
-	// the node performs a reset based on the instructions of the cp-supervisor.
+	// When in interop, and managed by an tw-supervisor,
+	// the node performs a reset based on the instructions of the tw-supervisor.
 	ManagedMode bool
 }
 
@@ -409,7 +409,7 @@ func (s *SyncDeriver) onEngineConfirmedReset(x engine.EngineResetConfirmedEvent)
 
 func (s *SyncDeriver) onResetEvent(x rollup.ResetEvent) {
 	if s.ManagedMode {
-		s.Log.Warn("Encountered reset in Managed Mode, waiting for cp-supervisor", "err", x.Err)
+		s.Log.Warn("Encountered reset in Managed Mode, waiting for tw-supervisor", "err", x.Err)
 		// ManagedMode will pick up the ResetEvent
 		return
 	}
@@ -420,7 +420,7 @@ func (s *SyncDeriver) onResetEvent(x rollup.ResetEvent) {
 }
 
 // SyncStep performs the sequence of encapsulated syncing steps.
-// Warning: this sequence will be broken apart as outlined in cp-node derivers design doc.
+// Warning: this sequence will be broken apart as outlined in tw-node derivers design doc.
 func (s *SyncDeriver) SyncStep() {
 	s.Log.Debug("Sync process step")
 

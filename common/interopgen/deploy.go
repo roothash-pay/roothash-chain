@@ -14,13 +14,13 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/cpchain-network/cp-chain/common/foundry"
-	"github.com/cpchain-network/cp-chain/common/genesis"
-	"github.com/cpchain-network/cp-chain/common/genesis/beacondeposit"
-	"github.com/cpchain-network/cp-chain/common/script"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/interop"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/opcm"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/common/foundry"
+	"github.com/roothash-pay/theweb3-chain/common/genesis"
+	"github.com/roothash-pay/theweb3-chain/common/genesis/beacondeposit"
+	"github.com/roothash-pay/theweb3-chain/common/script"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/interop"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/opcm"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 var (

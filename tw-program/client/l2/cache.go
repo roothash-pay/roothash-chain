@@ -4,9 +4,9 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/hashicorp/golang-lru/v2/simplelru"
-	interopTypes "github.com/roothash-pay/theweb3-chain/cp-program/client/interop/types"
-	l2Types "github.com/roothash-pay/theweb3-chain/cp-program/client/l2/types"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
+	interopTypes "github.com/roothash-pay/theweb3-chain/tw-program/client/interop/types"
+	l2Types "github.com/roothash-pay/theweb3-chain/tw-program/client/l2/types"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 // blockCacheSize should be set large enough to handle the pipeline reset process of walking back from core head to find

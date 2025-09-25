@@ -5,15 +5,15 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-service/client"
-	"github.com/cpchain-network/cp-chain/cp-service/sources/caching"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/roothash-pay/theweb3-chain/tw-service/client"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources/caching"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 func newRPCRecProviderFromConfig(client client.RPC, log log.Logger, metrics caching.Metrics, config *EthClientConfig) *CachingReceiptsProvider {

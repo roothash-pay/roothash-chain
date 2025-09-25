@@ -26,11 +26,11 @@ import (
 	"github.com/ethereum/go-ethereum/triedb"
 	"github.com/ethereum/go-ethereum/triedb/hashdb"
 
-	"github.com/cpchain-network/cp-chain/common/script/addresses"
+	"github.com/roothash-pay/theweb3-chain/common/script/addresses"
 
-	"github.com/cpchain-network/cp-chain/common/foundry"
-	"github.com/cpchain-network/cp-chain/common/script/forking"
-	"github.com/cpchain-network/cp-chain/common/srcmap"
+	"github.com/roothash-pay/theweb3-chain/common/foundry"
+	"github.com/roothash-pay/theweb3-chain/common/script/forking"
+	"github.com/roothash-pay/theweb3-chain/common/srcmap"
 )
 
 // jumpHistory is the amount of successful jumps to track for debugging.

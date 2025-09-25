@@ -32,8 +32,8 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 type L1Chain interface {
@@ -101,9 +101,9 @@ func currentHeads(ctx context.Context, cfg *rollup.Config, l2 L2Chain) (*FindHea
 // the finalized, unsafe and safe core blocks.
 //
 //   - The *unsafe core block*: This is the highest core block whose L1 origin is a *plausible*
-//     extension of the canonical L1 chain (as known to the cp-node).
+//     extension of the canonical L1 chain (as known to the tw-node).
 //   - The *safe core block*: This is the highest core block whose epoch's sequencing window is
-//     complete within the canonical L1 chain (as known to the cp-node).
+//     complete within the canonical L1 chain (as known to the tw-node).
 //   - The *finalized core block*: This is the core block which is known to be fully derived from
 //     finalized L1 block data.
 //

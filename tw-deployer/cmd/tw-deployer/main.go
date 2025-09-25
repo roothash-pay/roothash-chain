@@ -6,17 +6,17 @@ import (
 
 	cli "github.com/urfave/cli/v2"
 
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/clean"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/verify"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/clean"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/verify"
 
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/bootstrap"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/inspect"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/version"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/bootstrap"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/inspect"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/version"
 
-	opservice "github.com/cpchain-network/cp-chain/cp-service"
+	opservice "github.com/roothash-pay/theweb3-chain/tw-service"
 
-	"github.com/cpchain-network/cp-chain/cp-service/cliapp"
+	"github.com/roothash-pay/theweb3-chain/tw-service/cliapp"
 )
 
 var (
@@ -30,7 +30,7 @@ var VersionWithMeta = opservice.FormatVersion(version.Version, GitCommit, GitDat
 func main() {
 	app := cli.NewApp()
 	app.Version = VersionWithMeta
-	app.Name = "cp-deployer"
+	app.Name = "tw-deployer"
 	app.Usage = "Tool to configure and deploy OP Chains."
 	app.Flags = cliapp.ProtectFlags(deployer.GlobalFlags)
 	app.Commands = []*cli.Command{

@@ -7,11 +7,11 @@ import (
 	"path"
 	"testing"
 
-	"github.com/cpchain-network/cp-chain/cp-node/bindings"
-	"github.com/cpchain-network/cp-chain/cp-service/testutils"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/roothash-pay/theweb3-chain/tw-node/bindings"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testutils"
 	"github.com/stretchr/testify/require"
 )
 

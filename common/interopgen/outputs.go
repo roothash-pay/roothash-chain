@@ -3,7 +3,7 @@ package interopgen
 import (
 	"github.com/ethereum/go-ethereum/core"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
 )
 
 type L1Output struct {

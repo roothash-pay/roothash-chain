@@ -9,9 +9,9 @@ import (
 
 	"github.com/ethereum/go-ethereum/superchain"
 
-	"github.com/cpchain-network/cp-chain/common/genesis"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
-	op_service "github.com/cpchain-network/cp-chain/cp-service"
+	"github.com/roothash-pay/theweb3-chain/common/genesis"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	op_service "github.com/roothash-pay/theweb3-chain/tw-service"
 
 	"github.com/ethereum/go-ethereum/common"
 )

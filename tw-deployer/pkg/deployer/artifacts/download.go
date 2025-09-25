@@ -18,8 +18,8 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/cpchain-network/cp-chain/common/foundry"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/standard"
+	"github.com/roothash-pay/theweb3-chain/common/foundry"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/standard"
 )
 
 var ErrUnsupportedArtifactsScheme = errors.New("unsupported artifacts URL scheme")
@@ -81,7 +81,7 @@ func downloadHTTP(ctx context.Context, u *url.URL, progressor DownloadProgressor
 	if err != nil {
 		return nil, fmt.Errorf("failed to download artifacts: %w", err)
 	}
-	tmpDir, err := os.MkdirTemp(targetDir, "cp-deployer-artifacts-*")
+	tmpDir, err := os.MkdirTemp(targetDir, "tw-deployer-artifacts-*")
 	if err != nil {
 		return nil, fmt.Errorf("failed to create temp dir: %w", err)
 	}
@@ -114,7 +114,7 @@ func (d *HTTPDownloader) Download(ctx context.Context, url string, progress Down
 	if err := os.MkdirAll(targetDir, 0755); err != nil {
 		return "", fmt.Errorf("failed to ensure cache directory '%s': %w", targetDir, err)
 	}
-	tmpFile, err := os.CreateTemp(targetDir, "cp-deployer-artifacts-*")
+	tmpFile, err := os.CreateTemp(targetDir, "tw-deployer-artifacts-*")
 	if err != nil {
 		return "", fmt.Errorf("failed to create temporary file: %w", err)
 	}

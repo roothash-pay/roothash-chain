@@ -5,9 +5,9 @@ import (
 	"net"
 	"sync"
 
-	"github.com/cpchain-network/cp-chain/cp-service/client"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/roothash-pay/theweb3-chain/tw-service/client"
 	"golang.org/x/sync/semaphore"
 )
 

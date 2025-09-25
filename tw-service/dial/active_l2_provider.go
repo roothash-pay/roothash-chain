@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-service/client"
-	"github.com/cpchain-network/cp-chain/cp-service/sources"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/log"
+	"github.com/roothash-pay/theweb3-chain/tw-service/client"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources"
 )
 
 const DefaultActiveSequencerFollowerCheckDuration = 2 * DefaultDialTimeout

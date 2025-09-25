@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/standard"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/standard"
 
-	op_service "github.com/cpchain-network/cp-chain/cp-service"
+	op_service "github.com/roothash-pay/theweb3-chain/tw-service"
 
-	"github.com/cpchain-network/cp-chain/cp-service/jsonutil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/jsonutil"
 
 	"github.com/ethereum/go-ethereum/rpc"
 
@@ -17,8 +17,8 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/cpchain-network/cp-chain/common/genesis"
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/roothash-pay/theweb3-chain/common/genesis"
 )
 
 var (

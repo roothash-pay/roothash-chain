@@ -5,9 +5,9 @@ import (
 	"math/big"
 	"math/rand"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 var _ eth.BlockInfo = &MockBlockInfo{}

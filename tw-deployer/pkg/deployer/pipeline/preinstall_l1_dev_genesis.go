@@ -3,8 +3,8 @@ package pipeline
 import (
 	"fmt"
 
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/opcm"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/state"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/opcm"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/state"
 )
 
 func PreinstallL1DevGenesis(env *Env, intent *state.Intent, st *state.State) error {

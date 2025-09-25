@@ -10,8 +10,8 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/cpchain-network/cp-chain/cp-service/predeploys"
-	"github.com/cpchain-network/cp-chain/cp-service/solabi"
+	"github.com/roothash-pay/theweb3-chain/tw-service/predeploys"
+	"github.com/roothash-pay/theweb3-chain/tw-service/solabi"
 )
 
 const UpgradeToFuncSignature = "upgradeTo(address)"

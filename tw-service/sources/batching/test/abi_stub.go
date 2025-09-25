@@ -7,11 +7,11 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/cpchain-network/cp-chain/cp-service/sources/batching/rpcblock"
-	"github.com/cpchain-network/cp-chain/cp-service/txmgr"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources/batching/rpcblock"
+	"github.com/roothash-pay/theweb3-chain/tw-service/txmgr"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

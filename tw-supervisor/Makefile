@@ -1,3 +1,3 @@
-DEPRECATED_TARGETS := cp-supervisor clean test
+DEPRECATED_TARGETS := tw-supervisor clean test
 
 include ../justfiles/deprecated.mk

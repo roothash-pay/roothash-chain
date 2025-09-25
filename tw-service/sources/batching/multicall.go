@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/cpchain-network/cp-chain/cp-service/sources/batching/rpcblock"
 	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources/batching/rpcblock"
 )
 
 var DefaultBatchSize = 100

@@ -11,7 +11,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/core/types"
 
-	"github.com/cpchain-network/cp-chain/cp-service/testutils"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testutils"
 )
 
 type txTypeTest struct {

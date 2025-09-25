@@ -14,7 +14,7 @@ import (
 	"github.com/ethereum/go-ethereum/p2p/enode"
 	"github.com/ethereum/go-ethereum/p2p/enr"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
 )
 
 // Prepared provides a p2p host and discv5 service that is already set up.

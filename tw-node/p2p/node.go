@@ -22,13 +22,13 @@ import (
 	"github.com/ethereum/go-ethereum/p2p/discover"
 	"github.com/ethereum/go-ethereum/p2p/enode"
 
-	"github.com/cpchain-network/cp-chain/cp-node/metrics"
-	"github.com/cpchain-network/cp-chain/cp-node/p2p/gating"
-	"github.com/cpchain-network/cp-chain/cp-node/p2p/monitor"
-	"github.com/cpchain-network/cp-chain/cp-node/p2p/store"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
-	"github.com/cpchain-network/cp-chain/cp-service/clock"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-node/metrics"
+	"github.com/roothash-pay/theweb3-chain/tw-node/p2p/gating"
+	"github.com/roothash-pay/theweb3-chain/tw-node/p2p/monitor"
+	"github.com/roothash-pay/theweb3-chain/tw-node/p2p/store"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-service/clock"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 // NodeP2P is a p2p node, which can be used to gossip messages.

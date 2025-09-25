@@ -4,11 +4,11 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/cpchain-network/cp-chain/common/foundry"
-	"github.com/cpchain-network/cp-chain/common/script"
-	"github.com/cpchain-network/cp-chain/cp-service/testlog"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/log"
+	"github.com/roothash-pay/theweb3-chain/common/foundry"
+	"github.com/roothash-pay/theweb3-chain/common/script"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testlog"
 	"github.com/stretchr/testify/require"
 )
 
@@ -20,7 +20,7 @@ func createTestHost(t *testing.T) *script.Host {
 	logger, _ := testlog.CaptureLogger(t, log.LevelInfo)
 
 	// Create an artifact filesystem pointing to the bedrock contracts artifact directory
-	af := foundry.OpenArtifactsDir("../../../../packages/contracts-cpchain/forge-artifacts")
+	af := foundry.OpenArtifactsDir("../../../../packages/contracts-theweb3Chain/forge-artifacts")
 
 	// Now put a host together
 	host := script.NewHost(logger, af, nil, script.DefaultContext, script.WithCreate2Deployer())

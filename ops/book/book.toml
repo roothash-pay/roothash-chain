@@ -7,5 +7,5 @@ title = "Optimism Monorepo Ops"
 
 [output.html]
 site-url = "/monorepo-ops/"
-git-repository-url = "https://github.com/cpchain-network/cp-chain/tree/develop/ops/book"
-edit-url-template = "https://github.com/cpchain-network/cp-chain/tree/develop/ops/book/{path}"
+git-repository-url = "https://github.com/roothash-pay/theweb3-chain/tree/develop/ops/book"
+edit-url-template = "https://github.com/roothash-pay/theweb3-chain/tree/develop/ops/book/{path}"

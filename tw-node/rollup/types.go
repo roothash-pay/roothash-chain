@@ -9,10 +9,10 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/params"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 var (
@@ -125,7 +125,7 @@ type Config struct {
 	// ChainOpConfig is the OptimismConfig of the execution layer ChainConfig.
 	// It is used during safe chain consolidation to translate zero SystemConfig EIP1559
 	// parameters to the protocol values, like the execution layer does.
-	// If missing, it is loaded by the cp-node from the embedded superchain config at startup.
+	// If missing, it is loaded by the tw-node from the embedded superchain config at startup.
 	ChainOpConfig *params.OptimismConfig `json:"chain_op_config,omitempty"`
 
 	// PectraBlobScheduleTime sets the time until which (but not including) the blob base fee

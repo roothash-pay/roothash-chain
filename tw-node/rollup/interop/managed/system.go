@@ -11,14 +11,14 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	gethrpc "github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/derive"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/engine"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/event"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	opmetrics "github.com/cpchain-network/cp-chain/cp-service/metrics"
-	"github.com/cpchain-network/cp-chain/cp-service/rpc"
-	supervisortypes "github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/types"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/derive"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/engine"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/event"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	opmetrics "github.com/roothash-pay/theweb3-chain/tw-service/metrics"
+	"github.com/roothash-pay/theweb3-chain/tw-service/rpc"
+	supervisortypes "github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/types"
 )
 
 type L2Source interface {
@@ -35,7 +35,7 @@ type L1Source interface {
 	L1BlockRefByHash(ctx context.Context, hash common.Hash) (eth.L1BlockRef, error)
 }
 
-// ManagedMode makes the cp-node managed by an cp-supervisor,
+// ManagedMode makes the tw-node managed by an tw-supervisor,
 // by serving sync work and updating the canonical chain based on instructions.
 type ManagedMode struct {
 	log log.Logger

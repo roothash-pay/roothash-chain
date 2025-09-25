@@ -16,9 +16,9 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	optls "github.com/cpchain-network/cp-chain/cp-service/tls"
-	"github.com/cpchain-network/cp-chain/cp-service/tls/certman"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	optls "github.com/roothash-pay/theweb3-chain/tw-service/tls"
+	"github.com/roothash-pay/theweb3-chain/tw-service/tls/certman"
 )
 
 type SignerClient struct {

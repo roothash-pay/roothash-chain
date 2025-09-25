@@ -8,14 +8,14 @@ import (
 	"sync/atomic"
 	"time"
 
-	opservice "github.com/cpchain-network/cp-chain/cp-service"
-	opcrypto "github.com/cpchain-network/cp-chain/cp-service/crypto"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	opsigner "github.com/cpchain-network/cp-chain/cp-service/signer"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/params"
+	opservice "github.com/roothash-pay/theweb3-chain/tw-service"
+	opcrypto "github.com/roothash-pay/theweb3-chain/tw-service/crypto"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	opsigner "github.com/roothash-pay/theweb3-chain/tw-service/signer"
 	"github.com/urfave/cli/v2"
 )
 

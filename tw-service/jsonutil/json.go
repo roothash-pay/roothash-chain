@@ -8,7 +8,7 @@ import (
 
 	"github.com/BurntSushi/toml"
 
-	"github.com/cpchain-network/cp-chain/cp-service/ioutil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/ioutil"
 )
 
 type Decoder interface {

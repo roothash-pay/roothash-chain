@@ -16,16 +16,16 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/ethereum/go-ethereum/rpc"
-	"github.com/roothash-pay/theweb3-chain/cp-node/rollup"
-	"github.com/roothash-pay/theweb3-chain/cp-program/chainconfig"
-	"github.com/roothash-pay/theweb3-chain/cp-program/host"
-	"github.com/roothash-pay/theweb3-chain/cp-program/host/config"
-	"github.com/roothash-pay/theweb3-chain/cp-service/client"
-	"github.com/roothash-pay/theweb3-chain/cp-service/dial"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
-	oplog "github.com/roothash-pay/theweb3-chain/cp-service/log"
-	"github.com/roothash-pay/theweb3-chain/cp-service/retry"
-	"github.com/roothash-pay/theweb3-chain/cp-service/sources"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-program/chainconfig"
+	"github.com/roothash-pay/theweb3-chain/tw-program/host"
+	"github.com/roothash-pay/theweb3-chain/tw-program/host/config"
+	"github.com/roothash-pay/theweb3-chain/tw-service/client"
+	"github.com/roothash-pay/theweb3-chain/tw-service/dial"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	oplog "github.com/roothash-pay/theweb3-chain/tw-service/log"
+	"github.com/roothash-pay/theweb3-chain/tw-service/retry"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources"
 )
 
 type Runner struct {
@@ -192,7 +192,7 @@ func (r *Runner) run(ctx context.Context, l1Head common.Hash, agreedBlockInfo et
 	args := []string{
 		"--log.level", "DEBUG",
 		"--network", r.network,
-		"--exec", "./bin/cp-program-client",
+		"--exec", "./bin/tw-program-client",
 		"--datadir", r.dataDir,
 		"--l1.head", l1Head.Hex(),
 		"--l2.head", agreedBlockInfo.Hash().Hex(),
@@ -260,7 +260,7 @@ func (r *Runner) run(ctx context.Context, l1Head common.Hash, agreedBlockInfo et
 func runFaultProofProgram(ctx context.Context, args []string) error {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Hour)
 	defer cancel()
-	cmd := exec.CommandContext(ctx, "./bin/cp-program", args...)
+	cmd := exec.CommandContext(ctx, "./bin/tw-program", args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	return cmd.Run()

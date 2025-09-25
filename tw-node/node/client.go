@@ -12,11 +12,11 @@ import (
 	gn "github.com/ethereum/go-ethereum/node"
 	"github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
-	"github.com/cpchain-network/cp-chain/cp-service/apis"
-	"github.com/cpchain-network/cp-chain/cp-service/client"
-	opmetrics "github.com/cpchain-network/cp-chain/cp-service/metrics"
-	"github.com/cpchain-network/cp-chain/cp-service/sources"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-service/apis"
+	"github.com/roothash-pay/theweb3-chain/tw-service/client"
+	opmetrics "github.com/roothash-pay/theweb3-chain/tw-service/metrics"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources"
 )
 
 type L2EndpointSetup interface {

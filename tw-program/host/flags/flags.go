@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/roothash-pay/theweb3-chain/cp-program/host/types"
+	"github.com/roothash-pay/theweb3-chain/tw-program/host/types"
 	"github.com/urfave/cli/v2"
 
-	"github.com/roothash-pay/theweb3-chain/cp-node/chaincfg"
-	service "github.com/roothash-pay/theweb3-chain/cp-service"
-	openum "github.com/roothash-pay/theweb3-chain/cp-service/enum"
-	oplog "github.com/roothash-pay/theweb3-chain/cp-service/log"
-	"github.com/roothash-pay/theweb3-chain/cp-service/sources"
+	"github.com/roothash-pay/theweb3-chain/tw-node/chaincfg"
+	service "github.com/roothash-pay/theweb3-chain/tw-service"
+	openum "github.com/roothash-pay/theweb3-chain/tw-service/enum"
+	oplog "github.com/roothash-pay/theweb3-chain/tw-service/log"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources"
 )
 
 const EnvVarPrefix = "OP_PROGRAM"

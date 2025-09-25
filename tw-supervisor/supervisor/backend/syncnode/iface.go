@@ -9,9 +9,9 @@ import (
 	gethtypes "github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	opmetrics "github.com/cpchain-network/cp-chain/cp-service/metrics"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/types"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	opmetrics "github.com/roothash-pay/theweb3-chain/tw-service/metrics"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/types"
 )
 
 type SyncNodeCollection interface {

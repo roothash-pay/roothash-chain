@@ -19,11 +19,11 @@ import (
 	"github.com/ethereum/go-ethereum/triedb"
 	"github.com/ethereum/go-ethereum/triedb/hashdb"
 	"github.com/roothash-pay/theweb3-chain/common/genesis"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/l2/engineapi"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/l2/engineapi/test"
-	l2test "github.com/roothash-pay/theweb3-chain/cp-program/client/l2/test"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
-	"github.com/roothash-pay/theweb3-chain/cp-service/testlog"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/l2/engineapi"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/l2/engineapi/test"
+	l2test "github.com/roothash-pay/theweb3-chain/tw-program/client/l2/test"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testlog"
 	"github.com/stretchr/testify/require"
 )
 

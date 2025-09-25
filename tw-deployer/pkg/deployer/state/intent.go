@@ -10,11 +10,11 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/artifacts"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/standard"
-	"github.com/cpchain-network/cp-chain/cp-service/ioutil"
-	"github.com/cpchain-network/cp-chain/cp-service/jsonutil"
 	"github.com/ethereum-optimism/superchain-registry/validation"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/artifacts"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/standard"
+	"github.com/roothash-pay/theweb3-chain/tw-service/ioutil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/jsonutil"
 )
 
 type IntentType string

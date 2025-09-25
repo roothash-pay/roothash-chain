@@ -2,7 +2,7 @@ package p2p
 
 import (
 	"context"
-	opsigner "github.com/cpchain-network/cp-chain/cp-service/signer"
+	opsigner "github.com/roothash-pay/theweb3-chain/tw-service/signer"
 )
 
 type Signer interface {

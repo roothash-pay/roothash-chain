@@ -1,6 +1,6 @@
 package engine
 
-import "github.com/cpchain-network/cp-chain/cp-service/eth"
+import "github.com/roothash-pay/theweb3-chain/tw-service/eth"
 
 type PayloadInvalidEvent struct {
 	Envelope *eth.ExecutionPayloadEnvelope

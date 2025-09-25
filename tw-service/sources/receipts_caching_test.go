@@ -6,9 +6,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )

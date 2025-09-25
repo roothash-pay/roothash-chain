@@ -1,4 +1,4 @@
-package cp_service
+package tw_service
 
 import (
 	"context"
@@ -14,7 +14,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 
-	"github.com/cpchain-network/cp-chain/cp-service/ctxinterrupt"
+	"github.com/roothash-pay/theweb3-chain/tw-service/ctxinterrupt"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/log"

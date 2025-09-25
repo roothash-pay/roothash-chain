@@ -8,10 +8,10 @@ _LDFLAGSSTRING := "'" + trim(
     "-X main.Meta=" + VERSION_META + " " + \
     "") + "'"
 
-BINARY := "./bin/cp-supervisor"
+BINARY := "./bin/tw-supervisor"
 
-# Build cp-supervisor binary
-cp-supervisor: (go_build BINARY "./cmd" "-ldflags" _LDFLAGSSTRING)
+# Build tw-supervisor binary
+tw-supervisor: (go_build BINARY "./cmd" "-ldflags" _LDFLAGSSTRING)
 
 # Clean build artifacts
 clean:

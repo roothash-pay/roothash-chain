@@ -5,8 +5,8 @@ import (
 	"math/big"
 	"testing"
 
-	oprpc "github.com/cpchain-network/cp-chain/cp-service/rpc"
 	"github.com/ethereum/go-ethereum/rpc"
+	oprpc "github.com/roothash-pay/theweb3-chain/tw-service/rpc"
 	"github.com/stretchr/testify/require"
 )
 

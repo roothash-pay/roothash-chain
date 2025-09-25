@@ -6,11 +6,11 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-service/clock"
 	"github.com/ethereum/go-ethereum/log"
 	ds "github.com/ipfs/go-datastore"
 	"github.com/libp2p/go-libp2p/core/peer"
 	"github.com/multiformats/go-base32"
+	"github.com/roothash-pay/theweb3-chain/tw-service/clock"
 )
 
 const (

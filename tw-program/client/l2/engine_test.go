@@ -5,8 +5,8 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/roothash-pay/theweb3-chain/cp-node/rollup"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/l2/engineapi"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/l2/engineapi"
 	"github.com/stretchr/testify/require"
 
 	"github.com/ethereum/go-ethereum"
@@ -19,10 +19,10 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/ethereum/go-ethereum/trie"
 
-	"github.com/roothash-pay/theweb3-chain/cp-node/chaincfg"
-	"github.com/roothash-pay/theweb3-chain/cp-node/rollup/derive"
-	"github.com/roothash-pay/theweb3-chain/cp-node/rollup/engine"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-node/chaincfg"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/derive"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/engine"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 // Should implement derive.Engine

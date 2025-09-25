@@ -16,8 +16,8 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/log"
 
-	opsigner "github.com/cpchain-network/cp-chain/cp-service/signer"
 	hdwallet "github.com/ethereum-optimism/go-ethereum-hdwallet"
+	opsigner "github.com/roothash-pay/theweb3-chain/tw-service/signer"
 )
 
 func PrivateKeySignerFn(key *ecdsa.PrivateKey, chainID *big.Int) bind.SignerFn {

@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cpchain-network/cp-chain/common/proofs/prestate"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/state"
+	"github.com/roothash-pay/theweb3-chain/common/proofs/prestate"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/state"
 )
 
 func GenerateInteropDepset(ctx context.Context, pEnv *Env, globalIntent *state.Intent, st *state.State) error {

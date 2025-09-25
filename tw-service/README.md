@@ -1,10 +1,10 @@
-# `cp-service`
+# `tw-service`
 
-Issues: [monorepo](https://github.com/cpchain-network/cp-chain/issues?q=is%3Aissue%20state%3Aopen%20label%3AA-cp-service)
+Issues: [monorepo](https://github.com/roothash-pay/theweb3-chain/issues?q=is%3Aissue%20state%3Aopen%20label%3AA-tw-service)
 
-Pull requests: [monorepo](https://github.com/cpchain-network/cp-chain/pulls?q=is%3Aopen+is%3Apr+label%3AA-cp-service)
+Pull requests: [monorepo](https://github.com/roothash-pay/theweb3-chain/pulls?q=is%3Aopen+is%3Apr+label%3AA-tw-service)
 
-`cp-service` is a collection of Go utilities to build OP-Stack services with.
+`tw-service` is a collection of Go utilities to build OP-Stack services with.
 
 ```text
 ├── apis            - interfaces for client / server RPC and misc. APIs
@@ -49,7 +49,7 @@ Pull requests: [monorepo](https://github.com/cpchain-network/cp-chain/pulls?q=is
 
 ## Usage
 
-From `cp-service` dir:
+From `tw-service` dir:
 ```bash
 # Run Go tests
 make test
@@ -65,8 +65,8 @@ Provide solid reusable building blocks for all OP-Stack Go services.
 
 ### Vision
 
-- Remove unused utilities: `cp-service` itself needs to stay maintainable.
-- Make all Go services consistent: `cp-service` modules can be used to simplify and improve more Go services.
+- Remove unused utilities: `tw-service` itself needs to stay maintainable.
+- Make all Go services consistent: `tw-service` modules can be used to simplify and improve more Go services.
 
 ## Design principles
 
@@ -76,5 +76,5 @@ Provide solid reusable building blocks for all OP-Stack Go services.
 
 ## Testing
 
-Each cp-service package has its own unit-testing.
+Each tw-service package has its own unit-testing.
 More advanced utils, such as the transaction manager, are covered in `op-e2e` as well.

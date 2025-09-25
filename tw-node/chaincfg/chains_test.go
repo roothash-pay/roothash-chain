@@ -4,21 +4,21 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/params"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 	"github.com/stretchr/testify/require"
 )
 
 // TestGetRollupConfig tests that the configs sourced from the superchain-registry match
-// the configs that were embedded in the cp-node manually before the superchain-registry was utilized.
+// the configs that were embedded in the tw-node manually before the superchain-registry was utilized.
 //
 // The superchain-registry repository is a work in progress.
 // At a later date, it will be proposed to, and must be approved by, Optimism Governance.
 // Until that time, the configuration described in the superchain-registry is subject to change.
 //
-// This test ensures no cp-node config-loading behavior changes before
+// This test ensures no tw-node config-loading behavior changes before
 // the superchain-registry is no longer deemed experimental.
 func TestGetRollupConfig(t *testing.T) {
 	configsByName := map[string]rollup.Config{

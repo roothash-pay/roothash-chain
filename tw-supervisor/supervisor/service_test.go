@@ -5,21 +5,21 @@ import (
 	"testing"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 	"github.com/stretchr/testify/require"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/cpchain-network/cp-chain/cp-service/dial"
-	oplog "github.com/cpchain-network/cp-chain/cp-service/log"
-	opmetrics "github.com/cpchain-network/cp-chain/cp-service/metrics"
-	"github.com/cpchain-network/cp-chain/cp-service/oppprof"
-	oprpc "github.com/cpchain-network/cp-chain/cp-service/rpc"
-	"github.com/cpchain-network/cp-chain/cp-service/testlog"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/config"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/backend/depset"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/types"
+	"github.com/roothash-pay/theweb3-chain/tw-service/dial"
+	oplog "github.com/roothash-pay/theweb3-chain/tw-service/log"
+	opmetrics "github.com/roothash-pay/theweb3-chain/tw-service/metrics"
+	"github.com/roothash-pay/theweb3-chain/tw-service/oppprof"
+	oprpc "github.com/roothash-pay/theweb3-chain/tw-service/rpc"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testlog"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/config"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/backend/depset"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/types"
 )
 
 func TestSupervisorService(t *testing.T) {

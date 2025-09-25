@@ -6,11 +6,11 @@ import (
 	"io"
 	"sync/atomic"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/frontend"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/frontend"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/types"
 )
 
 type MockBackend struct {

@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer"
-	oplog "github.com/cpchain-network/cp-chain/cp-service/log"
 	"github.com/ethereum/go-ethereum/log"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer"
+	oplog "github.com/roothash-pay/theweb3-chain/tw-service/log"
 	"github.com/urfave/cli/v2"
 )
 

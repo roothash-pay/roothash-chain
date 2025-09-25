@@ -3,8 +3,8 @@ package rollup
 import (
 	"errors"
 
-	"github.com/cpchain-network/cp-chain/cp-node/bindings"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-node/bindings"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 var ErrNilProof = errors.New("output root proof is nil")

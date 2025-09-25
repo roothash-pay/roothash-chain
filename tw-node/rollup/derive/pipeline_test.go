@@ -1,6 +1,6 @@
 package derive
 
-import "github.com/cpchain-network/cp-chain/cp-service/testutils"
+import "github.com/roothash-pay/theweb3-chain/tw-service/testutils"
 
 var _ L1Fetcher = (*testutils.MockL1Source)(nil)
 

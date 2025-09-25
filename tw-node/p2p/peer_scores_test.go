@@ -25,12 +25,12 @@ import (
 	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/suite"
 
-	p2p "github.com/cpchain-network/cp-chain/cp-node/p2p"
-	p2pMocks "github.com/cpchain-network/cp-chain/cp-node/p2p/mocks"
-	"github.com/cpchain-network/cp-chain/cp-node/p2p/store"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
-	"github.com/cpchain-network/cp-chain/cp-service/clock"
-	testlog "github.com/cpchain-network/cp-chain/cp-service/testlog"
+	p2p "github.com/roothash-pay/theweb3-chain/tw-node/p2p"
+	p2pMocks "github.com/roothash-pay/theweb3-chain/tw-node/p2p/mocks"
+	"github.com/roothash-pay/theweb3-chain/tw-node/p2p/store"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-service/clock"
+	testlog "github.com/roothash-pay/theweb3-chain/tw-service/testlog"
 )
 
 // PeerScoresTestSuite tests peer parameterization.

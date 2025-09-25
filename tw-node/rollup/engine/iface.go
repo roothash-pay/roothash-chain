@@ -1,8 +1,8 @@
 package engine
 
 import (
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/derive"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/derive"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 // EngineState provides a read-only interfaces of the forkchoice state properties of the core Engine.

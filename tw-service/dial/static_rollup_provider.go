@@ -3,8 +3,8 @@ package dial
 import (
 	"context"
 
-	"github.com/cpchain-network/cp-chain/cp-service/sources"
 	"github.com/ethereum/go-ethereum/log"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources"
 )
 
 // RollupProvider is an interfaces for providing a RollupClient

@@ -7,9 +7,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-service/client"
-	"github.com/cpchain-network/cp-chain/cp-service/sources"
 	"github.com/ethereum/go-ethereum/log"
+	"github.com/roothash-pay/theweb3-chain/tw-service/client"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources"
 )
 
 type rollupDialer func(ctx context.Context, log log.Logger, url string) (RollupClientInterface, error)

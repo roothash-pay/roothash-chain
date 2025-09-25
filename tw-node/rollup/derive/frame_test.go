@@ -11,8 +11,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/derive/params"
-	"github.com/cpchain-network/cp-chain/cp-service/testutils"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/derive/params"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testutils"
 )
 
 func FuzzFrameUnmarshalBinary(f *testing.F) {

@@ -41,7 +41,7 @@ If the PR is from an external fork, our CI suite will not automatically run on t
 
 or
 
-> /ci authorize https://github.com/cpchain-network/cpchain/pull/PR_NUMBER/commits/COMMITHASH
+> /ci authorize https://github.com/theweb3Chain-network/theweb3Chain/pull/PR_NUMBER/commits/COMMITHASH
 
 to trigger the CI suite to run. CI is a precondition for merging the PR and should be done before review is conducted, because it will reveal any failing tests or other problems such as linting errors.
 

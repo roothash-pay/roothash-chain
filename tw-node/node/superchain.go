@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
 	"github.com/ethereum/go-ethereum/eth/catalyst"
 	"github.com/ethereum/go-ethereum/params"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
 )
 
 var errNodeHalt = errors.New("opted to halt, unprepared for protocol change")
@@ -25,8 +25,8 @@ func (n *OpNode) handleProtocolVersionsUpdate(ctx context.Context) error {
 		n.log.Warn("failed to notify engine of protocol version", "err", err)
 		// engineSupport may still be available, or otherwise zero to signal as unknown
 	} else {
-		catalyst.LogProtocolVersionSupport(n.log.New("node", "cp-node"), engineSupport, recommended, "recommended")
-		catalyst.LogProtocolVersionSupport(n.log.New("node", "cp-node"), engineSupport, required, "required")
+		catalyst.LogProtocolVersionSupport(n.log.New("node", "tw-node"), engineSupport, recommended, "recommended")
+		catalyst.LogProtocolVersionSupport(n.log.New("node", "tw-node"), engineSupport, required, "required")
 	}
 	n.metrics.ReportProtocolVersions(local, engineSupport, recommended, required)
 	catalyst.LogProtocolVersionSupport(n.log.New("node", "engine"), local, recommended, "recommended")

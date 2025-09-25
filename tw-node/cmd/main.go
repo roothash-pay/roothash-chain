@@ -9,21 +9,21 @@ import (
 
 	"github.com/ethereum/go-ethereum/log"
 
-	opnode "github.com/cpchain-network/cp-chain/cp-node"
-	"github.com/cpchain-network/cp-chain/cp-node/chaincfg"
-	"github.com/cpchain-network/cp-chain/cp-node/cmd/genesis"
-	"github.com/cpchain-network/cp-chain/cp-node/cmd/interop"
-	"github.com/cpchain-network/cp-chain/cp-node/cmd/networks"
-	"github.com/cpchain-network/cp-chain/cp-node/cmd/p2p"
-	"github.com/cpchain-network/cp-chain/cp-node/flags"
-	"github.com/cpchain-network/cp-chain/cp-node/metrics"
-	"github.com/cpchain-network/cp-chain/cp-node/node"
-	"github.com/cpchain-network/cp-chain/cp-node/version"
-	opservice "github.com/cpchain-network/cp-chain/cp-service"
-	"github.com/cpchain-network/cp-chain/cp-service/cliapp"
-	"github.com/cpchain-network/cp-chain/cp-service/ctxinterrupt"
-	oplog "github.com/cpchain-network/cp-chain/cp-service/log"
-	"github.com/cpchain-network/cp-chain/cp-service/metrics/doc"
+	opnode "github.com/roothash-pay/theweb3-chain/tw-node"
+	"github.com/roothash-pay/theweb3-chain/tw-node/chaincfg"
+	"github.com/roothash-pay/theweb3-chain/tw-node/cmd/genesis"
+	"github.com/roothash-pay/theweb3-chain/tw-node/cmd/interop"
+	"github.com/roothash-pay/theweb3-chain/tw-node/cmd/networks"
+	"github.com/roothash-pay/theweb3-chain/tw-node/cmd/p2p"
+	"github.com/roothash-pay/theweb3-chain/tw-node/flags"
+	"github.com/roothash-pay/theweb3-chain/tw-node/metrics"
+	"github.com/roothash-pay/theweb3-chain/tw-node/node"
+	"github.com/roothash-pay/theweb3-chain/tw-node/version"
+	opservice "github.com/roothash-pay/theweb3-chain/tw-service"
+	"github.com/roothash-pay/theweb3-chain/tw-service/cliapp"
+	"github.com/roothash-pay/theweb3-chain/tw-service/ctxinterrupt"
+	oplog "github.com/roothash-pay/theweb3-chain/tw-service/log"
+	"github.com/roothash-pay/theweb3-chain/tw-service/metrics/doc"
 )
 
 var (
@@ -42,7 +42,7 @@ func main() {
 	app := cli.NewApp()
 	app.Version = VersionWithMeta
 	app.Flags = cliapp.ProtectFlags(flags.Flags)
-	app.Name = "cp-node"
+	app.Name = "tw-node"
 	app.Usage = "Optimism Rollup Node"
 	app.Description = "The Optimism Rollup Node derives core block inputs from L1 data and drives an external core Execution Engine to build a core chain."
 	app.Action = cliapp.LifecycleCmd(RollupNodeMain)

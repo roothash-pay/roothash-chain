@@ -4,9 +4,9 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/cpchain-network/cp-chain/cp-service/sources/batching/test"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources/batching/test"
 	"github.com/stretchr/testify/require"
 )
 

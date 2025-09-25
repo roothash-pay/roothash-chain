@@ -3,14 +3,14 @@ package pipeline
 import (
 	"fmt"
 
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/standard"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/standard"
 
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/env"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/env"
 
-	"github.com/cpchain-network/cp-chain/common/foundry"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/broadcaster"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/opcm"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/state"
+	"github.com/roothash-pay/theweb3-chain/common/foundry"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/broadcaster"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/opcm"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/state"
 
 	"github.com/ethereum/go-ethereum/common"
 )

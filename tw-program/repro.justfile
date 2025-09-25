@@ -20,11 +20,11 @@ cannon:
         GITDATE={{GIT_DATE}} \
         VERSION={{CANNON_VERSION}}
 
-# Build the cp-program-client elf binaries
-cp-program-client-mips:
+# Build the tw-program-client elf binaries
+tw-program-client-mips:
     #!/bin/bash
-    cd ../cp-program
-    make cp-program-client-mips \
+    cd ../tw-program
+    make tw-program-client-mips \
         GOOS=linux \
         GOARCH=mips \
         GOMIPS=softfloat \
@@ -32,14 +32,14 @@ cp-program-client-mips:
         GITDATE={{GIT_DATE}} \
         VERSION={{OP_PROGRAM_VERSION}}
 
-# Run the cp-program-client elf binary directly through cannon's load-elf subcommand.
-client TYPE CLIENT_SUFFIX PRESTATE_SUFFIX: cannon cp-program-client-mips
+# Run the tw-program-client elf binary directly through cannon's load-elf subcommand.
+client TYPE CLIENT_SUFFIX PRESTATE_SUFFIX: cannon tw-program-client-mips
     #!/bin/bash
     /app/cannon/bin/cannon load-elf \
         --type {{TYPE}} \
-        --path /app/cp-program/bin/cp-program-client{{CLIENT_SUFFIX}}.elf \
-        --out /app/cp-program/bin/prestate{{PRESTATE_SUFFIX}}.bin.gz \
-        --meta "/app/cp-program/bin/meta{{PRESTATE_SUFFIX}}.json"
+        --path /app/tw-program/bin/tw-program-client{{CLIENT_SUFFIX}}.elf \
+        --out /app/tw-program/bin/prestate{{PRESTATE_SUFFIX}}.bin.gz \
+        --meta "/app/tw-program/bin/meta{{PRESTATE_SUFFIX}}.json"
 
 # Generate the prestate proof containing the absolute pre-state hash.
 prestate TYPE CLIENT_SUFFIX PRESTATE_SUFFIX: (client TYPE CLIENT_SUFFIX PRESTATE_SUFFIX)
@@ -47,11 +47,11 @@ prestate TYPE CLIENT_SUFFIX PRESTATE_SUFFIX: (client TYPE CLIENT_SUFFIX PRESTATE
     /app/cannon/bin/cannon run \
         --proof-at '=0' \
         --stop-at '=1' \
-        --input /app/cp-program/bin/prestate{{PRESTATE_SUFFIX}}.bin.gz \
+        --input /app/tw-program/bin/prestate{{PRESTATE_SUFFIX}}.bin.gz \
         --meta "" \
-        --proof-fmt '/app/cp-program/bin/%d{{PRESTATE_SUFFIX}}.json' \
+        --proof-fmt '/app/tw-program/bin/%d{{PRESTATE_SUFFIX}}.json' \
         --output ""
-    mv /app/cp-program/bin/0{{PRESTATE_SUFFIX}}.json /app/cp-program/bin/prestate-proof{{PRESTATE_SUFFIX}}.json
+    mv /app/tw-program/bin/0{{PRESTATE_SUFFIX}}.json /app/tw-program/bin/prestate-proof{{PRESTATE_SUFFIX}}.json
 
 build-default: (prestate "singlethreaded-2" "" "")
 build-mt64: (prestate "multithreaded64-3" "64" "-mt64")

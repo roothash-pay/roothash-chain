@@ -5,7 +5,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-service/clock"
+	"github.com/roothash-pay/theweb3-chain/tw-service/clock"
 )
 
 // Poller runs a function on repeat at a set interval.

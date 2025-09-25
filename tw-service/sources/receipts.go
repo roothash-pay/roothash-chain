@@ -4,10 +4,10 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/trie"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 type ReceiptsProvider interface {

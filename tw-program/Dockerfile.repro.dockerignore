@@ -5,11 +5,11 @@
 # internal dependencies
 !cannon/
 !op-alt-da/
-!cp-node/
+!tw-node/
 !op-preimage/
-!cp-program/
-!cp-service/
-!cp-supervisor/
+!tw-program/
+!tw-service/
+!tw-supervisor/
 
 **/bin
 **/testdata

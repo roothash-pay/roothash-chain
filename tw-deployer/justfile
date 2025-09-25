@@ -1,5 +1,5 @@
 build:
-    go build -o bin/cp-deployer cmd/cp-deployer/main.go
+    go build -o bin/tw-deployer cmd/tw-deployer/main.go
 
 build-contracts:
     just ../packages/contracts-bedrock/forge-build

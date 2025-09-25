@@ -10,7 +10,7 @@ import (
 
 	net "net"
 
-	p2p "github.com/cpchain-network/cp-chain/cp-node/p2p"
+	p2p "github.com/roothash-pay/theweb3-chain/tw-node/p2p"
 
 	peer "github.com/libp2p/go-libp2p/core/peer"
 )

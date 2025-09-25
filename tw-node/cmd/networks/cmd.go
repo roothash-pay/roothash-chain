@@ -7,10 +7,10 @@ import (
 
 	"github.com/urfave/cli/v2"
 
-	opnode "github.com/cpchain-network/cp-chain/cp-node"
-	"github.com/cpchain-network/cp-chain/cp-node/flags"
-	opflags "github.com/cpchain-network/cp-chain/cp-service/flags"
-	oplog "github.com/cpchain-network/cp-chain/cp-service/log"
+	opnode "github.com/roothash-pay/theweb3-chain/tw-node"
+	"github.com/roothash-pay/theweb3-chain/tw-node/flags"
+	opflags "github.com/roothash-pay/theweb3-chain/tw-service/flags"
+	oplog "github.com/roothash-pay/theweb3-chain/tw-service/log"
 )
 
 var Subcommands = []*cli.Command{

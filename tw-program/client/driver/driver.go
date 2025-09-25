@@ -5,14 +5,14 @@ import (
 	"errors"
 
 	"github.com/ethereum/go-ethereum/log"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 
-	"github.com/roothash-pay/theweb3-chain/cp-node/metrics"
-	"github.com/roothash-pay/theweb3-chain/cp-node/rollup"
-	"github.com/roothash-pay/theweb3-chain/cp-node/rollup/derive"
-	"github.com/roothash-pay/theweb3-chain/cp-node/rollup/engine"
-	"github.com/roothash-pay/theweb3-chain/cp-node/rollup/event"
-	"github.com/roothash-pay/theweb3-chain/cp-node/rollup/sync"
+	"github.com/roothash-pay/theweb3-chain/tw-node/metrics"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/derive"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/engine"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/event"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/sync"
 )
 
 var errTooManyEvents = errors.New("way too many events queued up, something is wrong")

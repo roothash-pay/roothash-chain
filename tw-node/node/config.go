@@ -10,13 +10,13 @@ import (
 
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/cpchain-network/cp-chain/cp-node/flags"
-	"github.com/cpchain-network/cp-chain/cp-node/p2p"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/driver"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/interop"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/sync"
-	"github.com/cpchain-network/cp-chain/cp-service/oppprof"
+	"github.com/roothash-pay/theweb3-chain/tw-node/flags"
+	"github.com/roothash-pay/theweb3-chain/tw-node/p2p"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/driver"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/interop"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/sync"
+	"github.com/roothash-pay/theweb3-chain/tw-service/oppprof"
 )
 
 type Config struct {

@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/cpchain-network/cp-chain/cp-service/testlog"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testlog"
 	"github.com/stretchr/testify/require"
 )
 
@@ -41,8 +41,8 @@ func TestCacheCLIE2E(t *testing.T) {
 
 	require.NoError(t, os.WriteFile(filepath.Join(tmpDirForCache, "test.txt"), []byte("test"), 0644))
 
-	binaryPath := filepath.Join(tmpDirForBinary, "cp-deployer")
-	cmd := exec.Command("go", "build", "-o", binaryPath, "../../../cmd/cp-deployer/main.go")
+	binaryPath := filepath.Join(tmpDirForBinary, "tw-deployer")
+	cmd := exec.Command("go", "build", "-o", binaryPath, "../../../cmd/tw-deployer/main.go")
 	output, err := cmd.CombinedOutput()
 	require.NoError(t, err, "Failed to build binary: %s", output)
 

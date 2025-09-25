@@ -3,13 +3,13 @@ package opcm
 import (
 	"math/big"
 
-	"github.com/cpchain-network/cp-chain/common/foundry"
-	"github.com/cpchain-network/cp-chain/common/script"
-	opcrypto "github.com/cpchain-network/cp-chain/cp-service/crypto"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/params"
+	"github.com/roothash-pay/theweb3-chain/common/foundry"
+	"github.com/roothash-pay/theweb3-chain/common/script"
+	opcrypto "github.com/roothash-pay/theweb3-chain/tw-service/crypto"
 )
 
 type DeploySuperchainInput struct {

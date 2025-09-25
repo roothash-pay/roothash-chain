@@ -10,11 +10,11 @@ import (
 	"path"
 	"sort"
 
-	"github.com/cpchain-network/cp-chain/cp-node/cmd/batch_decoder/fetch"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/derive"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/roothash-pay/theweb3-chain/tw-node/cmd/batch_decoder/fetch"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/derive"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 type ChannelWithMetadata struct {

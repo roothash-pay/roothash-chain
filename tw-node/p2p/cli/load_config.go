@@ -11,15 +11,15 @@ import (
 	"os"
 	"strings"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
 	ds "github.com/ipfs/go-datastore"
 	"github.com/ipfs/go-datastore/sync"
 	leveldb "github.com/ipfs/go-ds-leveldb"
 	"github.com/libp2p/go-libp2p/core/crypto"
 	"github.com/multiformats/go-multiaddr"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
 
-	"github.com/cpchain-network/cp-chain/cp-node/flags"
-	"github.com/cpchain-network/cp-chain/cp-node/p2p"
+	"github.com/roothash-pay/theweb3-chain/tw-node/flags"
+	"github.com/roothash-pay/theweb3-chain/tw-node/p2p"
 
 	"github.com/urfave/cli/v2"
 

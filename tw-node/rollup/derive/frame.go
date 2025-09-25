@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/derive/params"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/derive/params"
 )
 
 // Frames cannot be larger than 1 MB.

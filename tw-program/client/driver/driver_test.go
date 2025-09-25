@@ -4,13 +4,13 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 	"github.com/stretchr/testify/require"
 
 	"github.com/ethereum/go-ethereum/log"
 
-	"github.com/roothash-pay/theweb3-chain/cp-node/rollup/event"
-	"github.com/roothash-pay/theweb3-chain/cp-service/testlog"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/event"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testlog"
 )
 
 var mockErr = errors.New("mock error")

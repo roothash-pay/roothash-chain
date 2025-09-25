@@ -5,14 +5,14 @@ import (
 
 	"github.com/urfave/cli/v2"
 
-	opservice "github.com/cpchain-network/cp-chain/cp-service"
-	oplog "github.com/cpchain-network/cp-chain/cp-service/log"
-	opmetrics "github.com/cpchain-network/cp-chain/cp-service/metrics"
-	"github.com/cpchain-network/cp-chain/cp-service/oppprof"
-	oprpc "github.com/cpchain-network/cp-chain/cp-service/rpc"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/config"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/backend/depset"
-	"github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/backend/syncnode"
+	opservice "github.com/roothash-pay/theweb3-chain/tw-service"
+	oplog "github.com/roothash-pay/theweb3-chain/tw-service/log"
+	opmetrics "github.com/roothash-pay/theweb3-chain/tw-service/metrics"
+	"github.com/roothash-pay/theweb3-chain/tw-service/oppprof"
+	oprpc "github.com/roothash-pay/theweb3-chain/tw-service/rpc"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/config"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/backend/depset"
+	"github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/backend/syncnode"
 )
 
 const EnvVarPrefix = "OP_SUPERVISOR"
@@ -47,7 +47,7 @@ var (
 	}
 	DataDirSyncEndpointFlag = &cli.PathFlag{
 		Name:    "datadir.sync-endpoint",
-		Usage:   "cp-supervisor endpoint to sync databases from",
+		Usage:   "tw-supervisor endpoint to sync databases from",
 		EnvVars: prefixEnvVars("DATADIR_SYNC_ENDPOINT"),
 	}
 	DependencySetFlag = &cli.PathFlag{

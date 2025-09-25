@@ -6,10 +6,10 @@ import (
 
 	"github.com/ethereum/go-ethereum/common/hexutil"
 
-	"github.com/cpchain-network/cp-chain/common/foundry"
-	"github.com/cpchain-network/cp-chain/common/genesis"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/state"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/common/foundry"
+	"github.com/roothash-pay/theweb3-chain/common/genesis"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/state"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 func SealL1DevGenesis(env *Env, intent *state.Intent, st *state.State) error {

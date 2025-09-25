@@ -16,21 +16,21 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/cpchain-network/cp-chain/cp-node/metrics"
-	"github.com/cpchain-network/cp-chain/cp-node/node/safedb"
-	"github.com/cpchain-network/cp-chain/cp-node/p2p"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/driver"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/event"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/interop"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/interop/managed"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/sequencing"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/sync"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	"github.com/cpchain-network/cp-chain/cp-service/httputil"
-	"github.com/cpchain-network/cp-chain/cp-service/oppprof"
-	oprpc "github.com/cpchain-network/cp-chain/cp-service/rpc"
-	"github.com/cpchain-network/cp-chain/cp-service/sources"
+	"github.com/roothash-pay/theweb3-chain/tw-node/metrics"
+	"github.com/roothash-pay/theweb3-chain/tw-node/node/safedb"
+	"github.com/roothash-pay/theweb3-chain/tw-node/p2p"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/driver"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/event"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/interop"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/interop/managed"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/sequencing"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/sync"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/httputil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/oppprof"
+	oprpc "github.com/roothash-pay/theweb3-chain/tw-service/rpc"
+	"github.com/roothash-pay/theweb3-chain/tw-service/sources"
 )
 
 var ErrAlreadyClosed = errors.New("node is already closed")
@@ -238,7 +238,7 @@ func (n *OpNode) initL2(ctx context.Context, cfg *Config) error {
 	}
 
 	if cfg.Rollup.ChainOpConfig == nil {
-		return fmt.Errorf("cfg.Rollup.ChainOpConfig is nil. Please see https://github.com/cpchain-network/cp-chain/releases/tag/cp-node/v1.11.0: %w", err)
+		return fmt.Errorf("cfg.Rollup.ChainOpConfig is nil. Please see https://github.com/roothash-pay/theweb3-chain/releases/tag/tw-node/v1.11.0: %w", err)
 	}
 
 	n.l2Driver = driver.NewDriver(n.eventSys, n.eventDrain, &cfg.Driver, &cfg.Rollup, n.l2Source, n.elClient, n, n, n.log, n.metrics, cfg.ConfigPersistence, n.safeDB, &cfg.Sync, managedMode, cfg.Driver.MaxRequestsPerBatch)
@@ -637,7 +637,7 @@ func (n *OpNode) InteropRPC() (rpcEndpoint string, jwtSecret eth.Bytes32) {
 func (n *OpNode) InteropRPCPort() (int, error) {
 	m, ok := n.interopSys.(*managed.ManagedMode)
 	if !ok {
-		return 0, fmt.Errorf("failed to fetch interop port for cp-node")
+		return 0, fmt.Errorf("failed to fetch interop port for tw-node")
 	}
 	return m.WSPort()
 }

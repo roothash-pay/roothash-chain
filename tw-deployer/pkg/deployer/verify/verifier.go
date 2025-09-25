@@ -12,11 +12,11 @@ import (
 	"github.com/urfave/cli/v2"
 	"golang.org/x/time/rate"
 
-	"github.com/cpchain-network/cp-chain/common/foundry"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/artifacts"
-	"github.com/cpchain-network/cp-chain/cp-service/ctxinterrupt"
-	oplog "github.com/cpchain-network/cp-chain/cp-service/log"
+	"github.com/roothash-pay/theweb3-chain/common/foundry"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/artifacts"
+	"github.com/roothash-pay/theweb3-chain/tw-service/ctxinterrupt"
+	oplog "github.com/roothash-pay/theweb3-chain/tw-service/log"
 )
 
 type Verifier struct {

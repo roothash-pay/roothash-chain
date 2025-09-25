@@ -16,14 +16,14 @@ import (
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/ethereum/go-ethereum/params"
-	clientTypes "github.com/roothash-pay/theweb3-chain/cp-program/client/interop/types"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/l1"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/l2"
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/mpt"
-	hostcommon "github.com/roothash-pay/theweb3-chain/cp-program/host/common"
-	"github.com/roothash-pay/theweb3-chain/cp-program/host/kvstore"
-	hosttypes "github.com/roothash-pay/theweb3-chain/cp-program/host/types"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
+	clientTypes "github.com/roothash-pay/theweb3-chain/tw-program/client/interop/types"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/l1"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/l2"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/mpt"
+	hostcommon "github.com/roothash-pay/theweb3-chain/tw-program/host/common"
+	"github.com/roothash-pay/theweb3-chain/tw-program/host/kvstore"
+	hosttypes "github.com/roothash-pay/theweb3-chain/tw-program/host/types"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 var (

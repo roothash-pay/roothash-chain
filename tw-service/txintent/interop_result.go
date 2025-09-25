@@ -4,13 +4,13 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	"github.com/cpchain-network/cp-chain/cp-service/plan"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-service/plan"
 
-	suptypes "github.com/cpchain-network/cp-chain/cp-supervisor/supervisor/types"
+	suptypes "github.com/roothash-pay/theweb3-chain/tw-supervisor/supervisor/types"
 )
 
 var _ Result = (*InteropOutput)(nil)

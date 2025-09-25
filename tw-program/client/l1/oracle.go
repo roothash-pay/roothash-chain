@@ -12,8 +12,8 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/ethereum/go-ethereum/rlp"
 
-	"github.com/roothash-pay/theweb3-chain/cp-program/client/mpt"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-program/client/mpt"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 type Oracle interface {

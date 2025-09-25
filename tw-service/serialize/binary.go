@@ -6,7 +6,7 @@ import (
 	"io"
 	"reflect"
 
-	"github.com/cpchain-network/cp-chain/cp-service/ioutil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/ioutil"
 )
 
 // Deserializable defines functionality for a type that may be deserialized from raw bytes.

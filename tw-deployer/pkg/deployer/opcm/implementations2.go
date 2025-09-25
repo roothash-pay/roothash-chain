@@ -3,8 +3,8 @@ package opcm
 import (
 	"math/big"
 
-	"github.com/cpchain-network/cp-chain/common/script"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/roothash-pay/theweb3-chain/common/script"
 )
 
 type DeployImplementations2Input struct {

@@ -4,11 +4,11 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/cpchain-network/cp-chain/cp-service/testutils"
-	"github.com/cpchain-network/cp-chain/cp-service/testutils/fuzzerutils"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	fuzz "github.com/google/gofuzz"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testutils"
+	"github.com/roothash-pay/theweb3-chain/tw-service/testutils/fuzzerutils"
 	"github.com/stretchr/testify/require"
 )
 

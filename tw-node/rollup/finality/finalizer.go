@@ -5,11 +5,11 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	"sync"
 
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/derive"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/engine"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/event"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/derive"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/engine"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/event"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 )
 
 // defaultFinalityLookback defines the amount of L1<>core relations to track for finalization purposes, one per L1 block.
@@ -194,7 +194,7 @@ func (fi *Finalizer) onDerivedSafeBlock(l2Safe eth.L2BlockRef) {
 
 	// Stop registering blocks after interop.
 	// Finality in interop is determined by the superchain backend,
-	// i.e. the cp-supervisor RPC identifies which core block may be finalized.
+	// i.e. the tw-supervisor RPC identifies which core block may be finalized.
 	if fi.cfg.IsInterop(l2Safe.Time) {
 		return
 	}

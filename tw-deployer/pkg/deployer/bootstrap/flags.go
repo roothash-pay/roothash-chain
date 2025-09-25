@@ -1,10 +1,10 @@
 package bootstrap
 
 import (
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer"
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/standard"
-	"github.com/cpchain-network/cp-chain/cp-service/cliapp"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/standard"
+	"github.com/roothash-pay/theweb3-chain/tw-service/cliapp"
 	"github.com/urfave/cli/v2"
 )
 

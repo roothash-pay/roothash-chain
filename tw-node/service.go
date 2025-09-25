@@ -10,18 +10,18 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	"github.com/urfave/cli/v2"
 
-	"github.com/cpchain-network/cp-chain/cp-node/chaincfg"
-	"github.com/cpchain-network/cp-chain/cp-node/flags"
-	"github.com/cpchain-network/cp-chain/cp-node/node"
-	p2pcli "github.com/cpchain-network/cp-chain/cp-node/p2p/cli"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/driver"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/engine"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/interop"
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/sync"
-	opflags "github.com/cpchain-network/cp-chain/cp-service/flags"
-	"github.com/cpchain-network/cp-chain/cp-service/oppprof"
-	"github.com/cpchain-network/cp-chain/cp-service/rpc"
+	"github.com/roothash-pay/theweb3-chain/tw-node/chaincfg"
+	"github.com/roothash-pay/theweb3-chain/tw-node/flags"
+	"github.com/roothash-pay/theweb3-chain/tw-node/node"
+	p2pcli "github.com/roothash-pay/theweb3-chain/tw-node/p2p/cli"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/driver"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/engine"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/interop"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/sync"
+	opflags "github.com/roothash-pay/theweb3-chain/tw-service/flags"
+	"github.com/roothash-pay/theweb3-chain/tw-service/oppprof"
+	"github.com/roothash-pay/theweb3-chain/tw-service/rpc"
 )
 
 // NewConfig creates a Config from the provided flags or environment variables.
@@ -197,7 +197,7 @@ func NewRollupConfig(log log.Logger, network string, rollupConfigPath string) (*
 		if rollupConfigPath != "" {
 			log.Error(`Cannot configure network and rollup-config at the same time.
 Startup will proceed to use the network-parameter and ignore the rollup config.
-Conflicting configuration is deprecated, and will stop the cp-node from starting in the future.
+Conflicting configuration is deprecated, and will stop the tw-node from starting in the future.
 `, "network", network, "rollup_config", rollupConfigPath)
 		}
 		rollupConfig, err := chaincfg.GetRollupConfig(network)

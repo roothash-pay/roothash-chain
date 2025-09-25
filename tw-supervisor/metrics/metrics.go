@@ -1,10 +1,10 @@
 package metrics
 
 import (
-	"github.com/cpchain-network/cp-chain/cp-node/rollup/event"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	opmetrics "github.com/cpchain-network/cp-chain/cp-service/metrics"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/roothash-pay/theweb3-chain/tw-node/rollup/event"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	opmetrics "github.com/roothash-pay/theweb3-chain/tw-service/metrics"
 )
 
 const Namespace = "op_supervisor"
@@ -83,7 +83,7 @@ func NewMetrics(procName string) *Metrics {
 		up: factory.NewGauge(prometheus.GaugeOpts{
 			Namespace: ns,
 			Name:      "up",
-			Help:      "1 if the cp-supervisor has finished starting up",
+			Help:      "1 if the tw-supervisor has finished starting up",
 		}),
 
 		CacheSizeVec: factory.NewGaugeVec(prometheus.GaugeOpts{
@@ -140,7 +140,7 @@ func (m *Metrics) Document() []opmetrics.DocumentedMetric {
 	return m.factory.Document()
 }
 
-// RecordInfo sets a pseudo-metric that contains versioning and config info for the cp-supervisor.
+// RecordInfo sets a pseudo-metric that contains versioning and config info for the tw-supervisor.
 func (m *Metrics) RecordInfo(version string) {
 	m.info.WithLabelValues(version).Set(1)
 }

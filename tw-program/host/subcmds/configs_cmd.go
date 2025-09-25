@@ -6,9 +6,9 @@ import (
 	"slices"
 
 	"github.com/ethereum/go-ethereum/superchain"
-	"github.com/roothash-pay/theweb3-chain/cp-node/chaincfg"
-	"github.com/roothash-pay/theweb3-chain/cp-program/chainconfig"
-	"github.com/roothash-pay/theweb3-chain/cp-service/eth"
+	"github.com/roothash-pay/theweb3-chain/tw-node/chaincfg"
+	"github.com/roothash-pay/theweb3-chain/tw-program/chainconfig"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
 	"github.com/urfave/cli/v2"
 )
 

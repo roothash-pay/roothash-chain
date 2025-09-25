@@ -9,7 +9,7 @@ import (
 	"github.com/olekukonko/tablewriter"
 	"github.com/urfave/cli/v2"
 
-	"github.com/cpchain-network/cp-chain/cp-service/metrics"
+	"github.com/roothash-pay/theweb3-chain/tw-service/metrics"
 )
 
 type Metrics interface {

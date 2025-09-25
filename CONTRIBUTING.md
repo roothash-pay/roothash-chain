@@ -1,20 +1,20 @@
-# CpChain Monorepo Contributing Guide
+# theweb3Chain Monorepo Contributing Guide
 
 ## What to Contribute
 
-Welcome to the CpChain Monorepo Contributing Guide!
-If you're reading this then you might be interested in contributing to the CpChain Monorepo.
+Welcome to the theweb3Chain Monorepo Contributing Guide!
+If you're reading this then you might be interested in contributing to the theweb3Chain Monorepo.
 Before diving into the specifics of this repository, you might be interested in taking a quick look at just a few of the ways that you can contribute.
 You can:
 
 - Report issues in this repository. Great bug reports are detailed and give clear instructions for how a developer can reproduce the problem. Write good bug reports and developers will love you.
-  - **IMPORTANT**: If you believe your report impacts the security of this repository, refer to the canonical [Security Policy](https://github.com/cpchain-network/.github/blob/master/SECURITY.md) document.
-- Fix issues that are tagged as [`D-good-first-issue`](https://github.com/cpchain-network/cp-chain/labels/D-good-first-issue) or [`S-confirmed`](https://github.com/cpchain-network/cp-chain/labels/S-confirmed).
-- Larger projects are listed on [this project board](https://github.com/orgs/cpchain-network/projects/31/views/9). Please talk to us if you're considering working on one of these, they may not be fully specified so it will reduce risk to discuss the approach and ensure that it's still relevant.
-- Help improve the [CpChain Docs] by reporting issues or adding missing sections.
-- Get involved in the protocol design process by joining discussions within the [OP Stack Specs](https://github.com/cpchain-network/specs/discussions) repository.
+  - **IMPORTANT**: If you believe your report impacts the security of this repository, refer to the canonical [Security Policy](https://github.com/theweb3Chain-network/.github/blob/master/SECURITY.md) document.
+- Fix issues that are tagged as [`D-good-first-issue`](https://github.com/roothash-pay/theweb3-chain/labels/D-good-first-issue) or [`S-confirmed`](https://github.com/roothash-pay/theweb3-chain/labels/S-confirmed).
+- Larger projects are listed on [this project board](https://github.com/orgs/theweb3Chain-network/projects/31/views/9). Please talk to us if you're considering working on one of these, they may not be fully specified so it will reduce risk to discuss the approach and ensure that it's still relevant.
+- Help improve the [theweb3Chain Docs] by reporting issues or adding missing sections.
+- Get involved in the protocol design process by joining discussions within the [OP Stack Specs](https://github.com/theweb3Chain-network/specs/discussions) repository.
 
-[CpChain Docs]: https://github.com/cpchain-network/docs
+[theweb3Chain Docs]: https://github.com/theweb3Chain-network/docs
 
 ### Contributions Related to Spelling and Grammar
 
@@ -26,7 +26,7 @@ and may be aggregated into new Pull Requests without attribution.
 
 ## Code of Conduct
 
-Interactions within this repository are subject to a [Code of Conduct](https://github.com/cpchain-network/.github/blob/master/CODE_OF_CONDUCT.md) adapted from the [Contributor Covenant](https://www.contributor-covenant.org/version/1/4/code-of-conduct/).
+Interactions within this repository are subject to a [Code of Conduct](https://github.com/theweb3Chain-network/.github/blob/master/CODE_OF_CONDUCT.md) adapted from the [Contributor Covenant](https://www.contributor-covenant.org/version/1/4/code-of-conduct/).
 
 ## Development Quick Start
 
@@ -35,17 +35,17 @@ Interactions within this repository are subject to a [Code of Conduct](https://g
 Clone the repository and open it:
 
 ```bash
-git clone git@github.com:cpchain-network/cp-chain.git
-cd cp-chain
+git clone git@github.com:roothash-pay/theweb3-chain.git
+cd theweb3-chain
 ```
 
 ### Software Dependencies
 
 You will need to install a number of software dependencies to effectively contribute to the
-CpChain Monorepo. We use [`mise`](https://mise.jdx.dev/) as a dependency manager for these tools.
+theweb3Chain Monorepo. We use [`mise`](https://mise.jdx.dev/) as a dependency manager for these tools.
 Once properly installed, `mise` will provide the correct versions for each tool. `mise` does not
 replace any other installations of these binaries and will only serve these binaries when you are
-working inside of the `cp-chain` directory.
+working inside of the `theweb3-chain` directory.
 
 #### Install `mise`
 
@@ -77,7 +77,7 @@ the latest versions of the dependencies if you receive these notifications.
 ### Building the Monorepo
 
 You must install all of the required [Software Dependencies](#software-dependencies) to build the
-CpChain Monorepo. Once you've done so, run the following command to build:
+theweb3Chain Monorepo. Once you've done so, run the following command to build:
 
 ```bash
 make build
@@ -94,7 +94,7 @@ Before running tests: **follow the above instructions to get everything built**.
 #### Running unit tests (solidity)
 
 ```bash
-cd packages/contracts-cpchain
+cd packages/contracts-theweb3Chain
 just test
 ```
 
@@ -117,7 +117,7 @@ You must have Python 3.x installed to run `slither`.
 To run `slither` locally, do:
 
 ```bash
-cd packages/contracts-cpchain
+cd packages/contracts-theweb3Chain
 pip3 install slither-analyzer
 just slither
 ```
@@ -137,29 +137,29 @@ The following are a comprehensive list of label categories.
 Labels also provide a versatile filter for finding tickets that need help or are open for assignment.
 This makes them a great tool for contributors!
 
-[area]: https://github.com/cpchain-network/cp-chain/labels?q=a-
-[category]: https://github.com/cpchain-network/cp-chain/labels?q=c-
-[meta]: https://github.com/cpchain-network/cp-chain/labels?q=m-
-[difficulty]: https://github.com/cpchain-network/cp-chain/labels?q=d-
-[status]: https://github.com/cpchain-network/cp-chain/labels?q=s-
+[area]: https://github.com/roothash-pay/theweb3-chain/labels?q=a-
+[category]: https://github.com/roothash-pay/theweb3-chain/labels?q=c-
+[meta]: https://github.com/roothash-pay/theweb3-chain/labels?q=m-
+[difficulty]: https://github.com/roothash-pay/theweb3-chain/labels?q=d-
+[status]: https://github.com/roothash-pay/theweb3-chain/labels?q=s-
 
 ### Filtering for Work
 
-To find tickets available for external contribution, take a look at the https://github.com/cpchain-network/cp-chain/labels/M-community label.
+To find tickets available for external contribution, take a look at the https://github.com/roothash-pay/theweb3-chain/labels/M-community label.
 
-You can filter by the https://github.com/cpchain-network/cp-chain/labels/D-good-first-issue
+You can filter by the https://github.com/roothash-pay/theweb3-chain/labels/D-good-first-issue
 label to find issues that are intended to be easy to implement or fix.
 
 Also, all labels can be seen by visiting the [labels page][labels]
 
-[labels]: https://github.com/cpchain-network/cp-chain/labels
+[labels]: https://github.com/roothash-pay/theweb3-chain/labels
 
 ### Modifying Labels
 
 When altering label names or deleting labels there are a few things you must be aware of.
 
-- If the https://github.com/cpchain-network/cp-chain/labels/S-stale label is altered, the [close-stale](.github/workflows/close-stale.yml) workflow should be updated.
-- If the https://github.com/cpchain-network/cp-chain/labels/M-dependabot label is altered, the [dependabot config](.github/dependabot.yml) file should be adjusted.
+- If the https://github.com/roothash-pay/theweb3-chain/labels/S-stale label is altered, the [close-stale](.github/workflows/close-stale.yml) workflow should be updated.
+- If the https://github.com/roothash-pay/theweb3-chain/labels/M-dependabot label is altered, the [dependabot config](.github/dependabot.yml) file should be adjusted.
 - Saved label filters for project boards will not automatically update. These should be updated if label names change.
 
 ## Workflow for Pull Requests
@@ -168,7 +168,7 @@ When altering label names or deleting labels there are a few things you must be 
 
 In general, the smaller the diff the easier it will be for us to review quickly.
 
-In order to contribute, fork the appropriate branch, for non-breaking changes to production that is `develop` and for the next release that is normally `release/X.X.X` branch, see [details about our branching model](https://github.com/cpchain-network/cp-chain/blob/develop/README.md#branching-model-and-releases).
+In order to contribute, fork the appropriate branch, for non-breaking changes to production that is `develop` and for the next release that is normally `release/X.X.X` branch, see [details about our branching model](https://github.com/roothash-pay/theweb3-chain/blob/develop/README.md#branching-model-and-releases).
 
 Additionally, if you are writing a new feature, please ensure you add appropriate test cases.
 

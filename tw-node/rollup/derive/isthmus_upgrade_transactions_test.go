@@ -3,8 +3,8 @@ package derive
 import (
 	"testing"
 
-	"github.com/cpchain-network/cp-chain/cp-service/predeploys"
 	"github.com/ethereum/go-ethereum/common"
+	"github.com/roothash-pay/theweb3-chain/tw-service/predeploys"
 	"github.com/stretchr/testify/require"
 )
 

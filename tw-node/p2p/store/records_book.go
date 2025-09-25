@@ -8,11 +8,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/cpchain-network/cp-chain/cp-service/clock"
 	"github.com/ethereum/go-ethereum/log"
 	lru "github.com/hashicorp/golang-lru/v2"
 	ds "github.com/ipfs/go-datastore"
 	"github.com/ipfs/go-datastore/query"
+	"github.com/roothash-pay/theweb3-chain/tw-service/clock"
 )
 
 const (

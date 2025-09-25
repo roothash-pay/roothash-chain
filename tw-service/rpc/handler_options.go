@@ -6,7 +6,7 @@ import (
 	"github.com/ethereum/go-ethereum/log"
 	gethrpc "github.com/ethereum/go-ethereum/rpc"
 
-	opmetrics "github.com/cpchain-network/cp-chain/cp-service/metrics"
+	opmetrics "github.com/roothash-pay/theweb3-chain/tw-service/metrics"
 )
 
 type Option func(b *Handler)
@@ -68,7 +68,7 @@ func WithMiddleware(middleware func(http.Handler) (hdlr http.Handler)) Option {
 }
 
 // WithRPCRecorder adds an RPC recorder to the RPC handler stack.
-// See cp-service RPCMetricer to create a recorder that maintains RPC metrics.
+// See tw-service RPCMetricer to create a recorder that maintains RPC metrics.
 func WithRPCRecorder(recorder gethrpc.Recorder) Option {
 	return func(b *Handler) {
 		b.recorder = recorder

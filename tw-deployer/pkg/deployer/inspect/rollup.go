@@ -3,10 +3,10 @@ package inspect
 import (
 	"fmt"
 
-	"github.com/cpchain-network/cp-chain/cp-deployer/pkg/deployer/pipeline"
+	"github.com/roothash-pay/theweb3-chain/tw-deployer/pkg/deployer/pipeline"
 
-	"github.com/cpchain-network/cp-chain/cp-service/ioutil"
-	"github.com/cpchain-network/cp-chain/cp-service/jsonutil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/ioutil"
+	"github.com/roothash-pay/theweb3-chain/tw-service/jsonutil"
 	"github.com/urfave/cli/v2"
 )
 

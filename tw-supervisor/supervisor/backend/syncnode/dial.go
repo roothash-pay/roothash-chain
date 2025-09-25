@@ -9,9 +9,9 @@ import (
 	gn "github.com/ethereum/go-ethereum/node"
 	"github.com/ethereum/go-ethereum/rpc"
 
-	"github.com/cpchain-network/cp-chain/cp-service/client"
-	"github.com/cpchain-network/cp-chain/cp-service/eth"
-	opmetrics "github.com/cpchain-network/cp-chain/cp-service/metrics"
+	"github.com/roothash-pay/theweb3-chain/tw-service/client"
+	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	opmetrics "github.com/roothash-pay/theweb3-chain/tw-service/metrics"
 )
 
 type RPCDialSetup struct {

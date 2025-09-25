@@ -1,6 +1,6 @@
 package test
 
-import "github.com/cpchain-network/cp-chain/cp-node/rollup"
+import "github.com/roothash-pay/theweb3-chain/tw-node/rollup"
 
 // ChainSpec wraps a *rollup.ChainSpec, allowing to optionally override individual values,
 // otherwise just returning the underlying ChainSpec's values.

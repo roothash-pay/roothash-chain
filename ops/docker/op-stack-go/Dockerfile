@@ -85,10 +85,10 @@ COPY --from=cannon-builder-v1-3-0 /usr/local/bin/cannon-4 ./cannon/multicannon/e
 RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build cd cannon && make cannon  \
   GOOS=$TARGETOS GOARCH=$TARGETARCH GITCOMMIT=$GIT_COMMIT GITDATE=$GIT_DATE VERSION="$CANNON_VERSION"
 
-FROM --platform=$BUILDPLATFORM builder AS cp-program-builder
+FROM --platform=$BUILDPLATFORM builder AS tw-program-builder
 ARG OP_PROGRAM_VERSION=v0.0.0
 # note: we only build the host, that's all the user needs. No Go MIPS cross-build in docker
-RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build cd cp-program && make cp-program-host  \
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build cd tw-program && make tw-program-host  \
   GOOS=$TARGETOS GOARCH=$TARGETARCH GITCOMMIT=$GIT_COMMIT GITDATE=$GIT_DATE VERSION="$OP_PROGRAM_VERSION"
 
 FROM --platform=$BUILDPLATFORM builder AS op-wheel-builder
@@ -96,9 +96,9 @@ ARG OP_WHEEL_VERSION=v0.0.0
 RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build cd op-wheel && make op-wheel  \
   GOOS=$TARGETOS GOARCH=$TARGETARCH GITCOMMIT=$GIT_COMMIT GITDATE=$GIT_DATE  VERSION="$OP_WHEEL_VERSION"
 
-FROM --platform=$BUILDPLATFORM builder AS cp-node-builder
+FROM --platform=$BUILDPLATFORM builder AS tw-node-builder
 ARG OP_NODE_VERSION=v0.0.0
-RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build cd cp-node && make cp-node  \
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build cd tw-node && make tw-node  \
   GOOS=$TARGETOS GOARCH=$TARGETARCH GITCOMMIT=$GIT_COMMIT GITDATE=$GIT_DATE VERSION="$OP_NODE_VERSION"
 
 FROM --platform=$BUILDPLATFORM builder AS op-challenger-builder
@@ -130,14 +130,14 @@ FROM --platform=$BUILDPLATFORM builder AS da-server-builder
 RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build cd op-alt-da && make da-server  \
   GOOS=$TARGETOS GOARCH=$TARGETARCH GITCOMMIT=$GIT_COMMIT GITDATE=$GIT_DATE
 
-FROM --platform=$BUILDPLATFORM builder AS cp-supervisor-builder
+FROM --platform=$BUILDPLATFORM builder AS tw-supervisor-builder
 ARG OP_SUPERVISOR_VERSION=v0.0.0
-RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build cd cp-supervisor && make cp-supervisor  \
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build cd tw-supervisor && make tw-supervisor  \
   GOOS=$TARGETOS GOARCH=$TARGETARCH GITCOMMIT=$GIT_COMMIT GITDATE=$GIT_DATE  VERSION="$OP_SUPERVISOR_VERSION"
 
-FROM --platform=$BUILDPLATFORM builder AS cp-deployer-builder
+FROM --platform=$BUILDPLATFORM builder AS tw-deployer-builder
 ARG OP_NODE_VERSION=v0.0.0
-RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build cd op-chain-ops && make cp-deployer  \
+RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build cd op-chain-ops && make tw-deployer  \
   GOOS=$TARGETOS GOARCH=$TARGETARCH GITCOMMIT=$GIT_COMMIT GITDATE=$GIT_DATE VERSION="$OP_DEPLOYER_VERSION"
 
 FROM --platform=$BUILDPLATFORM builder AS op-dripper-builder
@@ -150,17 +150,17 @@ COPY --from=cannon-builder /app/cannon/bin/cannon /usr/local/bin/
 COPY --from=cannon-builder /app/cannon/multicannon/embeds/* /usr/local/bin/
 CMD ["cannon"]
 
-FROM $TARGET_BASE_IMAGE AS cp-program-target
-COPY --from=cp-program-builder /app/cp-program/bin/cp-program /usr/local/bin/
-CMD ["cp-program"]
+FROM $TARGET_BASE_IMAGE AS tw-program-target
+COPY --from=tw-program-builder /app/tw-program/bin/tw-program /usr/local/bin/
+CMD ["tw-program"]
 
 FROM $TARGET_BASE_IMAGE AS op-wheel-target
 COPY --from=op-wheel-builder /app/op-wheel/bin/op-wheel /usr/local/bin/
 CMD ["op-wheel"]
 
-FROM $TARGET_BASE_IMAGE AS cp-node-target
-COPY --from=cp-node-builder /app/cp-node/bin/cp-node /usr/local/bin/
-CMD ["cp-node"]
+FROM $TARGET_BASE_IMAGE AS tw-node-target
+COPY --from=tw-node-builder /app/tw-node/bin/tw-node /usr/local/bin/
+CMD ["tw-node"]
 
 # Make the kona docker image published by upstream available as a source to copy kona from.
 FROM ghcr.io/op-rs/kona/kona-host:$KONA_VERSION AS kona
@@ -171,9 +171,9 @@ FROM us-docker.pkg.dev/oplabs-tools-artifacts/images/asterisc:$ASTERISC_VERSION 
 FROM $UBUNTU_TARGET_BASE_IMAGE AS op-challenger-target
 RUN apt-get update && apt-get install -y --no-install-recommends musl openssl ca-certificates
 COPY --from=op-challenger-builder /app/op-challenger/bin/op-challenger /usr/local/bin/
-# Copy in cp-program and cannon
-COPY --from=cp-program-builder /app/cp-program/bin/cp-program /usr/local/bin/
-ENV OP_CHALLENGER_CANNON_SERVER=/usr/local/bin/cp-program
+# Copy in tw-program and cannon
+COPY --from=tw-program-builder /app/tw-program/bin/tw-program /usr/local/bin/
+ENV OP_CHALLENGER_CANNON_SERVER=/usr/local/bin/tw-program
 COPY --from=cannon-builder /app/cannon/bin/cannon /usr/local/bin/
 ENV OP_CHALLENGER_CANNON_BIN=/usr/local/bin/cannon
 # Copy in kona and asterisc
@@ -203,13 +203,13 @@ FROM $TARGET_BASE_IMAGE AS da-server-target
 COPY --from=da-server-builder /app/op-alt-da/bin/da-server /usr/local/bin/
 CMD ["da-server"]
 
-FROM $TARGET_BASE_IMAGE AS cp-supervisor-target
-COPY --from=cp-supervisor-builder /app/cp-supervisor/bin/cp-supervisor /usr/local/bin/
-CMD ["cp-supervisor"]
+FROM $TARGET_BASE_IMAGE AS tw-supervisor-target
+COPY --from=tw-supervisor-builder /app/tw-supervisor/bin/tw-supervisor /usr/local/bin/
+CMD ["tw-supervisor"]
 
-FROM $TARGET_BASE_IMAGE AS cp-deployer-target
-COPY --from=cp-deployer-builder /app/op-chain-ops/bin/cp-deployer /usr/local/bin/
-CMD ["cp-deployer"]
+FROM $TARGET_BASE_IMAGE AS tw-deployer-target
+COPY --from=tw-deployer-builder /app/op-chain-ops/bin/tw-deployer /usr/local/bin/
+CMD ["tw-deployer"]
 
 FROM $TARGET_BASE_IMAGE AS op-dripper-target
 COPY --from=op-dripper-builder /app/op-dripper/bin/op-dripper /usr/local/bin/

@@ -4,10 +4,10 @@ import (
 	"context"
 	"sync"
 
-	"github.com/cpchain-network/cp-chain/common/script"
-	"github.com/cpchain-network/cp-chain/cp-service/txmgr"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
+	"github.com/roothash-pay/theweb3-chain/common/script"
+	"github.com/roothash-pay/theweb3-chain/tw-service/txmgr"
 )
 
 const defaultGasLimit = 30_000_000
