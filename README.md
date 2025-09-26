@@ -1,9 +1,9 @@
 <div align="center">
   <br />
   <br />
-  <a href="https://theweb3Chain.com"><img alt="theweb3Chain" src="./docs/assets/theweb3Chain.svg" width=600></a>
+  <a href="https://theweb3Chain.com"><img alt="The Web3 Chain" src="./docs/assets/theweb3Chain.svg" width=600></a>
   <br />
-  <h3><a href="https://theweb3Chain.com">theweb3Chain</a> is Ethereum, scaled.</h3>
+  <h3><a href="https://theweb3Chain.com">The Web3 Chain</a> is Ethereum, scaled.</h3>
   <br />
 </div>
 
