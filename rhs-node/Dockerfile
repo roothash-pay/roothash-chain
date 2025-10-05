@@ -6,10 +6,10 @@ RUN apk add --no-cache make gcc musl-dev linux-headers git jq bash
 
 # build op-node with the shared go.mod & go.sum files
 COPY ./rhs-node /app/rhs-node
-COPY ./tw-service /app/tw-service
+COPY ./rhs-service /app/rhs-service
 COPY ./common /app/common
-COPY ./tw-supervisor /app/tw-supervisor
-COPY ./tw-deployer /app/tw-deployer
+COPY ./rhs-supervisor /app/rhs-supervisor
+COPY ./rhs-deployer /app/rhs-deployer
 
 COPY ./go.mod /app/go.mod
 COPY ./go.sum /app/go.sum
