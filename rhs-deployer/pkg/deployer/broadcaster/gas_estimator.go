@@ -22,7 +22,7 @@ var (
 	minTip = big.NewInt(1 * 1e9)
 )
 
-// DeployerGasPriceEstimator is a custom gas price estimator for use with tw-deployer.
+// DeployerGasPriceEstimator is a custom gas price estimator for use with rhs-deployer.
 // It pads the base fee by 50% and multiplies the suggested tip by 5 up to a max of
 // 50 gwei.
 func DeployerGasPriceEstimator(ctx context.Context, client txmgr.ETHBackend) (*big.Int, *big.Int, *big.Int, error) {

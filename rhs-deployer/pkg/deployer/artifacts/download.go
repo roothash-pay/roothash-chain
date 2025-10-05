@@ -81,7 +81,7 @@ func downloadHTTP(ctx context.Context, u *url.URL, progressor DownloadProgressor
 	if err != nil {
 		return nil, fmt.Errorf("failed to download artifacts: %w", err)
 	}
-	tmpDir, err := os.MkdirTemp(targetDir, "tw-deployer-artifacts-*")
+	tmpDir, err := os.MkdirTemp(targetDir, "rhs-deployer-artifacts-*")
 	if err != nil {
 		return nil, fmt.Errorf("failed to create temp dir: %w", err)
 	}
@@ -114,7 +114,7 @@ func (d *HTTPDownloader) Download(ctx context.Context, url string, progress Down
 	if err := os.MkdirAll(targetDir, 0755); err != nil {
 		return "", fmt.Errorf("failed to ensure cache directory '%s': %w", targetDir, err)
 	}
-	tmpFile, err := os.CreateTemp(targetDir, "tw-deployer-artifacts-*")
+	tmpFile, err := os.CreateTemp(targetDir, "rhs-deployer-artifacts-*")
 	if err != nil {
 		return "", fmt.Errorf("failed to create temporary file: %w", err)
 	}

@@ -44,7 +44,7 @@ func main() {
 		os.Exit(2)
 	}
 
-	// Apply the custom configs by running tw-program
+	// Apply the custom configs by running rhs-program
 	runner, err := verify.NewRunner(l1RpcUrl, l1RpcKind, l1BeaconUrl, l2RpcUrl, dataDir, "901", eth.ChainIDFromUInt64(901), false)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "Failed to create runner: %v\n", err.Error())

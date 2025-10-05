@@ -69,7 +69,7 @@ func InitCLI() func(ctx *cli.Context) error {
 			return err
 		}
 
-		fmt.Printf("Successfully initialized tw-deployer intent in directory: %s\n", outdir)
+		fmt.Printf("Successfully initialized rhs-deployer intent in directory: %s\n", outdir)
 		return nil
 	}
 }

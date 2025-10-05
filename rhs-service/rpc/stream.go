@@ -84,7 +84,7 @@ func StreamFallback[E any](fn func(ctx context.Context) (*E, error), frequency t
 // Subscriber implements the subscribe subset of the RPC client interfaces.
 // The inner geth-native Subscribe interfaces returns a struct subscription type,
 // this can be interpreted as general ethereum.Subscription but may require a wrapper,
-// like in the tw-service client package.
+// like in the rhs-service client package.
 type Subscriber interface {
 	Subscribe(ctx context.Context, namespace string, channel any, args ...any) (ethereum.Subscription, error)
 }

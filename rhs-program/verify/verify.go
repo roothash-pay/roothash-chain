@@ -192,7 +192,7 @@ func (r *Runner) run(ctx context.Context, l1Head common.Hash, agreedBlockInfo et
 	args := []string{
 		"--log.level", "DEBUG",
 		"--network", r.network,
-		"--exec", "./bin/tw-program-client",
+		"--exec", "./bin/rhs-program-client",
 		"--datadir", r.dataDir,
 		"--l1.head", l1Head.Hex(),
 		"--l2.head", agreedBlockInfo.Hash().Hex(),
@@ -260,7 +260,7 @@ func (r *Runner) run(ctx context.Context, l1Head common.Hash, agreedBlockInfo et
 func runFaultProofProgram(ctx context.Context, args []string) error {
 	ctx, cancel := context.WithTimeout(ctx, 3*time.Hour)
 	defer cancel()
-	cmd := exec.CommandContext(ctx, "./bin/tw-program", args...)
+	cmd := exec.CommandContext(ctx, "./bin/rhs-program", args...)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	return cmd.Run()

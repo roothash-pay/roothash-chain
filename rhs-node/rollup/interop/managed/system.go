@@ -35,7 +35,7 @@ type L1Source interface {
 	L1BlockRefByHash(ctx context.Context, hash common.Hash) (eth.L1BlockRef, error)
 }
 
-// ManagedMode makes the rhs-node managed by an tw-supervisor,
+// ManagedMode makes the rhs-node managed by an rhs-supervisor,
 // by serving sync work and updating the canonical chain based on instructions.
 type ManagedMode struct {
 	log log.Logger

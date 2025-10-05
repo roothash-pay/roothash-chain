@@ -63,7 +63,7 @@ Bounty hunters are encouraged to check out the [roothashChain Immunefi bug bount
 ├── <a href="./docs">docs</a>: A collection of documents including audits and post-mortems
 ├── <a href="./roothash-chain-ops">roothash-chain-ops</a>: State surgery utilities
 ├── <a href="./rhs-node">rhs-node</a>: consensus-layer of roothashChain
-├── <a href="./tw-service">tw-service</a>: Common codebase utilities
+├── <a href="./rhs-service">rhs-service</a>: Common codebase utilities
 ├── <a href="./ops">ops</a>: Various operational packages
 ├── <a href="./packages">packages</a>
 │   ├── <a href="./packages/contracts-roothashChain">contracts-roothashChain</a>: roothashChain smart contracts

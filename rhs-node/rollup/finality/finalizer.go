@@ -194,7 +194,7 @@ func (fi *Finalizer) onDerivedSafeBlock(l2Safe eth.L2BlockRef) {
 
 	// Stop registering blocks after interop.
 	// Finality in interop is determined by the superchain backend,
-	// i.e. the tw-supervisor RPC identifies which core block may be finalized.
+	// i.e. the rhs-supervisor RPC identifies which core block may be finalized.
 	if fi.cfg.IsInterop(l2Safe.Time) {
 		return
 	}

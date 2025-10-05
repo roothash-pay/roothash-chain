@@ -84,7 +84,7 @@ type Stage func(ctx context.Context, env *Env, bundle ArtifactsBundle, intent *s
 
 func RenderGenesisAndRollup(globalState *state.State, chainID common.Hash, useGlobalIntent *state.Intent) (*core.Genesis, *rollup.Config, error) {
 	if useGlobalIntent == nil && globalState.AppliedIntent == nil {
-		return nil, nil, fmt.Errorf("chain state is not applied - run tw-deployer apply")
+		return nil, nil, fmt.Errorf("chain state is not applied - run rhs-deployer apply")
 	}
 
 	globalIntent := useGlobalIntent

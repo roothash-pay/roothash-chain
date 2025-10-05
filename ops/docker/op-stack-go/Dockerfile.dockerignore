@@ -6,7 +6,7 @@
 !/devnet-sdk
 !/op-batcher
 !/op-chain-ops
-!/tw-deployer
+!/rhs-deployer
 !/op-dripper
 !/op-challenger
 !/packages/contracts-bedrock/snapshots
@@ -14,10 +14,10 @@
 !/op-conductor
 !/rhs-node
 !/op-preimage
-!/tw-program
+!/rhs-program
 !/op-proposer
-!/tw-service
-!/tw-supervisor
+!/rhs-service
+!/rhs-supervisor
 !/op-wheel
 !/op-alt-da
 !/go.mod

@@ -10,7 +10,7 @@ help: ## Prints this help message
 build: build-go build-contracts ## Builds Go components and contracts-theweb3Chain
 .PHONY: build
 
-build-go: submodules rhs-node rhs-deployer## Builds rhs-node and tw-deployer
+build-go: submodules rhs-node rhs-deployer## Builds rhs-node and rhs-deployer
 .PHONY: build-go
 
 build-contracts:
@@ -19,7 +19,7 @@ build-contracts:
 
 lint-go: ## Lints Go code with specific linters
 	golangci-lint run -E goimports,sqlclosecheck,bodyclose,asciicheck,misspell,errorlint --timeout 5m -e "errors.As" -e "errors.Is" ./...
-	golangci-lint run -E err113 --timeout 5m -e "errors.As" -e "errors.Is" ./tw-program/client/...
+	golangci-lint run -E err113 --timeout 5m -e "errors.As" -e "errors.Is" ./rhs-program/client/...
 .PHONY: lint-go
 
 lint-go-fix: ## Lints Go code with specific linters and fixes reported issues
@@ -35,7 +35,7 @@ golang-docker: ## Builds Docker images for Go components using buildx
 			--progress plain \
 			--load \
 			-f docker-bake.hcl \
-			rhs-node tw-supervisor
+			rhs-node rhs-supervisor
 .PHONY: golang-docker
 
 docker-builder-clean: ## Removes the Docker buildx builder
@@ -96,20 +96,20 @@ generate-mocks-rhs-node: ## Generates mocks for rhs-node
 	make -C ./rhs-node generate-mocks
 .PHONY: generate-mocks-rhs-node
 
-generate-mocks-tw-service: ## Generates mocks for tw-service
-	make -C ./tw-service generate-mocks
-.PHONY: generate-mocks-tw-service
+generate-mocks-rhs-service: ## Generates mocks for rhs-service
+	make -C ./rhs-service generate-mocks
+.PHONY: generate-mocks-rhs-service
 
-rhs-deployer: ## Builds tw-deployer binary
+rhs-deployer: ## Builds rhs-deployer binary
 	just $(JUSTFLAGS) ./rhs-deployer/build
 .PHONY: rhs-deployer
 
-tw-program: ## Builds tw-program binary
-	make -C ./tw-program tw-program
-.PHONY: tw-program
+rhs-program: ## Builds rhs-program binary
+	make -C ./rhs-program rhs-program
+.PHONY: rhs-program
 
 reproducible-prestate:   ## Builds reproducible-prestate binary
-	make -C ./tw-program reproducible-prestate
+	make -C ./rhs-program reproducible-prestate
 .PHONY: reproducible-prestate
 
 mod-tidy: ## Cleans up unused dependencies in Go modules

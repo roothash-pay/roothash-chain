@@ -40,7 +40,7 @@ func GenesisCLI(cliCtx *cli.Context) error {
 
 func GenesisAndRollup(globalState *state.State, chainID common.Hash) (*core.Genesis, *rollup.Config, error) {
 	if globalState.AppliedIntent == nil {
-		return nil, nil, fmt.Errorf("chain state is not applied - run tw-deployer apply")
+		return nil, nil, fmt.Errorf("chain state is not applied - run rhs-deployer apply")
 	}
 
 	chainIntent, err := globalState.AppliedIntent.Chain(chainID)

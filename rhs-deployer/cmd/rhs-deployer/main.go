@@ -30,7 +30,7 @@ var VersionWithMeta = opservice.FormatVersion(version.Version, GitCommit, GitDat
 func main() {
 	app := cli.NewApp()
 	app.Version = VersionWithMeta
-	app.Name = "tw-deployer"
+	app.Name = "rhs-deployer"
 	app.Usage = "Tool to configure and deploy OP Chains."
 	app.Flags = cliapp.ProtectFlags(deployer.GlobalFlags)
 	app.Commands = []*cli.Command{

@@ -42,7 +42,7 @@ func run(args []string, action ConfigAction) error {
 	app := cli.NewApp()
 	app.Version = VersionWithMeta
 	app.Flags = flags.Flags
-	app.Name = "tw-program"
+	app.Name = "rhs-program"
 	app.Usage = "Optimism Fault Proof Program"
 	app.Description = "The Optimism Fault Proof Program fault proof program that runs through the rollup state-transition to verify an core output from L1 inputs."
 	app.Commands = []*cli.Command{

@@ -47,7 +47,7 @@ var (
 	}
 	DataDirSyncEndpointFlag = &cli.PathFlag{
 		Name:    "datadir.sync-endpoint",
-		Usage:   "tw-supervisor endpoint to sync databases from",
+		Usage:   "rhs-supervisor endpoint to sync databases from",
 		EnvVars: prefixEnvVars("DATADIR_SYNC_ENDPOINT"),
 	}
 	DependencySetFlag = &cli.PathFlag{

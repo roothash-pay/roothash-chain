@@ -41,8 +41,8 @@ func TestCacheCLIE2E(t *testing.T) {
 
 	require.NoError(t, os.WriteFile(filepath.Join(tmpDirForCache, "test.txt"), []byte("test"), 0644))
 
-	binaryPath := filepath.Join(tmpDirForBinary, "tw-deployer")
-	cmd := exec.Command("go", "build", "-o", binaryPath, "../../../cmd/tw-deployer/main.go")
+	binaryPath := filepath.Join(tmpDirForBinary, "rhs-deployer")
+	cmd := exec.Command("go", "build", "-o", binaryPath, "../../../cmd/rhs-deployer/main.go")
 	output, err := cmd.CombinedOutput()
 	require.NoError(t, err, "Failed to build binary: %s", output)
 

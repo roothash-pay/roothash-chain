@@ -3,7 +3,7 @@
 
 version: 2
 
-project_name: tw-deployer
+project_name: rhs-deployer
 
 before:
   hooks:
@@ -12,8 +12,8 @@ before:
 
 builds:
   - id: main
-    main: ./cmd/tw-deployer
-    binary: tw-deployer
+    main: ./cmd/rhs-deployer
+    binary: rhs-deployer
     env:
       - CGO_ENABLED=0
     goos:
@@ -51,13 +51,13 @@ dockers:
     goarch: amd64
     dockerfile: Dockerfile.default
     image_templates:
-      - "us-docker.pkg.dev/oplabs-tools-artifacts/images/tw-deployer:{{ .Tag }}"
+      - "us-docker.pkg.dev/oplabs-tools-artifacts/images/rhs-deployer:{{ .Tag }}"
   - id: minimal
     goos: linux
     goarch: amd64
     dockerfile: Dockerfile.minimal
     image_templates:
-      - "us-docker.pkg.dev/oplabs-tools-artifacts/images/tw-deployer:{{ .Tag }}-minimal"
+      - "us-docker.pkg.dev/oplabs-tools-artifacts/images/rhs-deployer:{{ .Tag }}-minimal"
 
 changelog:
   sort: asc
@@ -73,5 +73,5 @@ release:
   make_latest: false
 
 monorepo:
-  tag_prefix: tw-deployer/
-  dir: tw-deployer
+  tag_prefix: rhs-deployer/
+  dir: rhs-deployer

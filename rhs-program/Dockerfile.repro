@@ -30,8 +30,8 @@ ARG TARGETOS TARGETARCH
 
 WORKDIR /app
 RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache/go-build just \
-        -d /app/tw-program \
-        -f /app/tw-program/repro.justfile \
+        -d /app/rhs-program \
+        -f /app/rhs-program/repro.justfile \
         GOOS="$TARGETOS" \
         GOARCH="$TARGETARCH" \
         GIT_COMMIT="$GIT_COMMIT" \
@@ -44,14 +44,14 @@ RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache
 # Writing files to host requires buildkit to be enabled.
 # e.g. `BUILDKIT=1 docker build ...`
 FROM scratch AS export-stage
-COPY --from=builder /app/tw-program/bin/tw-program-client.elf .
-COPY --from=builder /app/tw-program/bin/tw-program-client64.elf .
-COPY --from=builder /app/tw-program/bin/meta.json .
-COPY --from=builder /app/tw-program/bin/prestate.bin.gz .
-COPY --from=builder /app/tw-program/bin/prestate-proof.json .
-COPY --from=builder /app/tw-program/bin/meta-mt64.json .
-COPY --from=builder /app/tw-program/bin/prestate-mt64.bin.gz .
-COPY --from=builder /app/tw-program/bin/prestate-proof-mt64.json .
-COPY --from=builder /app/tw-program/bin/meta-interop.json .
-COPY --from=builder /app/tw-program/bin/prestate-interop.bin.gz .
-COPY --from=builder /app/tw-program/bin/prestate-proof-interop.json .
+COPY --from=builder /app/rhs-program/bin/rhs-program-client.elf .
+COPY --from=builder /app/rhs-program/bin/rhs-program-client64.elf .
+COPY --from=builder /app/rhs-program/bin/meta.json .
+COPY --from=builder /app/rhs-program/bin/prestate.bin.gz .
+COPY --from=builder /app/rhs-program/bin/prestate-proof.json .
+COPY --from=builder /app/rhs-program/bin/meta-mt64.json .
+COPY --from=builder /app/rhs-program/bin/prestate-mt64.bin.gz .
+COPY --from=builder /app/rhs-program/bin/prestate-proof-mt64.json .
+COPY --from=builder /app/rhs-program/bin/meta-interop.json .
+COPY --from=builder /app/rhs-program/bin/prestate-interop.bin.gz .
+COPY --from=builder /app/rhs-program/bin/prestate-proof-interop.json .

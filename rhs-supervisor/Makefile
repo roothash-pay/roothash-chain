@@ -1,3 +1,3 @@
-DEPRECATED_TARGETS := tw-supervisor clean test
+DEPRECATED_TARGETS := rhs-supervisor clean test
 
 include ../justfiles/deprecated.mk

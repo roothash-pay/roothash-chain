@@ -496,7 +496,7 @@ func configForArgs(t *testing.T, cliArgs []string) *config.Config {
 func runWithArgs(cliArgs []string) (log.Logger, *config.Config, error) {
 	cfg := new(config.Config)
 	var logger log.Logger
-	fullArgs := append([]string{"tw-program"}, cliArgs...)
+	fullArgs := append([]string{"rhs-program"}, cliArgs...)
 	err := run(fullArgs, func(log log.Logger, config *config.Config) error {
 		logger = log
 		cfg = config

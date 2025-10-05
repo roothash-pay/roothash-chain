@@ -108,7 +108,7 @@ var (
 		Name:     "rpc.port",
 		Usage:    "RPC listening port",
 		EnvVars:  prefixEnvVars("RPC_PORT"),
-		Value:    9545, // Note: tw-service/rpc/cli.go uses 8545 as the default.
+		Value:    9545, // Note: rhs-service/rpc/cli.go uses 8545 as the default.
 		Category: OperationsCategory,
 	}
 	RPCEnableAdmin = &cli.BoolFlag{
@@ -362,7 +362,7 @@ var (
 		Usage: "Interop RPC listening port, to serve supervisor syncing." +
 			"Applies only to Interop-enabled networks.",
 		EnvVars:  prefixEnvVars("INTEROP_RPC_PORT"),
-		Value:    9645, // Note: tw-service/rpc/cli.go uses 8545 as the default.
+		Value:    9645, // Note: rhs-service/rpc/cli.go uses 8545 as the default.
 		Category: InteropCategory,
 	}
 	InteropJWTSecret = &cli.StringFlag{

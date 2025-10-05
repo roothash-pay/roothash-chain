@@ -328,8 +328,8 @@ type SyncDeriver struct {
 
 	Drain func() error
 
-	// When in interop, and managed by an tw-supervisor,
-	// the node performs a reset based on the instructions of the tw-supervisor.
+	// When in interop, and managed by an rhs-supervisor,
+	// the node performs a reset based on the instructions of the rhs-supervisor.
 	ManagedMode bool
 }
 
@@ -409,7 +409,7 @@ func (s *SyncDeriver) onEngineConfirmedReset(x engine.EngineResetConfirmedEvent)
 
 func (s *SyncDeriver) onResetEvent(x rollup.ResetEvent) {
 	if s.ManagedMode {
-		s.Log.Warn("Encountered reset in Managed Mode, waiting for tw-supervisor", "err", x.Err)
+		s.Log.Warn("Encountered reset in Managed Mode, waiting for rhs-supervisor", "err", x.Err)
 		// ManagedMode will pick up the ResetEvent
 		return
 	}

@@ -56,11 +56,11 @@ func NewDeploymentTarget(s string) (DeploymentTarget, error) {
 func GetDefaultCacheDir() string {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
-		fallbackDir := ".tw-deployer/cache"
+		fallbackDir := ".rhs-deployer/cache"
 		log.Printf("error getting user home directory: %v, using fallback directory: %s\n", err, fallbackDir)
 		return fallbackDir
 	}
-	return path.Join(homeDir, ".tw-deployer/cache")
+	return path.Join(homeDir, ".rhs-deployer/cache")
 }
 
 var (
@@ -116,7 +116,7 @@ var (
 		Value:   string(DeploymentTargetLive),
 	}
 	OpProgramSvcUrlFlag = &cli.StringFlag{
-		Name:    "tw-program-svc-url",
+		Name:    "rhs-program-svc-url",
 		Usage:   "URL of the OP Program SVC",
 		EnvVars: PrefixEnvVar("OP_PROGRAM_SVC_URL"),
 	}

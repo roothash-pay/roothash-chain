@@ -7,9 +7,9 @@
 !op-alt-da/
 !rhs-node/
 !op-preimage/
-!tw-program/
-!tw-service/
-!tw-supervisor/
+!rhs-program/
+!rhs-service/
+!rhs-supervisor/
 
 **/bin
 **/testdata

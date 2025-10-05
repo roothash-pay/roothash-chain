@@ -39,9 +39,9 @@ func run(ctx context.Context, args []string, fn supervisor.MainFn) error {
 	app := cli.NewApp()
 	app.Flags = cliapp.ProtectFlags(flags.Flags)
 	app.Version = opservice.FormatVersion(Version, GitCommit, GitDate, "")
-	app.Name = "tw-supervisor"
-	app.Usage = "tw-supervisor monitors cross-core interop messaging"
-	app.Description = "The tw-supervisor monitors cross-core interop messaging by pre-fetching events and then resolving the cross-core dependencies to answer safety queries."
+	app.Name = "rhs-supervisor"
+	app.Usage = "rhs-supervisor monitors cross-core interop messaging"
+	app.Description = "The rhs-supervisor monitors cross-core interop messaging by pre-fetching events and then resolving the cross-core dependencies to answer safety queries."
 	app.Action = cliapp.LifecycleCmd(supervisor.Main(app.Version, fn))
 	app.Commands = []*cli.Command{
 		{

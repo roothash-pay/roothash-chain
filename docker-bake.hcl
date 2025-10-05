@@ -178,7 +178,7 @@ target "da-server" {
   tags = [for tag in split(",", IMAGE_TAGS) : "${REGISTRY}/${REPOSITORY}/da-server:${tag}"]
 }
 
-target "tw-program" {
+target "rhs-program" {
   dockerfile = "ops/docker/op-stack-go/Dockerfile"
   context = "."
   args = {
@@ -186,12 +186,12 @@ target "tw-program" {
     GIT_DATE = "${GIT_DATE}"
     OP_PROGRAM_VERSION = "${OP_PROGRAM_VERSION}"
   }
-  target = "tw-program-target"
+  target = "rhs-program-target"
   platforms = split(",", PLATFORMS)
-  tags = [for tag in split(",", IMAGE_TAGS) : "${REGISTRY}/${REPOSITORY}/tw-program:${tag}"]
+  tags = [for tag in split(",", IMAGE_TAGS) : "${REGISTRY}/${REPOSITORY}/rhs-program:${tag}"]
 }
 
-target "tw-supervisor" {
+target "rhs-supervisor" {
   dockerfile = "ops/docker/op-stack-go/Dockerfile"
   context = "."
   args = {
@@ -199,9 +199,9 @@ target "tw-supervisor" {
     GIT_DATE = "${GIT_DATE}"
     OP_SUPERVISOR_VERSION = "${OP_SUPERVISOR_VERSION}"
   }
-  target = "tw-supervisor-target"
+  target = "rhs-supervisor-target"
   platforms = split(",", PLATFORMS)
-  tags = [for tag in split(",", IMAGE_TAGS) : "${REGISTRY}/${REPOSITORY}/tw-supervisor:${tag}"]
+  tags = [for tag in split(",", IMAGE_TAGS) : "${REGISTRY}/${REPOSITORY}/rhs-supervisor:${tag}"]
 }
 
 target "cannon" {
@@ -228,7 +228,7 @@ target "holocene-deployer" {
   tags = [for tag in split(",", IMAGE_TAGS) : "${REGISTRY}/${REPOSITORY}/holocene-deployer:${tag}"]
 }
 
-target "tw-deployer" {
+target "rhs-deployer" {
   dockerfile = "ops/docker/op-stack-go/Dockerfile"
   context = "."
   args = {
@@ -236,9 +236,9 @@ target "tw-deployer" {
     GIT_DATE = "${GIT_DATE}"
     OP_DEPLOYER_VERSION = "${OP_DEPLOYER_VERSION}"
   }
-  target = "tw-deployer-target"
+  target = "rhs-deployer-target"
   platforms = split(",", PLATFORMS)
-  tags = [for tag in split(",", IMAGE_TAGS) : "${REGISTRY}/${REPOSITORY}/tw-deployer:${tag}"]
+  tags = [for tag in split(",", IMAGE_TAGS) : "${REGISTRY}/${REPOSITORY}/rhs-deployer:${tag}"]
 }
 
 target "op-dripper" {

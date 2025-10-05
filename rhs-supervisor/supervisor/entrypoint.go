@@ -18,7 +18,7 @@ import (
 type MainFn func(ctx context.Context, cfg *config.Config, logger log.Logger) (cliapp.Lifecycle, error)
 
 // Main is the entrypoint into the Supervisor.
-// This method returns a cliapp.LifecycleAction, to create an tw-service CLI-lifecycle-managed supervisor with.
+// This method returns a cliapp.LifecycleAction, to create an rhs-service CLI-lifecycle-managed supervisor with.
 func Main(version string, fn MainFn) cliapp.LifecycleAction {
 	return func(cliCtx *cli.Context, closeApp context.CancelCauseFunc) (cliapp.Lifecycle, error) {
 		if err := flags.CheckRequired(cliCtx); err != nil {

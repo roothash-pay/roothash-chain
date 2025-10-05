@@ -149,17 +149,17 @@ messages between chains form safety dependencies, and verified asynchronously.
 Asynchronous verification entails that the rhs-node reorgs away a block
 if and when the block is determined to be invalid.
 
-The [tw-supervisor] specializes in this dependency verification work.
+The [rhs-supervisor] specializes in this dependency verification work.
 
 The rhs-node encapsulates all the single-chain concerns:
-it prepares the local safety data-points (DA confirmation and block contents) for the tw-supervisor.
+it prepares the local safety data-points (DA confirmation and block contents) for the rhs-supervisor.
 
-The tw-supervisor then verifies the cross-chain safety, and promotes the block safety level accordingly,
+The rhs-supervisor then verifies the cross-chain safety, and promotes the block safety level accordingly,
 which the rhs-node then follows.
 
 See [Interop specs] and [Interop design-docs] for more information about interoperability.
 
-[tw-supervisor]: ../tw-supervisor/README.md
+[rhs-supervisor]: ../rhs-supervisor/README.md
 
 ### User stories
 
@@ -177,7 +177,7 @@ As _a proof dev_ I want _reusable state-transition code_ so that I _don't reimpl
 
 - Encapsulate the state-transition:
   - Use interfaces to abstract file-IO / concurrency / etc. away from state-transition logic.
-  - Ensure code-sharing with action-tests and tw-program.
+  - Ensure code-sharing with action-tests and rhs-program.
 - No critical database:
   - Persisting data is ok, but it should be recoverable from external data without too much work.
   - The best chain "sync" is no sync.

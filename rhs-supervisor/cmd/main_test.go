@@ -95,7 +95,7 @@ func configForArgs(t *testing.T, cliArgs []string) *config.Config {
 func dryRunWithArgs(cliArgs []string) (log.Logger, *config.Config, error) {
 	cfg := new(config.Config)
 	var logger log.Logger
-	fullArgs := append([]string{"tw-supervisor"}, cliArgs...)
+	fullArgs := append([]string{"rhs-supervisor"}, cliArgs...)
 	testErr := errors.New("dry-run")
 	err := run(context.Background(), fullArgs, func(ctx context.Context, config *config.Config, log log.Logger) (cliapp.Lifecycle, error) {
 		logger = log
