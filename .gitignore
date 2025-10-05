@@ -20,7 +20,7 @@ cache
 !op-chain-ops/foundry/testdata/srcmaps/cache
 !op-chain-ops/foundry/testdata/srcmaps/artifacts
 
-!tw-deployer/pkg/deployer/artifacts
+!rhs-deployer/pkg/deployer/artifacts
 
 
 packages/contracts-theweb3Chain/deployments/anvil
