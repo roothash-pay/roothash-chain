@@ -2,8 +2,8 @@
 pragma solidity ^0.8.0;
 
 // Libraries
-import { Bytes } from "src/libraries/Bytes.sol";
-import { RLPReader } from "src/libraries/rlp/RLPReader.sol";
+import {Bytes} from "src/libraries/Bytes.sol";
+import {RLPReader} from "src/libraries/rlp/RLPReader.sol";
 
 /// @title MerkleTrie
 /// @notice MerkleTrie is a small library for verifying standard Ethereum Merkle-Patricia trie
@@ -48,12 +48,7 @@ library MerkleTrie {
     /// @param _root  Known root of the Merkle trie. Used to verify that the included proof is
     ///               correctly constructed.
     /// @return valid_ Whether or not the proof is valid.
-    function verifyInclusionProof(
-        bytes memory _key,
-        bytes memory _value,
-        bytes[] memory _proof,
-        bytes32 _root
-    )
+    function verifyInclusionProof(bytes memory _key, bytes memory _value, bytes[] memory _proof, bytes32 _root)
         internal
         pure
         returns (bool valid_)
@@ -184,7 +179,7 @@ library MerkleTrie {
         uint256 length = _proof.length;
         proof_ = new TrieNode[](length);
         for (uint256 i = 0; i < length;) {
-            proof_[i] = TrieNode({ encoded: _proof[i], decoded: RLPReader.readList(_proof[i]) });
+            proof_[i] = TrieNode({encoded: _proof[i], decoded: RLPReader.readList(_proof[i])});
             unchecked {
                 ++i;
             }

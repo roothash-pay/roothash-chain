@@ -48,39 +48,19 @@ contract RewardManagerTest is Test {
         pauserregistry = new PauserRegistry(pausers, unpauser);
 
         theweb3ChainBase logic1 = new theweb3ChainBase();
-        TransparentUpgradeableProxy proxy1 = new TransparentUpgradeableProxy(
-            address(logic1),
-            owner,
-            ""
-        );
+        TransparentUpgradeableProxy proxy1 = new TransparentUpgradeableProxy(address(logic1), owner, "");
 
         theweb3ChainDepositManager logic2 = new theweb3ChainDepositManager();
-        TransparentUpgradeableProxy proxy2 = new TransparentUpgradeableProxy(
-            address(logic2),
-            owner,
-            ""
-        );
+        TransparentUpgradeableProxy proxy2 = new TransparentUpgradeableProxy(address(logic2), owner, "");
 
         DelegationManager logic3 = new DelegationManager();
-        TransparentUpgradeableProxy proxy3 = new TransparentUpgradeableProxy(
-            address(logic3),
-            owner,
-            ""
-        );
+        TransparentUpgradeableProxy proxy3 = new TransparentUpgradeableProxy(address(logic3), owner, "");
 
         SlashingManager logic4 = new SlashingManager();
-        TransparentUpgradeableProxy proxy4 = new TransparentUpgradeableProxy(
-            address(logic4),
-            owner,
-            ""
-        );
+        TransparentUpgradeableProxy proxy4 = new TransparentUpgradeableProxy(address(logic4), owner, "");
 
         RewardManager logic5 = new RewardManager();
-        TransparentUpgradeableProxy proxy5 = new TransparentUpgradeableProxy(
-            address(logic5),
-            owner,
-            ""
-        );
+        TransparentUpgradeableProxy proxy5 = new TransparentUpgradeableProxy(address(logic5), owner, "");
 
         theweb3ChainBase = theweb3ChainBase(payable(address(proxy1)));
         theweb3ChainDepositManager = theweb3ChainDepositManager(payable(address(proxy2)));
@@ -89,16 +69,9 @@ contract RewardManagerTest is Test {
         rewardManager = RewardManager(payable(address(proxy5)));
 
         theweb3ChainBase.initialize(
-            pauserregistry,
-            1 ether,
-            10 ether,
-            Itheweb3ChainDepositManager(address(theweb3ChainDepositManager))
+            pauserregistry, 1 ether, 10 ether, Itheweb3ChainDepositManager(address(theweb3ChainDepositManager))
         );
-        theweb3ChainDepositManager.initialize(
-            owner,
-            IDelegationManager(address(delegationManager)),
-            theweb3ChainBase
-        );
+        theweb3ChainDepositManager.initialize(owner, IDelegationManager(address(delegationManager)), theweb3ChainBase);
         delegationManager.initialize(
             owner,
             IPauserRegistry(address(pauserregistry)),
@@ -109,11 +82,7 @@ contract RewardManagerTest is Test {
             slashingManager
         );
         slashingManager.initialize(
-            owner,
-            IDelegationManager(address(delegationManager)),
-            slasher,
-            0.1 ether,
-            slashingReceipt
+            owner, IDelegationManager(address(delegationManager)), slasher, 0.1 ether, slashingReceipt
         );
         rewardManager.initialize(
             owner,
@@ -132,18 +101,16 @@ contract RewardManagerTest is Test {
     }
 
     function _registerAndDelegate() internal {
-        DelegationManager.OperatorDetails memory od = IDelegationManager
-            .OperatorDetails({
-                earningsReceiver: operator,
-                delegationApprover: address(0),
-                stakerOptOutWindowBlocks: 100
-            });
-        DelegationManager.OperatorDetails memory od1 = IDelegationManager
-            .OperatorDetails({
-                earningsReceiver: operator1,
-                delegationApprover: address(0),
-                stakerOptOutWindowBlocks: 100
-            });
+        DelegationManager.OperatorDetails memory od = IDelegationManager.OperatorDetails({
+            earningsReceiver: operator,
+            delegationApprover: address(0),
+            stakerOptOutWindowBlocks: 100
+        });
+        DelegationManager.OperatorDetails memory od1 = IDelegationManager.OperatorDetails({
+            earningsReceiver: operator1,
+            delegationApprover: address(0),
+            stakerOptOutWindowBlocks: 100
+        });
         ISignatureUtils.SignatureWithExpiry memory emptySignatureAndExpiry;
 
         vm.prank(operator);
@@ -157,26 +124,12 @@ contract RewardManagerTest is Test {
         theweb3ChainDepositManager.depositIntotheweb3Chain{value: 2 ether}(2 ether);
 
         vm.prank(user1);
-        delegationManager.delegateTo(
-            operator,
-            emptySignatureAndExpiry,
-            bytes32(0)
-        );
+        delegationManager.delegateTo(operator, emptySignatureAndExpiry, bytes32(0));
         vm.prank(user2);
-        delegationManager.delegateTo(
-            operator1,
-            emptySignatureAndExpiry,
-            bytes32(0)
-        );
+        delegationManager.delegateTo(operator1, emptySignatureAndExpiry, bytes32(0));
 
-        assertEq(
-            delegationManager.stakerDelegateSharesToOperator(operator, user1),
-            2 ether
-        );
-        assertEq(
-            delegationManager.stakerDelegateSharesToOperator(operator1, user2),
-            2 ether
-        );
+        assertEq(delegationManager.stakerDelegateSharesToOperator(operator, user1), 2 ether);
+        assertEq(delegationManager.stakerDelegateSharesToOperator(operator1, user2), 2 ether);
     }
 
     function testPayFeeAndClaimRewards() public {
@@ -186,7 +139,6 @@ contract RewardManagerTest is Test {
         assertEq(rewardManager.operatorRewards(operator), 100 ether);
         assertEq(rewardManager.operatorRewards(operator1), 0);
 
-
         vm.deal(address(rewardManager), 500 ether);
 
         vm.prank(operator);
@@ -195,27 +147,20 @@ contract RewardManagerTest is Test {
         assertEq(operator.balance, 100 ether);
 
         vm.prank(user1);
-        bool success1 = rewardManager.stakeHolderClaimReward(
-            address(theweb3ChainBase)
-        );
+        bool success1 = rewardManager.stakeHolderClaimReward(address(theweb3ChainBase));
         assertTrue(success1);
         assertEq(user1.balance, 98 ether + 50 ether);
 
         vm.prank(user2);
-        bool success2 = rewardManager.stakeHolderClaimReward(
-            address(theweb3ChainBase)
-        );
+        bool success2 = rewardManager.stakeHolderClaimReward(address(theweb3ChainBase));
         assertTrue(success2);
 
         assertEq(user2.balance, 98 ether + 50 ether);
-
     }
 
     function testPayFeeRevertsIfZeroShares() public {
         vm.prank(payFeeManager);
-        vm.expectRevert(
-            "RewardManager payFee: one of totalShares and operatorShares is zero"
-        );
+        vm.expectRevert("RewardManager payFee: one of totalShares and operatorShares is zero");
         rewardManager.payFee(address(theweb3ChainBase), slasher, 100 ether);
     }
 
@@ -224,33 +169,25 @@ contract RewardManagerTest is Test {
         rewardManager.payFee(address(theweb3ChainBase), operator, 100 ether);
 
         vm.prank(slasher);
-        vm.expectRevert(
-            "RewardManager operatorClaimReward: stake holder amount need more then zero"
-        );
+        vm.expectRevert("RewardManager operatorClaimReward: stake holder amount need more then zero");
         rewardManager.stakeHolderClaimReward(address(theweb3ChainBase));
 
         vm.deal(address(rewardManager), 0.1 ether);
 
         vm.prank(user1);
-        vm.expectRevert(
-            "RewardManager operatorClaimReward: Reward Token balance insufficient"
-        );
+        vm.expectRevert("RewardManager operatorClaimReward: Reward Token balance insufficient");
         rewardManager.stakeHolderClaimReward(address(theweb3ChainBase));
 
         vm.deal(address(rewardManager), 500 ether);
 
         vm.prank(user1);
-        bool success = rewardManager.stakeHolderClaimReward(
-            address(theweb3ChainBase)
-        );
+        bool success = rewardManager.stakeHolderClaimReward(address(theweb3ChainBase));
         assertTrue(success);
         assertEq(user1.balance, 110.5 ether);
     }
 
     function testUpdateStakePercent() public {
-        vm.expectRevert(
-            "RewardManager.only reward manager can call this function"
-        );
+        vm.expectRevert("RewardManager.only reward manager can call this function");
         rewardManager.updateStakePercent(80);
 
         vm.prank(rewardingmanager);
@@ -260,25 +197,19 @@ contract RewardManagerTest is Test {
 
     function testOperatorClaimRewardFailsWhenBalanceInsufficient() public {
         vm.prank(slasher);
-        vm.expectRevert(
-            "RewardManager.only pay fee manager can call this function"
-        );
+        vm.expectRevert("RewardManager.only pay fee manager can call this function");
         rewardManager.payFee(address(theweb3ChainBase), operator, 400 ether);
 
         vm.prank(payFeeManager);
         rewardManager.payFee(address(theweb3ChainBase), operator, 400 ether);
 
         vm.prank(slasher);
-        vm.expectRevert(
-            "RewardManager operatorClaimReward: operator claim amount need more then zero"
-        );
+        vm.expectRevert("RewardManager operatorClaimReward: operator claim amount need more then zero");
         rewardManager.operatorClaimReward();
 
         vm.prank(operator);
         vm.deal(address(rewardManager), 0.1 ether);
-        vm.expectRevert(
-            "RewardManager operatorClaimReward: Reward Token balance insufficient"
-        );
+        vm.expectRevert("RewardManager operatorClaimReward: Reward Token balance insufficient");
         rewardManager.operatorClaimReward();
 
         vm.deal(address(rewardManager), 500 ether);

@@ -4,9 +4,8 @@ pragma solidity ^0.8.0;
 import "../../interfaces/ISlashingManager.sol";
 import "../../interfaces/IDelegationManager.sol";
 
-
 abstract contract SlashingManagerStorage is ISlashingManager {
-    uint256 public  MIN_WITHDRAWAL_AMOUNT;
+    uint256 public MIN_WITHDRAWAL_AMOUNT;
 
     IDelegationManager public delegationManager;
 

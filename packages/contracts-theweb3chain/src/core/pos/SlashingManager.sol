@@ -10,15 +10,11 @@ import "@/access/Pausable.sol";
 
 import "./SlashingManagerStorage.sol";
 
-
 contract SlashingManager is Initializable, OwnableUpgradeable, ReentrancyGuardUpgradeable, SlashingManagerStorage {
     uint256 public constant SCALE = 1e18;
 
     modifier onlySlasher() {
-        require(
-            msg.sender == slasherAddress,
-            "SlashingManager.onlySlasher: only slasher can do this operation"
-        );
+        require(msg.sender == slasherAddress, "SlashingManager.onlySlasher: only slasher can do this operation");
         _;
     }
 
@@ -47,7 +43,7 @@ contract SlashingManager is Initializable, OwnableUpgradeable, ReentrancyGuardUp
         emit IsJail(operator, true);
     }
 
-    function unJail(address operator)  external onlySlasher {
+    function unJail(address operator) external onlySlasher {
         isOperatorJail[operator] = false;
         emit IsJail(operator, false);
     }
@@ -57,7 +53,10 @@ contract SlashingManager is Initializable, OwnableUpgradeable, ReentrancyGuardUp
 
         (address[] memory stakers, uint256[] memory shares) = delegationManager.getStakerSharesOfOperator(operator);
 
-        require(stakers.length == shares.length, "SlashingManager.freezeOperatorStakingShares: stakers and shares length must equal");
+        require(
+            stakers.length == shares.length,
+            "SlashingManager.freezeOperatorStakingShares: stakers and shares length must equal"
+        );
 
         uint256 totalShares = 0;
         for (uint256 i = 0; i < shares.length; i++) {
@@ -68,7 +67,6 @@ contract SlashingManager is Initializable, OwnableUpgradeable, ReentrancyGuardUp
 
         for (uint256 i = 0; i < stakers.length; i++) {
             if (shares[i] > 0) {
-
                 uint256 stakerSlashedShare = (slashShare * shares[i] * SCALE) / totalShares / SCALE;
 
                 slashingStakerShares[stakers[i]] += stakerSlashedShare;
@@ -79,10 +77,7 @@ contract SlashingManager is Initializable, OwnableUpgradeable, ReentrancyGuardUp
             }
         }
 
-        emit SlashingOperatorStakingShares(
-            operator,
-            slashShare
-        );
+        emit SlashingOperatorStakingShares(operator, slashShare);
         return slashShare;
     }
 
@@ -102,7 +97,7 @@ contract SlashingManager is Initializable, OwnableUpgradeable, ReentrancyGuardUp
 
         emit Withdrawal(amountToSend, slashingRecipient, msg.sender);
 
-        (bool success, ) = payable(slashingRecipient).call{value: amountToSend}("");
+        (bool success,) = payable(slashingRecipient).call{value: amountToSend}("");
 
         require(success, "FeeVault: SlashingManager to send ETH to recipient");
     }

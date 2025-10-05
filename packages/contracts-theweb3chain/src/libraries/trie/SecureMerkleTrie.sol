@@ -2,7 +2,7 @@
 pragma solidity ^0.8.0;
 
 // Libraries
-import { MerkleTrie } from "src/libraries/trie/MerkleTrie.sol";
+import {MerkleTrie} from "src/libraries/trie/MerkleTrie.sol";
 
 /// @title SecureMerkleTrie
 /// @notice SecureMerkleTrie is a thin wrapper around the MerkleTrie library that hashes the input
@@ -17,12 +17,7 @@ library SecureMerkleTrie {
     /// @param _root  Known root of the Merkle trie. Used to verify that the included proof is
     ///               correctly constructed.
     /// @return valid_ Whether or not the proof is valid.
-    function verifyInclusionProof(
-        bytes memory _key,
-        bytes memory _value,
-        bytes[] memory _proof,
-        bytes32 _root
-    )
+    function verifyInclusionProof(bytes memory _key, bytes memory _value, bytes[] memory _proof, bytes32 _root)
         internal
         pure
         returns (bool valid_)

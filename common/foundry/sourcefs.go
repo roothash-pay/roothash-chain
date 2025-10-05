@@ -11,7 +11,7 @@ import (
 
 	"golang.org/x/exp/maps"
 
-	"github.com/roothash-pay/theweb3-chain/common/srcmap"
+	"github.com/roothash-pay/roothash-chain/common/srcmap"
 )
 
 // SourceMapFS wraps an FS to provide source-maps.

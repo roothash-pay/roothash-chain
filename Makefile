@@ -10,7 +10,7 @@ help: ## Prints this help message
 build: build-go build-contracts ## Builds Go components and contracts-theweb3Chain
 .PHONY: build
 
-build-go: submodules tw-node tw-deployer## Builds tw-node and tw-deployer
+build-go: submodules rhs-node rhs-deployer## Builds rhs-node and tw-deployer
 .PHONY: build-go
 
 build-contracts:
@@ -35,7 +35,7 @@ golang-docker: ## Builds Docker images for Go components using buildx
 			--progress plain \
 			--load \
 			-f docker-bake.hcl \
-			tw-node tw-supervisor
+			rhs-node tw-supervisor
 .PHONY: golang-docker
 
 docker-builder-clean: ## Removes the Docker buildx builder
@@ -48,13 +48,13 @@ docker-builder: ## Creates a Docker buildx builder
 .PHONY: docker-builder
 
 # add --print to dry-run
-cross-tw-node: ## Builds cross-platform Docker image for tw-node
+cross-rhs-node: ## Builds cross-platform Docker image for rhs-node
 	# We don't use a buildx builder here, and just load directly into regular docker, for convenience.
 	GIT_COMMIT=$$(git rev-parse HEAD) \
 	GIT_DATE=$$(git show -s --format='%ct') \
 	IMAGE_TAGS=$$(git rev-parse HEAD),latest \
 	PLATFORMS="linux/arm64" \
-	GIT_VERSION=$(shell tags=$$(git tag --points-at $(GITCOMMIT) | grep '^tw-node/' | sed 's/tw-node\///' | sort -V); \
+	GIT_VERSION=$(shell tags=$$(git tag --points-at $(GITCOMMIT) | grep '^rhs-node/' | sed 's/rhs-node\///' | sort -V); \
              preferred_tag=$$(echo "$$tags" | grep -v -- '-rc' | tail -n 1); \
              if [ -z "$$preferred_tag" ]; then \
                  if [ -z "$$tags" ]; then \
@@ -71,8 +71,8 @@ cross-tw-node: ## Builds cross-platform Docker image for tw-node
 			--load \
 			--no-cache \
 			-f docker-bake.hcl \
-			tw-node
-.PHONY: cross-tw-node
+			rhs-node
+.PHONY: cross-rhs-node
 
 contracts-theweb3Chain-docker: ## Builds Docker image for Bedrock contracts
 	IMAGE_TAGS=$$(git rev-parse HEAD),latest \
@@ -88,21 +88,21 @@ submodules: ## Updates git submodules
 .PHONY: submodules
 
 
-tw-node: ## Builds tw-node binary
-	just $(JUSTFLAGS) ./tw-node/tw-node
-.PHONY: tw-node
+rhs-node: ## Builds rhs-node binary
+	just $(JUSTFLAGS) ./rhs-node/rhs-node
+.PHONY: rhs-node
 
-generate-mocks-tw-node: ## Generates mocks for tw-node
-	make -C ./tw-node generate-mocks
-.PHONY: generate-mocks-tw-node
+generate-mocks-rhs-node: ## Generates mocks for rhs-node
+	make -C ./rhs-node generate-mocks
+.PHONY: generate-mocks-rhs-node
 
 generate-mocks-tw-service: ## Generates mocks for tw-service
 	make -C ./tw-service generate-mocks
 .PHONY: generate-mocks-tw-service
 
-tw-deployer: ## Builds tw-deployer binary
-	just $(JUSTFLAGS) ./tw-deployer/build
-.PHONY: tw-deployer
+rhs-deployer: ## Builds tw-deployer binary
+	just $(JUSTFLAGS) ./rhs-deployer/build
+.PHONY: rhs-deployer
 
 tw-program: ## Builds tw-program binary
 	make -C ./tw-program tw-program
@@ -131,7 +131,7 @@ nuke: clean ## Completely clean the project directory
 .PHONY: nuke
 
 test-unit: ## Runs unit tests for all components
-	make -C ./tw-node test
+	make -C ./rhs-node test
 	(cd packages/contracts-theweb3Chain && just test)
 .PHONY: test-unit
 
@@ -141,6 +141,6 @@ semgrep: ## Runs Semgrep checks
 	SEMGREP_REPO_NAME=/roothash-pay/theweb3-chain semgrep ci --baseline-commit=$(DEV_REF)
 .PHONY: semgrep
 
-update-tw-geth: ## Updates the Geth version used in the project
-	./ops/scripts/update-tw-geth.py
-.PHONY: update-tw-geth
+update-rhs-geth: ## Updates the Geth version used in the project
+	./ops/scripts/update-rhs-geth.py
+.PHONY: update-rhs-geth

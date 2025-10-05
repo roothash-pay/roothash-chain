@@ -62,7 +62,7 @@ Bounty hunters are encouraged to check out the [theweb3Chain Immunefi bug bounty
 <pre>
 ├── <a href="./docs">docs</a>: A collection of documents including audits and post-mortems
 ├── <a href="./theweb3-chain-ops">theweb3-chain-ops</a>: State surgery utilities
-├── <a href="./tw-node">tw-node</a>: consensus-layer of theweb3Chain
+├── <a href="./rhs-node">rhs-node</a>: consensus-layer of theweb3Chain
 ├── <a href="./tw-service">tw-service</a>: Common codebase utilities
 ├── <a href="./ops">ops</a>: Various operational packages
 ├── <a href="./packages">packages</a>

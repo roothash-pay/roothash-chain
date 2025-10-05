@@ -86,7 +86,7 @@ variable "OP_DRIPPER_VERSION" {
 }
 
 
-target "tw-node" {
+target "rhs-node" {
   dockerfile = "ops/docker/op-stack-go/Dockerfile"
   context = "."
   args = {
@@ -94,9 +94,9 @@ target "tw-node" {
     GIT_DATE = "${GIT_DATE}"
     OP_NODE_VERSION = "${OP_NODE_VERSION}"
   }
-  target = "tw-node-target"
+  target = "rhs-node-target"
   platforms = split(",", PLATFORMS)
-  tags = [for tag in split(",", IMAGE_TAGS) : "${REGISTRY}/${REPOSITORY}/tw-node:${tag}"]
+  tags = [for tag in split(",", IMAGE_TAGS) : "${REGISTRY}/${REPOSITORY}/rhs-node:${tag}"]
 }
 
 target "op-batcher" {

@@ -1,45 +1,37 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-
 library SafeCall {
-    function send(
-        address _target,
-        uint256 _gas,
-        uint256 _value
-    ) internal returns (bool) {
+    function send(address _target, uint256 _gas, uint256 _value) internal returns (bool) {
         bool _success;
         assembly {
-            _success := call(
-                _gas, // gas
-                _target, // recipient
-                _value, // ether value
-                0, // inloc
-                0, // inlen
-                0, // outloc
-                0 // outlen
-            )
+            _success :=
+                call(
+                    _gas, // gas
+                    _target, // recipient
+                    _value, // ether value
+                    0, // inloc
+                    0, // inlen
+                    0, // outloc
+                    0 // outlen
+                )
         }
         return _success;
     }
 
-    function call(
-        address _target,
-        uint256 _gas,
-        uint256 _value,
-        bytes memory _calldata
-    ) internal returns (bool) {
+    function call(address _target, uint256 _gas, uint256 _value, bytes memory _calldata) internal returns (bool) {
         bool _success;
         assembly {
-            _success := call(
-                _gas, // gas
-                _target, // recipient
-                _value, // ether value
-                add(_calldata, 32), // inloc
-                mload(_calldata), // inlen
-                0, // outloc
-                0 // outlen
-            )
+            _success :=
+                call(
+                    _gas, // gas
+                    _target, // recipient
+                    _value, // ether value
+                    add(_calldata, 32), // inloc
+                    mload(_calldata), // inlen
+                    0, // outloc
+                    0 // outlen
+                )
         }
         return _success;
     }
@@ -48,19 +40,15 @@ library SafeCall {
         bool _hasMinGas;
         assembly {
             // Equation: gas × 63 ≥ minGas × 64 + 63(40_000 + reservedGas)
-            _hasMinGas := iszero(
-                lt(mul(gas(), 63), add(mul(_minGas, 64), mul(add(40000, _reservedGas), 63)))
-            )
+            _hasMinGas := iszero(lt(mul(gas(), 63), add(mul(_minGas, 64), mul(add(40000, _reservedGas), 63))))
         }
         return _hasMinGas;
     }
 
-    function callWithMinGas(
-        address _target,
-        uint256 _minGas,
-        uint256 _value,
-        bytes memory _calldata
-    ) internal returns (bool) {
+    function callWithMinGas(address _target, uint256 _minGas, uint256 _value, bytes memory _calldata)
+        internal
+        returns (bool)
+    {
         bool _success;
         bool _hasMinGas = hasMinGas(_minGas, 0);
         assembly {
@@ -91,15 +79,16 @@ library SafeCall {
             // `_minGas` does not account for the `memory_expansion_cost` and `code_execution_cost`
             // factors of the dynamic cost of the `CALL` opcode), the call will receive at least
             // the minimum amount of gas specified.
-            _success := call(
-                gas(), // gas
-                _target, // recipient
-                _value, // ether value
-                add(_calldata, 32), // inloc
-                mload(_calldata), // inlen
-                0x00, // outloc
-                0x00 // outlen
-            )
+            _success :=
+                call(
+                    gas(), // gas
+                    _target, // recipient
+                    _value, // ether value
+                    add(_calldata, 32), // inloc
+                    mload(_calldata), // inlen
+                    0x00, // outloc
+                    0x00 // outlen
+                )
         }
         return _success;
     }

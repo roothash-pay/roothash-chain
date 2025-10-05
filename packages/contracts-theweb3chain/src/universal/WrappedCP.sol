@@ -2,7 +2,6 @@
 pragma solidity 0.8.24;
 
 contract WrappedTW {
-
     uint8 public constant decimals = 18;
 
     mapping(address => uint256) internal _balanceOf;

@@ -12,7 +12,7 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/ethereum/go-ethereum/trie/utils"
 	"github.com/holiman/uint256"
-	"github.com/roothash-pay/theweb3-chain/common/script/addresses"
+	"github.com/roothash-pay/roothash-chain/common/script/addresses"
 )
 
 type forkStateEntry struct {

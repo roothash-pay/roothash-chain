@@ -3,7 +3,6 @@ pragma solidity ^0.8.24;
 
 import "@/access/interfaces/IPausable.sol";
 
-
 contract Pausable is IPausable {
     IPauserRegistry public pauserRegistry;
 

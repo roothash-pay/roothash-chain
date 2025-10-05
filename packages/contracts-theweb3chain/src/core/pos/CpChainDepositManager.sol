@@ -28,11 +28,10 @@ contract theweb3ChainDepositManager is
         _disableInitializers();
     }
 
-    function initialize(
-        address initialOwner,
-        IDelegationManager _delegation,
-        Itheweb3ChainBase _theweb3ChainBase
-    ) public initializer {
+    function initialize(address initialOwner, IDelegationManager _delegation, Itheweb3ChainBase _theweb3ChainBase)
+        public
+        initializer
+    {
         _DOMAIN_SEPARATOR = _calculateDomainSeparator();
         __Ownable_init(initialOwner);
         _inittheweb3ChainDepositManagerStorage(_delegation, _theweb3ChainBase);
@@ -40,9 +39,13 @@ contract theweb3ChainDepositManager is
 
     receive() external payable {}
 
-    function depositIntotheweb3Chain(
-        uint256 amount
-    ) external payable whenNotPaused nonReentrant returns (uint256 shares) {
+    function depositIntotheweb3Chain(uint256 amount)
+        external
+        payable
+        whenNotPaused
+        nonReentrant
+        returns (uint256 shares)
+    {
         require(amount == msg.value, "deposit value not match amount");
         shares = _depositIntotheweb3Chain(msg.sender, amount);
     }
@@ -60,42 +63,25 @@ contract theweb3ChainDepositManager is
         );
         uint256 nonce = nonces[staker];
 
-        bytes32 structHash = keccak256(
-            abi.encode(DEPOSIT_TYPEHASH, staker, amount, nonce, expiry)
-        );
+        bytes32 structHash = keccak256(abi.encode(DEPOSIT_TYPEHASH, staker, amount, nonce, expiry));
 
         unchecked {
             nonces[staker] = nonce + 1;
         }
 
-        bytes32 digestHash = keccak256(
-            abi.encodePacked("\x19\x01", domainSeparator(), structHash)
-        );
+        bytes32 digestHash = keccak256(abi.encodePacked("\x19\x01", domainSeparator(), structHash));
 
-        EIP1271SignatureUtils.checkSignature_EIP1271(
-            staker,
-            digestHash,
-            signature
-        );
+        EIP1271SignatureUtils.checkSignature_EIP1271(staker, digestHash, signature);
 
         shares = _depositIntotheweb3Chain(staker, amount);
     }
 
-    function removeShares(
-        address staker,
-        uint256 shareAmount
-    ) external onlyDelegationManager {
-        require(
-            shareAmount != 0,
-            "theweb3ChainDepositManager.removeShares: shareAmount should not be zero!"
-        );
+    function removeShares(address staker, uint256 shareAmount) external onlyDelegationManager {
+        require(shareAmount != 0, "theweb3ChainDepositManager.removeShares: shareAmount should not be zero!");
 
         uint256 userShares = stakertheweb3ChainBaseShares[staker];
 
-        require(
-            shareAmount <= userShares,
-            "theweb3ChainDepositManager._removeShares: shareAmount too high"
-        );
+        require(shareAmount <= userShares, "theweb3ChainDepositManager._removeShares: shareAmount too high");
 
         unchecked {
             userShares = userShares - shareAmount;
@@ -109,17 +95,11 @@ contract theweb3ChainDepositManager is
         }
     }
 
-    function addShares(
-        address staker,
-        uint256 shares
-    ) external onlyDelegationManager {
+    function addShares(address staker, uint256 shares) external onlyDelegationManager {
         _addShares(staker, shares);
     }
 
-    function withdrawSharesAsCp(
-        address recipient,
-        uint256 shares
-    ) external onlyDelegationManager {
+    function withdrawSharesAsCp(address recipient, uint256 shares) external onlyDelegationManager {
         theweb3ChainBase.withdraw(recipient, shares);
     }
 
@@ -136,13 +116,8 @@ contract theweb3ChainDepositManager is
     }
 
     // ================= internal function =================
-    function _depositIntotheweb3Chain(
-        address staker,
-        uint256 amount
-    ) internal returns (uint256 shares) {
-
+    function _depositIntotheweb3Chain(address staker, uint256 amount) internal returns (uint256 shares) {
         shares = theweb3ChainBase.deposit{value: amount}(amount, staker);
-
 
         _addShares(staker, shares);
 
@@ -152,27 +127,13 @@ contract theweb3ChainDepositManager is
     }
 
     function _addShares(address staker, uint256 shares) internal {
-        require(
-            staker != address(0),
-            "theweb3ChainDepositManager._addShares: staker cannot be zero address"
-        );
-        require(
-            shares != 0,
-            "theweb3ChainDepositManager._addShares: shares should not be zero!"
-        );
+        require(staker != address(0), "theweb3ChainDepositManager._addShares: staker cannot be zero address");
+        require(shares != 0, "theweb3ChainDepositManager._addShares: shares should not be zero!");
         stakertheweb3ChainBaseShares[staker] += shares;
         emit Deposit(staker, theweb3ChainBase, shares);
     }
 
     function _calculateDomainSeparator() internal view returns (bytes32) {
-        return
-            keccak256(
-                abi.encode(
-                    DOMAIN_TYPEHASH,
-                    keccak256(bytes("theweb3Chain")),
-                    block.chainid,
-                    address(this)
-                )
-            );
+        return keccak256(abi.encode(DOMAIN_TYPEHASH, keccak256(bytes("theweb3Chain")), block.chainid, address(this)));
     }
 }

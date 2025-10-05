@@ -6,7 +6,7 @@ set -euo pipefail
 usage() {
     echo "Usage: $0 <commit-hash> [tag-prefix]"
     echo "  <commit-hash> : The commit hash to check."
-    echo "  [tag-prefix]  : Optional. The prefix for tags to check. Default is 'tw-node'."
+    echo "  [tag-prefix]  : Optional. The prefix for tags to check. Default is 'rhs-node'."
 }
 
 # Check for at least one argument
@@ -16,7 +16,7 @@ if [ "$#" -lt 1 ]; then
 fi
 
 commit_hash=$1
-tag_prefix=${2:-"tw-node"} # Default tag prefix is "tw-node"
+tag_prefix=${2:-"rhs-node"} # Default tag prefix is "rhs-node"
 
 # Get all tags containing the commit, sorted by creation date
 tags=$(git tag --contains "$commit_hash" --sort=taggerdate)

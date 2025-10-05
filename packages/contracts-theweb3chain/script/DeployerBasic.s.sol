@@ -23,14 +23,12 @@ contract DeployerBasic is ExistingDeploymentParser {
         vm.stopBroadcast();
 
         // Sanity Checks
-//        _verifyContractPointers();
-//        _verifyImplementations();
-//        _verifyContractsInitialized();
-//        _verifyInitializationParams();
+        //        _verifyContractPointers();
+        //        _verifyImplementations();
+        //        _verifyContractsInitialized();
+        //        _verifyInitializationParams();
 
-        logAndOutputContractAddresses(
-            "script/output/DeploymentBasic.config.json"
-        );
+        logAndOutputContractAddresses("script/output/DeploymentBasic.config.json");
     }
 
     /**
@@ -51,63 +49,32 @@ contract DeployerBasic is ExistingDeploymentParser {
         emptyContract = new EmptyContract();
 
         // Deploy and upgrade chainBase
-        TransparentUpgradeableProxy chainBaseBaseProxyInstance = new TransparentUpgradeableProxy(
-                address(emptyContract),
-                executorMultisig,
-                ""
-            );
+        TransparentUpgradeableProxy chainBaseBaseProxyInstance =
+            new TransparentUpgradeableProxy(address(emptyContract), executorMultisig, "");
         theweb3ChainBase = theweb3ChainBase(payable(address(chainBaseBaseProxyInstance)));
-        chainBaseBaseProxyAdmin = ProxyAdmin(
-            getProxyAdminAddress(address(chainBaseBaseProxyInstance))
-        );
+        chainBaseBaseProxyAdmin = ProxyAdmin(getProxyAdminAddress(address(chainBaseBaseProxyInstance)));
 
-        TransparentUpgradeableProxy delegationManagerProxyInstance = new TransparentUpgradeableProxy(
-                address(emptyContract),
-                executorMultisig,
-                ""
-            );
-        delegationManager = DelegationManager(
-            payable(address(delegationManagerProxyInstance))
-        );
-        delegationManagerProxyAdmin = ProxyAdmin(
-            getProxyAdminAddress(address(delegationManagerProxyInstance))
-        );
+        TransparentUpgradeableProxy delegationManagerProxyInstance =
+            new TransparentUpgradeableProxy(address(emptyContract), executorMultisig, "");
+        delegationManager = DelegationManager(payable(address(delegationManagerProxyInstance)));
+        delegationManagerProxyAdmin = ProxyAdmin(getProxyAdminAddress(address(delegationManagerProxyInstance)));
 
-        TransparentUpgradeableProxy theweb3ChainDepositManagerProxyInstance = new TransparentUpgradeableProxy(
-                address(emptyContract),
-                executorMultisig,
-                ""
-            );
-        theweb3ChainDepositManager = theweb3ChainDepositManager(
-            payable(address(theweb3ChainDepositManagerProxyInstance))
-        );
-        theweb3ChainDepositManagerProxyAdmin = ProxyAdmin(
-            getProxyAdminAddress(address(theweb3ChainDepositManagerProxyInstance))
-        );
+        TransparentUpgradeableProxy theweb3ChainDepositManagerProxyInstance =
+            new TransparentUpgradeableProxy(address(emptyContract), executorMultisig, "");
+        theweb3ChainDepositManager =
+            theweb3ChainDepositManager(payable(address(theweb3ChainDepositManagerProxyInstance)));
+        theweb3ChainDepositManagerProxyAdmin =
+            ProxyAdmin(getProxyAdminAddress(address(theweb3ChainDepositManagerProxyInstance)));
 
-        TransparentUpgradeableProxy rewardManagerProxyInstance = new TransparentUpgradeableProxy(
-                address(emptyContract),
-                executorMultisig,
-                ""
-            );
-        rewardManager = RewardManager(
-            payable(address(rewardManagerProxyInstance))
-        );
-        rewardManagerProxyAdmin = ProxyAdmin(
-            getProxyAdminAddress(address(rewardManagerProxyInstance))
-        );
+        TransparentUpgradeableProxy rewardManagerProxyInstance =
+            new TransparentUpgradeableProxy(address(emptyContract), executorMultisig, "");
+        rewardManager = RewardManager(payable(address(rewardManagerProxyInstance)));
+        rewardManagerProxyAdmin = ProxyAdmin(getProxyAdminAddress(address(rewardManagerProxyInstance)));
 
-        TransparentUpgradeableProxy slashingManagerProxyInstance = new TransparentUpgradeableProxy(
-                address(emptyContract),
-                executorMultisig,
-                ""
-            );
-        slashingManager = SlashingManager(
-            payable(address(slashingManagerProxyInstance))
-        );
-        slashingManagerProxyAdmin = ProxyAdmin(
-            getProxyAdminAddress(address(slashingManagerProxyInstance))
-        );
+        TransparentUpgradeableProxy slashingManagerProxyInstance =
+            new TransparentUpgradeableProxy(address(emptyContract), executorMultisig, "");
+        slashingManager = SlashingManager(payable(address(slashingManagerProxyInstance)));
+        slashingManagerProxyAdmin = ProxyAdmin(getProxyAdminAddress(address(slashingManagerProxyInstance)));
 
         delegationManagerImplementation = new DelegationManager();
         theweb3ChainDepositManagerImplementation = new theweb3ChainDepositManager();
@@ -132,9 +99,7 @@ contract DeployerBasic is ExistingDeploymentParser {
         );
         // theweb3ChainDepositManager
         theweb3ChainDepositManagerProxyAdmin.upgradeAndCall(
-            ITransparentUpgradeableProxy(
-                payable(address(theweb3ChainDepositManager))
-            ),
+            ITransparentUpgradeableProxy(payable(address(theweb3ChainDepositManager))),
             address(theweb3ChainDepositManagerImplementation),
             abi.encodeWithSelector(
                 theweb3ChainDepositManager.initialize.selector,
@@ -157,19 +122,19 @@ contract DeployerBasic is ExistingDeploymentParser {
             )
         );
 
-//        // Deploy RewardManager proxy and implementation
-//        rewardManagerProxyAdmin.upgradeAndCall(
-//            ITransparentUpgradeableProxy(payable(address(rewardManager))),
-//            address(rewardManagerImplementation),
-//            abi.encodeWithSelector(
-//                RewardManager.initialize.selector,
-//                executorMultisig,
-//                executorMultisig,
-//                executorMultisig,
-//                REWARD_MANAGER_STAKE_PERCENTAGE,
-//                theweb3ChainLayerPauserReg
-//            )
-//        );
+        //        // Deploy RewardManager proxy and implementation
+        //        rewardManagerProxyAdmin.upgradeAndCall(
+        //            ITransparentUpgradeableProxy(payable(address(rewardManager))),
+        //            address(rewardManagerImplementation),
+        //            abi.encodeWithSelector(
+        //                RewardManager.initialize.selector,
+        //                executorMultisig,
+        //                executorMultisig,
+        //                executorMultisig,
+        //                REWARD_MANAGER_STAKE_PERCENTAGE,
+        //                theweb3ChainLayerPauserReg
+        //            )
+        //        );
 
         slashingManagerProxyAdmin.upgradeAndCall(
             ITransparentUpgradeableProxy(payable(address(slashingManager))),

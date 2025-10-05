@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.24;
 
-import { WrappedTW  } from "src/universal/WrappedTW.sol";
+import {WrappedTW} from "src/universal/WrappedTW.sol";
 
 contract WTW is WrappedTW {
     string public constant version = "0.0.1";

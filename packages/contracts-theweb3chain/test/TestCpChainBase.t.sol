@@ -27,11 +27,7 @@ contract theweb3ChainBaseTest is Test {
         pauserregistry = new PauserRegistry(pausers, unpauser);
 
         theweb3ChainBase logic = new theweb3ChainBase();
-        TransparentUpgradeableProxy proxy = new TransparentUpgradeableProxy(
-            address(logic),
-            owner,
-            ""
-        );
+        TransparentUpgradeableProxy proxy = new TransparentUpgradeableProxy(address(logic), owner, "");
 
         theweb3ChainBase = theweb3ChainBase(payable(address(proxy)));
 
@@ -49,10 +45,7 @@ contract theweb3ChainBaseTest is Test {
         vm.deal(strategyManager, 10 ether);
         vm.prank(strategyManager);
 
-        uint256 newShares = theweb3ChainBase.deposit{value: 10 ether}(
-            10 ether,
-            user1
-        );
+        uint256 newShares = theweb3ChainBase.deposit{value: 10 ether}(10 ether, user1);
 
         uint256 balanceAfter = address(theweb3ChainBase).balance;
 
@@ -62,23 +55,17 @@ contract theweb3ChainBaseTest is Test {
     }
 
     function testDepositTooLowOrHighShouldRevert() public {
-        vm.expectRevert(
-            "theweb3ChainBase: deposit token must more than min deposit amount"
-        );
+        vm.expectRevert("theweb3ChainBase: deposit token must more than min deposit amount");
         vm.deal(strategyManager, 10 ether);
         vm.prank(strategyManager);
 
         theweb3ChainBase.deposit{value: 0.5 ether}(0.5 ether, user1);
 
-
-        vm.expectRevert(
-            "theweb3ChainBase: deposit token must less than max deposit amount"
-        );
+        vm.expectRevert("theweb3ChainBase: deposit token must less than max deposit amount");
         vm.deal(strategyManager, 15 ether);
         vm.prank(strategyManager);
 
         theweb3ChainBase.deposit{value: 12 ether}(12 ether, user1);
-
     }
 
     function testWithdrawShouldSendEth() public {
@@ -101,9 +88,7 @@ contract theweb3ChainBaseTest is Test {
     }
 
     function testWithdrawTooMuchShouldRevert() public {
-        vm.expectRevert(
-            "theweb3ChainBase.withdraw: amountShares must be less than or equal to totalShares"
-        );
+        vm.expectRevert("theweb3ChainBase.withdraw: amountShares must be less than or equal to totalShares");
         vm.prank(strategyManager);
         theweb3ChainBase.withdraw(address(this), 100 ether);
     }

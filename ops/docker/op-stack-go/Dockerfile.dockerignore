@@ -12,7 +12,7 @@
 !/packages/contracts-bedrock/snapshots
 !/op-dispute-mon
 !/op-conductor
-!/tw-node
+!/rhs-node
 !/op-preimage
 !/tw-program
 !/op-proposer

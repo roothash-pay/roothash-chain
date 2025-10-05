@@ -30,10 +30,7 @@ contract DelegationManager is
     uint256 public constant MAX_STAKER_OPT_OUT_WINDOW_BLOCKS = (180 days) / 12;
 
     modifier onlyDepositManager() {
-        require(
-            msg.sender == address(theweb3ChainDepositManager),
-            "onlyDepositManager"
-        );
+        require(msg.sender == address(theweb3ChainDepositManager), "onlyDepositManager");
         _;
     }
 
@@ -61,22 +58,19 @@ contract DelegationManager is
         _DOMAIN_SEPARATOR = _calculateDomainSeparator();
         __Ownable_init(initialOwner);
         _settheweb3ChainBaseWithdrawalDelayBlocks(_withdrawalDelayBlock);
-        _initializeDelegationManagerStorage(
-            _theweb3ChainDepositManager,
-            _theweb3ChainBase,
-            _slashingManager
-        );
+        _initializeDelegationManagerStorage(_theweb3ChainDepositManager, _theweb3ChainBase, _slashingManager);
 
         ORIGINAL_CHAIN_ID = block.chainid;
     }
 
-    /*******************************************************************************
-                            EXTERNAL FUNCTIONS
-    *******************************************************************************/
-    function registerAsOperator(
-        OperatorDetails calldata registeringOperatorDetails,
-        string calldata nodeUrl
-    ) external {
+    /**
+     *
+     *                         EXTERNAL FUNCTIONS
+     *
+     */
+    function registerAsOperator(OperatorDetails calldata registeringOperatorDetails, string calldata nodeUrl)
+        external
+    {
         require(
             _operatorDetails[msg.sender].earningsReceiver == address(0),
             "DelegationManager.registerAsOperator: operator has already registered"
@@ -88,53 +82,30 @@ contract DelegationManager is
         emit OperatorNodeUrlUpdated(msg.sender, nodeUrl);
     }
 
-    function modifyOperatorDetails(
-        OperatorDetails calldata newOperatorDetails
-    ) external {
-        require(
-            isOperator(msg.sender),
-            "DelegationManager.modifyOperatorDetails: caller must be an operator"
-        );
+    function modifyOperatorDetails(OperatorDetails calldata newOperatorDetails) external {
+        require(isOperator(msg.sender), "DelegationManager.modifyOperatorDetails: caller must be an operator");
         _setOperatorDetails(msg.sender, newOperatorDetails);
     }
 
     function updateOperatorNodeUrl(string calldata nodeUrl) external {
-        require(
-            isOperator(msg.sender),
-            "DelegationManager.updateOperatorNodeUrl: caller must be an operator"
-        );
+        require(isOperator(msg.sender), "DelegationManager.updateOperatorNodeUrl: caller must be an operator");
         emit OperatorNodeUrlUpdated(msg.sender, nodeUrl);
     }
 
-    function slashingStakingShares(
-        address operator,
-        address staker,
-        uint256 shares
-    ) external onlySlashingManager {
-
+    function slashingStakingShares(address operator, address staker, uint256 shares) external onlySlashingManager {
         if (operator != address(0)) {
             _decreaseOperatorShares(operator, staker, shares);
         }
 
         theweb3ChainDepositManager.removeShares(staker, shares);
 
-        theweb3ChainDepositManager.withdrawSharesAsCp(
-            address(slashingManager),
-            shares
-        );
+        theweb3ChainDepositManager.withdrawSharesAsCp(address(slashingManager), shares);
     }
 
-    function delegateTo(
-        address operator,
-        SignatureWithExpiry memory approverSignatureAndExpiry,
-        bytes32 approverSalt
-    ) external {
-        _delegate(
-            msg.sender,
-            operator,
-            approverSignatureAndExpiry,
-            approverSalt
-        );
+    function delegateTo(address operator, SignatureWithExpiry memory approverSignatureAndExpiry, bytes32 approverSalt)
+        external
+    {
+        _delegate(msg.sender, operator, approverSignatureAndExpiry, approverSalt);
     }
 
     function delegateToBySignature(
@@ -150,45 +121,25 @@ contract DelegationManager is
         );
 
         uint256 currentStakerNonce = stakerNonce[staker];
-        bytes32 stakerDigestHash = calculateStakerDelegationDigestHash(
-            staker,
-            currentStakerNonce,
-            operator,
-            stakerSignatureAndExpiry.expiry
-        );
+        bytes32 stakerDigestHash =
+            calculateStakerDelegationDigestHash(staker, currentStakerNonce, operator, stakerSignatureAndExpiry.expiry);
         unchecked {
             stakerNonce[staker] = currentStakerNonce + 1;
         }
 
-        EIP1271SignatureUtils.checkSignature_EIP1271(
-            staker,
-            stakerDigestHash,
-            stakerSignatureAndExpiry.signature
-        );
+        EIP1271SignatureUtils.checkSignature_EIP1271(staker, stakerDigestHash, stakerSignatureAndExpiry.signature);
 
         _delegate(staker, operator, approverSignatureAndExpiry, approverSalt);
     }
 
-    function undelegate(
-        address staker
-    ) external returns (bytes32 withdrawalRoot) {
-        require(
-            isDelegated(staker),
-            "DelegationManager.undelegate: staker must be delegated to undelegate"
-        );
-        require(
-            !isOperator(staker),
-            "DelegationManager.undelegate: operators cannot be undelegated"
-        );
-        require(
-            staker != address(0),
-            "DelegationManager.undelegate: cannot undelegate zero address"
-        );
+    function undelegate(address staker) external returns (bytes32 withdrawalRoot) {
+        require(isDelegated(staker), "DelegationManager.undelegate: staker must be delegated to undelegate");
+        require(!isOperator(staker), "DelegationManager.undelegate: operators cannot be undelegated");
+        require(staker != address(0), "DelegationManager.undelegate: cannot undelegate zero address");
         address operator = delegatedTo[staker];
         require(
-            msg.sender == staker ||
-                msg.sender == operator ||
-                msg.sender == _operatorDetails[operator].delegationApprover,
+            msg.sender == staker || msg.sender == operator
+                || msg.sender == _operatorDetails[operator].delegationApprover,
             "DelegationManager.undelegate: caller cannot undelegate staker"
         );
 
@@ -209,30 +160,23 @@ contract DelegationManager is
             }
         }
 
-        withdrawalRoot = _removeSharesAndQueueWithdrawal({
-            staker: staker,
-            operator: operator,
-            withdrawer: staker,
-            shares: shares
-        });
+        withdrawalRoot =
+            _removeSharesAndQueueWithdrawal({staker: staker, operator: operator, withdrawer: staker, shares: shares});
 
         return withdrawalRoot;
     }
 
-    function queueWithdrawals(
-        QueuedWithdrawalParams[] calldata queuedWithdrawalParams
-    ) external whenNotPaused returns (bytes32[] memory) {
-        bytes32[] memory withdrawalRoots = new bytes32[](
-            queuedWithdrawalParams.length
-        );
+    function queueWithdrawals(QueuedWithdrawalParams[] calldata queuedWithdrawalParams)
+        external
+        whenNotPaused
+        returns (bytes32[] memory)
+    {
+        bytes32[] memory withdrawalRoots = new bytes32[](queuedWithdrawalParams.length);
 
         address operator = delegatedTo[msg.sender];
 
         for (uint256 i = 0; i < queuedWithdrawalParams.length; i++) {
-            require(
-                queuedWithdrawalParams[i].withdrawer == msg.sender,
-                "not authorized caller"
-            );
+            require(queuedWithdrawalParams[i].withdrawer == msg.sender, "not authorized caller");
 
             withdrawalRoots[i] = _removeSharesAndQueueWithdrawal({
                 staker: queuedWithdrawalParams[i].withdrawer,
@@ -244,69 +188,50 @@ contract DelegationManager is
         return withdrawalRoots;
     }
 
-    function completeQueuedWithdrawal(
-        Withdrawal calldata withdrawal
-    ) external whenNotPaused nonReentrant {
+    function completeQueuedWithdrawal(Withdrawal calldata withdrawal) external whenNotPaused nonReentrant {
         _completeQueuedWithdrawal(withdrawal);
     }
 
-    function completeQueuedWithdrawals(
-        Withdrawal[] calldata withdrawals
-    ) external whenNotPaused nonReentrant {
+    function completeQueuedWithdrawals(Withdrawal[] calldata withdrawals) external whenNotPaused nonReentrant {
         for (uint256 i = 0; i < withdrawals.length; ++i) {
             _completeQueuedWithdrawal(withdrawals[i]);
         }
     }
 
-    function increaseDelegatedShares(
-        address staker,
-        uint256 shares
-    ) external onlyDepositManager {
+    function increaseDelegatedShares(address staker, uint256 shares) external onlyDepositManager {
         if (isDelegated(staker)) {
             address operator = delegatedTo[staker];
             _increaseOperatorShares(operator, staker, shares);
         }
     }
 
-    function decreaseDelegatedShares(
-        address staker,
-        uint256 shares
-    ) external onlyDepositManager {
+    function decreaseDelegatedShares(address staker, uint256 shares) external onlyDepositManager {
         if (isDelegated(staker)) {
             address operator = delegatedTo[staker];
-            _decreaseOperatorShares({
-                operator: operator,
-                staker: staker,
-                shares: shares
-            });
+            _decreaseOperatorShares({operator: operator, staker: staker, shares: shares});
         }
     }
 
-    function settheweb3ChainBaseWithdrawalDelayBlocks(
-        uint256 withdrawalDelayBlock
-    ) external onlyOwner {
+    function settheweb3ChainBaseWithdrawalDelayBlocks(uint256 withdrawalDelayBlock) external onlyOwner {
         _settheweb3ChainBaseWithdrawalDelayBlocks(withdrawalDelayBlock);
     }
 
-    /*******************************************************************************
-                            INTERNAL FUNCTIONS
-    *******************************************************************************/
-    function _setOperatorDetails(
-        address operator,
-        OperatorDetails calldata newOperatorDetails
-    ) internal {
+    /**
+     *
+     *                         INTERNAL FUNCTIONS
+     *
+     */
+    function _setOperatorDetails(address operator, OperatorDetails calldata newOperatorDetails) internal {
         require(
             newOperatorDetails.earningsReceiver != address(0),
             "DelegationManager._setOperatorDetails: cannot set `earningsReceiver` to zero address"
         );
         require(
-            newOperatorDetails.stakerOptOutWindowBlocks <=
-                MAX_STAKER_OPT_OUT_WINDOW_BLOCKS,
+            newOperatorDetails.stakerOptOutWindowBlocks <= MAX_STAKER_OPT_OUT_WINDOW_BLOCKS,
             "DelegationManager._setOperatorDetails: stakerOptOutWindowBlocks cannot be > MAX_STAKER_OPT_OUT_WINDOW_BLOCKS"
         );
         require(
-            newOperatorDetails.stakerOptOutWindowBlocks >=
-                _operatorDetails[operator].stakerOptOutWindowBlocks,
+            newOperatorDetails.stakerOptOutWindowBlocks >= _operatorDetails[operator].stakerOptOutWindowBlocks,
             "DelegationManager._setOperatorDetails: stakerOptOutWindowBlocks cannot be decreased"
         );
         _operatorDetails[operator] = newOperatorDetails;
@@ -319,50 +244,29 @@ contract DelegationManager is
         SignatureWithExpiry memory approverSignatureAndExpiry,
         bytes32 approverSalt
     ) internal {
-        require(
-            !isDelegated(staker),
-            "DelegationManager._delegate: staker is already actively delegated"
-        );
-        require(
-            isOperator(operator),
-            "DelegationManager._delegate: operator is not registered in theweb3ChainLayer"
-        );
+        require(!isDelegated(staker), "DelegationManager._delegate: staker is already actively delegated");
+        require(isOperator(operator), "DelegationManager._delegate: operator is not registered in theweb3ChainLayer");
 
-        address _delegationApprover = _operatorDetails[operator]
-            .delegationApprover;
+        address _delegationApprover = _operatorDetails[operator].delegationApprover;
 
-        if (
-            _delegationApprover != address(0) &&
-            msg.sender != _delegationApprover &&
-            msg.sender != operator
-        ) {
+        if (_delegationApprover != address(0) && msg.sender != _delegationApprover && msg.sender != operator) {
             require(
                 approverSignatureAndExpiry.expiry >= block.timestamp,
                 "DelegationManager._delegate: approver signature expired"
             );
 
             require(
-                !delegationApproverSaltIsSpent[_delegationApprover][
-                    approverSalt
-                ],
+                !delegationApproverSaltIsSpent[_delegationApprover][approverSalt],
                 "DelegationManager._delegate: approverSalt already spent"
             );
-            delegationApproverSaltIsSpent[_delegationApprover][
-                approverSalt
-            ] = true;
+            delegationApproverSaltIsSpent[_delegationApprover][approverSalt] = true;
 
             bytes32 approverDigestHash = calculateDelegationApprovalDigestHash(
-                staker,
-                operator,
-                _delegationApprover,
-                approverSalt,
-                approverSignatureAndExpiry.expiry
+                staker, operator, _delegationApprover, approverSalt, approverSignatureAndExpiry.expiry
             );
 
             EIP1271SignatureUtils.checkSignature_EIP1271(
-                staker,
-                approverDigestHash,
-                approverSignatureAndExpiry.signature
+                staker, approverDigestHash, approverSignatureAndExpiry.signature
             );
         }
 
@@ -374,21 +278,14 @@ contract DelegationManager is
 
         uint256 shares = theweb3ChainDepositManager.getDeposits(staker);
 
-        _increaseOperatorShares({
-            operator: operator,
-            staker: staker,
-            shares: shares
-        });
+        _increaseOperatorShares({operator: operator, staker: staker, shares: shares});
     }
 
-    function _completeQueuedWithdrawal(
-        Withdrawal calldata withdrawal
-    ) internal {
+    function _completeQueuedWithdrawal(Withdrawal calldata withdrawal) internal {
         bytes32 withdrawalRoot = calculateWithdrawalRoot(withdrawal);
 
         require(
-            pendingWithdrawals[withdrawalRoot],
-            "DelegationManager._completeQueuedWithdrawal: action is not in queue"
+            pendingWithdrawals[withdrawalRoot], "DelegationManager._completeQueuedWithdrawal: action is not in queue"
         );
 
         require(
@@ -401,49 +298,33 @@ contract DelegationManager is
         address currentOperator = delegatedTo[msg.sender];
 
         require(
-            withdrawal.startBlock + chainBaseWithdrawalDelayBlock <=
-                block.number,
+            withdrawal.startBlock + chainBaseWithdrawalDelayBlock <= block.number,
             "DelegationManager._completeQueuedWithdrawal: withdrawalDelayBlocks period has not yet passed for this chainBase"
         );
 
         _withdrawSharesAsCp(msg.sender, withdrawal.shares);
 
-        emit WithdrawalCompleted(
-            currentOperator,
-            msg.sender,
-            withdrawal.shares
-        );
+        emit WithdrawalCompleted(currentOperator, msg.sender, withdrawal.shares);
     }
 
-    function _increaseOperatorShares(
-        address operator,
-        address staker,
-        uint256 shares
-    ) internal {
+    function _increaseOperatorShares(address operator, address staker, uint256 shares) internal {
         operatorShares[operator] += shares;
         stakerDelegateSharesToOperator[operator][staker] += shares;
         emit OperatorSharesIncreased(operator, staker, shares);
     }
 
-    function _decreaseOperatorShares(
-        address operator,
-        address staker,
-        uint256 shares
-    ) internal {
+    function _decreaseOperatorShares(address operator, address staker, uint256 shares) internal {
         operatorShares[operator] -= shares;
         stakerDelegateSharesToOperator[operator][staker] -= shares;
         emit OperatorSharesDecreased(operator, staker, shares);
     }
 
-    function _removeSharesAndQueueWithdrawal(
-        address staker,
-        address operator,
-        address withdrawer,
-        uint256 shares
-    ) internal returns (bytes32) {
+    function _removeSharesAndQueueWithdrawal(address staker, address operator, address withdrawer, uint256 shares)
+        internal
+        returns (bytes32)
+    {
         require(
-            staker != address(0),
-            "DelegationManager._removeSharesAndQueueWithdrawal: staker cannot be zero address"
+            staker != address(0), "DelegationManager._removeSharesAndQueueWithdrawal: staker cannot be zero address"
         );
 
         if (operator != address(0)) {
@@ -478,9 +359,7 @@ contract DelegationManager is
         theweb3ChainDepositManager.withdrawSharesAsCp(withdrawer, shares);
     }
 
-    function _settheweb3ChainBaseWithdrawalDelayBlocks(
-        uint256 _withdrawalDelayBlocks
-    ) internal {
+    function _settheweb3ChainBaseWithdrawalDelayBlocks(uint256 _withdrawalDelayBlocks) internal {
         uint256 prevStrategyWithdrawalDelayBlock = chainBaseWithdrawalDelayBlock;
         uint256 newStrategyWithdrawalDelayBlock = _withdrawalDelayBlocks;
 
@@ -491,15 +370,10 @@ contract DelegationManager is
 
         chainBaseWithdrawalDelayBlock = newStrategyWithdrawalDelayBlock;
 
-        emit StrategyWithdrawalDelayBlocksSet(
-            prevStrategyWithdrawalDelayBlock,
-            newStrategyWithdrawalDelayBlock
-        );
+        emit StrategyWithdrawalDelayBlocksSet(prevStrategyWithdrawalDelayBlock, newStrategyWithdrawalDelayBlock);
     }
 
-    function getStakerSharesOfOperator(
-        address operator
-    ) external view returns (address[] memory, uint256[] memory) {
+    function getStakerSharesOfOperator(address operator) external view returns (address[] memory, uint256[] memory) {
         uint256 stakerLen = stakerList.length;
         address[] memory stakers = new address[](stakerLen);
         uint256[] memory shares = new uint256[](stakerLen);
@@ -511,9 +385,11 @@ contract DelegationManager is
         return (stakers, shares);
     }
 
-    /*******************************************************************************
-                            VIEW FUNCTIONS
-    *******************************************************************************/
+    /**
+     *
+     *                         VIEW FUNCTIONS
+     *
+     */
     function domainSeparator() public view returns (bytes32) {
         return _calculateDomainSeparator();
     }
@@ -526,27 +402,19 @@ contract DelegationManager is
         return (_operatorDetails[operator].earningsReceiver != address(0));
     }
 
-    function operatorDetails(
-        address operator
-    ) external view returns (OperatorDetails memory) {
+    function operatorDetails(address operator) external view returns (OperatorDetails memory) {
         return _operatorDetails[operator];
     }
 
-    function earningsReceiver(
-        address operator
-    ) external view returns (address) {
+    function earningsReceiver(address operator) external view returns (address) {
         return _operatorDetails[operator].earningsReceiver;
     }
 
-    function delegationApprover(
-        address operator
-    ) external view returns (address) {
+    function delegationApprover(address operator) external view returns (address) {
         return _operatorDetails[operator].delegationApprover;
     }
 
-    function stakerOptOutWindowBlocks(
-        address operator
-    ) external view returns (uint256) {
+    function stakerOptOutWindowBlocks(address operator) external view returns (uint256) {
         return _operatorDetails[operator].stakerOptOutWindowBlocks;
     }
 
@@ -554,46 +422,28 @@ contract DelegationManager is
         return operatorShares[operator];
     }
 
-    function calculateWithdrawalRoot(
-        Withdrawal memory withdrawal
-    ) public pure returns (bytes32) {
+    function calculateWithdrawalRoot(Withdrawal memory withdrawal) public pure returns (bytes32) {
         return keccak256(abi.encode(withdrawal));
     }
 
-    function calculateCurrentStakerDelegationDigestHash(
-        address staker,
-        address operator,
-        uint256 expiry
-    ) external view returns (bytes32) {
+    function calculateCurrentStakerDelegationDigestHash(address staker, address operator, uint256 expiry)
+        external
+        view
+        returns (bytes32)
+    {
         uint256 currentStakerNonce = stakerNonce[staker];
-        return
-            calculateStakerDelegationDigestHash(
-                staker,
-                currentStakerNonce,
-                operator,
-                expiry
-            );
+        return calculateStakerDelegationDigestHash(staker, currentStakerNonce, operator, expiry);
     }
 
-    function calculateStakerDelegationDigestHash(
-        address staker,
-        uint256 _stakerNonce,
-        address operator,
-        uint256 expiry
-    ) public view returns (bytes32) {
-        bytes32 stakerStructHash = keccak256(
-            abi.encode(
-                STAKER_DELEGATION_TYPEHASH,
-                staker,
-                operator,
-                _stakerNonce,
-                expiry
-            )
-        );
+    function calculateStakerDelegationDigestHash(address staker, uint256 _stakerNonce, address operator, uint256 expiry)
+        public
+        view
+        returns (bytes32)
+    {
+        bytes32 stakerStructHash =
+            keccak256(abi.encode(STAKER_DELEGATION_TYPEHASH, staker, operator, _stakerNonce, expiry));
 
-        bytes32 stakerDigestHash = keccak256(
-            abi.encodePacked("\x19\x01", domainSeparator(), stakerStructHash)
-        );
+        bytes32 stakerDigestHash = keccak256(abi.encodePacked("\x19\x01", domainSeparator(), stakerStructHash));
         return stakerDigestHash;
     }
 
@@ -605,30 +455,14 @@ contract DelegationManager is
         uint256 expiry
     ) public view returns (bytes32) {
         bytes32 approverStructHash = keccak256(
-            abi.encode(
-                DELEGATION_APPROVAL_TYPEHASH,
-                staker,
-                operator,
-                _delegationApprover,
-                approverSalt,
-                expiry
-            )
+            abi.encode(DELEGATION_APPROVAL_TYPEHASH, staker, operator, _delegationApprover, approverSalt, expiry)
         );
-        bytes32 approverDigestHash = keccak256(
-            abi.encodePacked("\x19\x01", domainSeparator(), approverStructHash)
-        );
+        bytes32 approverDigestHash = keccak256(abi.encodePacked("\x19\x01", domainSeparator(), approverStructHash));
         return approverDigestHash;
     }
 
     function _calculateDomainSeparator() internal view returns (bytes32) {
         return
-            keccak256(
-                abi.encode(
-                    DOMAIN_TYPEHASH,
-                    keccak256(bytes("theweb3ChainLayer")),
-                    block.chainid,
-                    address(this)
-                )
-            );
+            keccak256(abi.encode(DOMAIN_TYPEHASH, keccak256(bytes("theweb3ChainLayer")), block.chainid, address(this)));
     }
 }

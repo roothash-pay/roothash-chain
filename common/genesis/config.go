@@ -16,9 +16,9 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 	"github.com/ethereum/go-ethereum/rpc"
 
-	opparams "github.com/roothash-pay/theweb3-chain/tw-node/params"
-	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
-	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
+	opparams "github.com/roothash-pay/roothash-chain/rhs-node/params"
+	"github.com/roothash-pay/roothash-chain/rhs-node/rollup"
+	"github.com/roothash-pay/roothash-chain/rhs-service/eth"
 )
 
 var (
@@ -604,7 +604,7 @@ type L2CoreDeployConfig struct {
 	// BatchInboxAddress is the L1 account that batches are sent to.
 	BatchInboxAddress common.Address `json:"batchInboxAddress"`
 
-	// SystemConfigStartBlock represents the block at which the tw-node should start syncing
+	// SystemConfigStartBlock represents the block at which the rhs-node should start syncing
 	// from. It is an override to set this value on legacy networks where it is not set by
 	// default. It can be removed once all networks have this value set in their storage.
 	SystemConfigStartBlock uint64 `json:"systemConfigStartBlock"`

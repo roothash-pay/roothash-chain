@@ -10,7 +10,7 @@ import {Math256} from "./Math256.sol";
 ///     capacity and level of filling.
 /// @dev The current implementation favors buckets with the least fill factor
 library MinFirstAllocationStrategy {
-    uint256 private constant MAX_UINT256 = 2**256 - 1;
+    uint256 private constant MAX_UINT256 = 2 ** 256 - 1;
 
     /// @notice Allocates passed maxAllocationSize among the buckets. The resulting allocation doesn't exceed the
     ///     capacities of the buckets. An algorithm starts filling from the least populated buckets to equalize the fill factor.
@@ -26,11 +26,11 @@ library MinFirstAllocationStrategy {
     /// @param capacities The array of capacities of the buckets
     /// @param allocationSize The desired value to allocate among the buckets
     /// @return allocated The total value allocated among the buckets. Can't exceed the allocationSize value
-    function allocate(
-        uint256[] memory buckets,
-        uint256[] memory capacities,
-        uint256 allocationSize
-    ) internal pure returns (uint256 allocated) {
+    function allocate(uint256[] memory buckets, uint256[] memory capacities, uint256 allocationSize)
+        internal
+        pure
+        returns (uint256 allocated)
+    {
         uint256 allocatedToBestCandidate = 0;
         while (allocated < allocationSize) {
             allocatedToBestCandidate = allocateToBestCandidate(buckets, capacities, allocationSize - allocated);
@@ -58,11 +58,11 @@ library MinFirstAllocationStrategy {
     /// @param capacities The array of capacities of the buckets
     /// @param allocationSize The desired value to allocate to the bucket
     /// @return allocated The total value allocated to the bucket. Can't exceed the allocationSize value
-    function allocateToBestCandidate(
-        uint256[] memory buckets,
-        uint256[] memory capacities,
-        uint256 allocationSize
-    ) internal pure returns (uint256 allocated) {
+    function allocateToBestCandidate(uint256[] memory buckets, uint256[] memory capacities, uint256 allocationSize)
+        internal
+        pure
+        returns (uint256 allocated)
+    {
         uint256 bestCandidateIndex = buckets.length;
         uint256 bestCandidateAllocation = MAX_UINT256;
         uint256 bestCandidatesCount = 0;

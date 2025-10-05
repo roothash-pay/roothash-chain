@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import { Bytes } from "src/libraries/Bytes.sol";
+import {Bytes} from "src/libraries/Bytes.sol";
 
 /// @notice Methods for working with ERC-5202 blueprint contracts.
 /// https://eips.ethereum.org/EIPS/eip-5202
@@ -135,12 +135,7 @@ library Blueprint {
 
     /// @notice Parses the code at two target addresses as individual blueprints, concatentates them and then deploys
     /// the resulting initcode with the given `_data` appended, i.e. `_data` is the ABI-encoded constructor arguments.
-    function deployFrom(
-        address _target1,
-        address _target2,
-        bytes32 _salt,
-        bytes memory _data
-    )
+    function deployFrom(address _target1, address _target2, bytes32 _salt, bytes memory _data)
         internal
         returns (address newContract_)
     {
@@ -162,10 +157,7 @@ library Blueprint {
     /// @notice Deploys a blueprint contract with the given `_rawBytecode` and `_salt`. If the blueprint is too large to
     /// fit in a single deployment, it is split across two addresses. It is the responsibility of the caller to handle
     /// large contracts by checking if the second return value is not address(0).
-    function create(
-        bytes memory _rawBytecode,
-        bytes32 _salt
-    )
+    function create(bytes memory _rawBytecode, bytes32 _salt)
         internal
         returns (address newContract1_, address newContract2_)
     {
@@ -186,10 +178,7 @@ library Blueprint {
     }
 
     /// @notice Deploys a two blueprint contracts, splitting the bytecode across both of them.
-    function deployBigBytecode(
-        bytes memory _bytecode,
-        bytes32 _salt
-    )
+    function deployBigBytecode(bytes memory _bytecode, bytes32 _salt)
         internal
         returns (address newContract1_, address newContract2_)
     {

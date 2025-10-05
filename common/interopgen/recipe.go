@@ -8,8 +8,8 @@ import (
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/params"
 
-	"github.com/roothash-pay/theweb3-chain/common/devkeys"
-	"github.com/roothash-pay/theweb3-chain/common/genesis"
+	"github.com/roothash-pay/roothash-chain/common/devkeys"
+	"github.com/roothash-pay/roothash-chain/common/genesis"
 )
 
 type InteropDevRecipe struct {

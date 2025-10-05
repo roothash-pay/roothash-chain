@@ -5,7 +5,6 @@
 // solhint-disable-next-line lido/fixed-compiler-version
 pragma solidity >=0.4.24 <0.9.0;
 
-
 library MemUtils {
     /**
      * @dev Allocates a memory byte array of `_len` bytes without zeroing it out.
@@ -26,7 +25,7 @@ library MemUtils {
     function memcpy(uint256 _src, uint256 _dst, uint256 _len) internal pure {
         assembly {
             // while al least 32 bytes left, copy in 32-byte chunks
-            for { } gt(_len, 31) { } {
+            for {} gt(_len, 31) {} {
                 mstore(_dst, mload(_src))
                 _src := add(_src, 32)
                 _dst := add(_dst, 32)
@@ -46,7 +45,10 @@ library MemUtils {
     /**
      * Copies `_len` bytes from `_src`, starting at position `_srcStart`, into `_dst`, starting at position `_dstStart` into `_dst`.
      */
-    function copyBytes(bytes memory _src, bytes memory _dst, uint256 _srcStart, uint256 _dstStart, uint256 _len) internal pure {
+    function copyBytes(bytes memory _src, bytes memory _dst, uint256 _srcStart, uint256 _dstStart, uint256 _len)
+        internal
+        pure
+    {
         require(_srcStart + _len <= _src.length && _dstStart + _len <= _dst.length, "BYTES_ARRAY_OUT_OF_BOUNDS");
         uint256 srcStartPos;
         uint256 dstStartPos;

@@ -42,32 +42,16 @@ contract CpDelegationManagerTest is Test {
         pauserregistry = new PauserRegistry(pausers, unpauser);
 
         theweb3ChainBase logic1 = new theweb3ChainBase();
-        TransparentUpgradeableProxy proxy1 = new TransparentUpgradeableProxy(
-            address(logic1),
-            owner,
-            ""
-        );
+        TransparentUpgradeableProxy proxy1 = new TransparentUpgradeableProxy(address(logic1), owner, "");
 
         theweb3ChainDepositManager logic2 = new theweb3ChainDepositManager();
-        TransparentUpgradeableProxy proxy2 = new TransparentUpgradeableProxy(
-            address(logic2),
-            owner,
-            ""
-        );
+        TransparentUpgradeableProxy proxy2 = new TransparentUpgradeableProxy(address(logic2), owner, "");
 
         DelegationManager logic3 = new DelegationManager();
-        TransparentUpgradeableProxy proxy3 = new TransparentUpgradeableProxy(
-            address(logic3),
-            owner,
-            ""
-        );
+        TransparentUpgradeableProxy proxy3 = new TransparentUpgradeableProxy(address(logic3), owner, "");
 
         SlashingManager logic4 = new SlashingManager();
-        TransparentUpgradeableProxy proxy4 = new TransparentUpgradeableProxy(
-            address(logic4),
-            owner,
-            ""
-        );
+        TransparentUpgradeableProxy proxy4 = new TransparentUpgradeableProxy(address(logic4), owner, "");
 
         theweb3ChainBase = theweb3ChainBase(payable(address(proxy1)));
         theweb3ChainDepositManager = theweb3ChainDepositManager(payable(address(proxy2)));
@@ -80,11 +64,7 @@ contract CpDelegationManagerTest is Test {
             10 ether,
             Itheweb3ChainDepositManager(address(theweb3ChainDepositManager))
         );
-        theweb3ChainDepositManager.initialize(
-            owner,
-            IDelegationManager(address(delegationManager)),
-            theweb3ChainBase
-        );
+        theweb3ChainDepositManager.initialize(owner, IDelegationManager(address(delegationManager)), theweb3ChainBase);
         delegationManager.initialize(
             owner,
             IPauserRegistry(address(pauserregistry)),
@@ -95,11 +75,7 @@ contract CpDelegationManagerTest is Test {
             slashingManager
         );
         slashingManager.initialize(
-            owner,
-            IDelegationManager(address(delegationManager)),
-            slasher,
-            0.1 ether,
-            slashingReceipt
+            owner, IDelegationManager(address(delegationManager)), slasher, 0.1 ether, slashingReceipt
         );
 
         vm.deal(user1, 100 ether);
@@ -115,25 +91,20 @@ contract CpDelegationManagerTest is Test {
         assertFalse(slashingManager.isOperatorJail(operator));
 
         vm.prank(user1);
-        vm.expectRevert(
-            "SlashingManager.onlySlasher: only slasher can do this operation"
-        );
+        vm.expectRevert("SlashingManager.onlySlasher: only slasher can do this operation");
         slashingManager.jail(operator);
 
         vm.prank(user1);
-        vm.expectRevert(
-            "SlashingManager.onlySlasher: only slasher can do this operation"
-        );
+        vm.expectRevert("SlashingManager.onlySlasher: only slasher can do this operation");
         slashingManager.unJail(operator);
     }
 
     function _registerAndDelegate() internal {
-        DelegationManager.OperatorDetails memory od = IDelegationManager
-            .OperatorDetails({
-                earningsReceiver: operator,
-                delegationApprover: address(0),
-                stakerOptOutWindowBlocks: 100
-            });
+        DelegationManager.OperatorDetails memory od = IDelegationManager.OperatorDetails({
+            earningsReceiver: operator,
+            delegationApprover: address(0),
+            stakerOptOutWindowBlocks: 100
+        });
         ISignatureUtils.SignatureWithExpiry memory emptySignatureAndExpiry;
 
         vm.prank(operator);
@@ -145,34 +116,20 @@ contract CpDelegationManagerTest is Test {
         theweb3ChainDepositManager.depositIntotheweb3Chain{value: 2 ether}(2 ether);
 
         vm.prank(user1);
-        delegationManager.delegateTo(
-            operator,
-            emptySignatureAndExpiry,
-            bytes32(0)
-        );
+        delegationManager.delegateTo(operator, emptySignatureAndExpiry, bytes32(0));
 
-        assertEq(
-            delegationManager.stakerDelegateSharesToOperator(operator, user1),
-            2 ether
-        );
+        assertEq(delegationManager.stakerDelegateSharesToOperator(operator, user1), 2 ether);
     }
 
     function testFreezeAndSlashingSharesSuccess() public {
         vm.prank(slasher);
-        vm.expectRevert(
-            "SlashingManager.freezeOperatorStakingShares: No shares to distribute slashShare"
-        );
-        uint256 returned = slashingManager.freezeAndSlashingShares(
-            operator,
-            1 ether
-        );
+        vm.expectRevert("SlashingManager.freezeOperatorStakingShares: No shares to distribute slashShare");
+        uint256 returned = slashingManager.freezeAndSlashingShares(operator, 1 ether);
 
         _registerAndDelegate();
 
         vm.prank(user1);
-        vm.expectRevert(
-            "SlashingManager.onlySlasher: only slasher can do this operation"
-        );
+        vm.expectRevert("SlashingManager.onlySlasher: only slasher can do this operation");
         returned = slashingManager.freezeAndSlashingShares(operator, 1 ether);
 
         vm.prank(slasher);
@@ -187,9 +144,7 @@ contract CpDelegationManagerTest is Test {
         address newRecipient = address(0xCAFE);
 
         vm.prank(user1);
-        vm.expectRevert(
-            "SlashingManager.onlySlasher: only slasher can do this operation"
-        );
+        vm.expectRevert("SlashingManager.onlySlasher: only slasher can do this operation");
         slashingManager.updateSlashingRecipient(newRecipient);
 
         vm.prank(slasher);
@@ -199,9 +154,7 @@ contract CpDelegationManagerTest is Test {
 
     function testWithdrawRevertsBelowThreshold() public {
         vm.deal(address(slashingManager), 0.05 ether);
-        vm.expectRevert(
-            "SlashingManager: withdrawal amount must be greater than minimum withdrawal amount"
-        );
+        vm.expectRevert("SlashingManager: withdrawal amount must be greater than minimum withdrawal amount");
         slashingManager.withdraw();
 
         vm.deal(address(slashingManager), 0.5 ether);
@@ -224,11 +177,7 @@ contract CpDelegationManagerTest is Test {
 
         vm.deal(address(slashingManager), 2 ether);
         vm.expectEmit(true, true, true, true);
-        emit ISlashingManager.Withdrawal(
-            2 ether,
-            slashingReceipt,
-            address(this)
-        );
+        emit ISlashingManager.Withdrawal(2 ether, slashingReceipt, address(this));
 
         slashingManager.withdraw();
         assertEq(slashingReceipt.balance, 2 ether);

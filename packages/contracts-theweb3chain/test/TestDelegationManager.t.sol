@@ -39,25 +39,13 @@ contract CpDelegationManagerTest is Test {
         pauserregistry = new PauserRegistry(pausers, unpauser);
 
         theweb3ChainBase logic1 = new theweb3ChainBase();
-        TransparentUpgradeableProxy proxy1 = new TransparentUpgradeableProxy(
-            address(logic1),
-            owner,
-            ""
-        );
+        TransparentUpgradeableProxy proxy1 = new TransparentUpgradeableProxy(address(logic1), owner, "");
 
         theweb3ChainDepositManager logic2 = new theweb3ChainDepositManager();
-        TransparentUpgradeableProxy proxy2 = new TransparentUpgradeableProxy(
-            address(logic2),
-            owner,
-            ""
-        );
+        TransparentUpgradeableProxy proxy2 = new TransparentUpgradeableProxy(address(logic2), owner, "");
 
         DelegationManager logic3 = new DelegationManager();
-        TransparentUpgradeableProxy proxy3 = new TransparentUpgradeableProxy(
-            address(logic3),
-            owner,
-            ""
-        );
+        TransparentUpgradeableProxy proxy3 = new TransparentUpgradeableProxy(address(logic3), owner, "");
 
         theweb3ChainBase = theweb3ChainBase(payable(address(proxy1)));
         theweb3ChainDepositManager = theweb3ChainDepositManager(payable(address(proxy2)));
@@ -69,11 +57,7 @@ contract CpDelegationManagerTest is Test {
             10 ether,
             Itheweb3ChainDepositManager(address(theweb3ChainDepositManager))
         );
-        theweb3ChainDepositManager.initialize(
-            owner,
-            IDelegationManager(address(delegationManager)),
-            theweb3ChainBase
-        );
+        theweb3ChainDepositManager.initialize(owner, IDelegationManager(address(delegationManager)), theweb3ChainBase);
         delegationManager.initialize(
             owner,
             IPauserRegistry(address(pauserregistry)),
@@ -90,24 +74,21 @@ contract CpDelegationManagerTest is Test {
     }
 
     function testOperatorCanRegisterAndEmitEvents() public {
-        DelegationManager.OperatorDetails memory od1 = IDelegationManager
-            .OperatorDetails({
-                earningsReceiver: operator,
-                delegationApprover: address(0),
-                stakerOptOutWindowBlocks: 100
-            });
-        DelegationManager.OperatorDetails memory od2 = IDelegationManager
-            .OperatorDetails({
-                earningsReceiver: address(0),
-                delegationApprover: address(0),
-                stakerOptOutWindowBlocks: 100
-            });
-        DelegationManager.OperatorDetails memory od3 = IDelegationManager
-            .OperatorDetails({
-                earningsReceiver: operator1,
-                delegationApprover: address(0),
-                stakerOptOutWindowBlocks: 180 days
-            });
+        DelegationManager.OperatorDetails memory od1 = IDelegationManager.OperatorDetails({
+            earningsReceiver: operator,
+            delegationApprover: address(0),
+            stakerOptOutWindowBlocks: 100
+        });
+        DelegationManager.OperatorDetails memory od2 = IDelegationManager.OperatorDetails({
+            earningsReceiver: address(0),
+            delegationApprover: address(0),
+            stakerOptOutWindowBlocks: 100
+        });
+        DelegationManager.OperatorDetails memory od3 = IDelegationManager.OperatorDetails({
+            earningsReceiver: operator1,
+            delegationApprover: address(0),
+            stakerOptOutWindowBlocks: 180 days
+        });
         string memory nodeUrl = "http://127.0.0.1:1234";
 
         vm.expectEmit(true, true, true, true);
@@ -119,18 +100,14 @@ contract CpDelegationManagerTest is Test {
         delegationManager.registerAsOperator(od1, nodeUrl);
 
         vm.prank(operator);
-        vm.expectRevert(
-            "DelegationManager.registerAsOperator: operator has already registered"
-        );
+        vm.expectRevert("DelegationManager.registerAsOperator: operator has already registered");
         delegationManager.registerAsOperator(od2, nodeUrl);
 
         assertEq(true, delegationManager.isDelegated(operator));
         assertEq(true, delegationManager.isOperator(operator));
 
         vm.prank(operator1);
-        vm.expectRevert(
-            "DelegationManager._setOperatorDetails: cannot set `earningsReceiver` to zero address"
-        );
+        vm.expectRevert("DelegationManager._setOperatorDetails: cannot set `earningsReceiver` to zero address");
         delegationManager.registerAsOperator(od2, nodeUrl);
 
         vm.prank(operator1);
@@ -145,37 +122,26 @@ contract CpDelegationManagerTest is Test {
         delegationManager.registerAsOperator(od1, nodeUrl);
 
         assertEq(delegationManager.getOperatorShares(operator1), 2 ether);
-        assertEq(
-            delegationManager.stakerDelegateSharesToOperator(
-                operator1,
-                operator1
-            ),
-            2 ether
-        );
+        assertEq(delegationManager.stakerDelegateSharesToOperator(operator1, operator1), 2 ether);
 
         address[2] memory stakerList;
-        stakerList = [
-            delegationManager.stakerList(0),
-            delegationManager.stakerList(1)
-        ];
+        stakerList = [delegationManager.stakerList(0), delegationManager.stakerList(1)];
 
         assertEq(stakerList[0], operator);
         assertEq(stakerList[1], operator1);
 
         // 修改 details
-        IDelegationManager.OperatorDetails
-            memory newDetails = IDelegationManager.OperatorDetails({
-                earningsReceiver: operator,
-                delegationApprover: address(4),
-                stakerOptOutWindowBlocks: 150
-            });
+        IDelegationManager.OperatorDetails memory newDetails = IDelegationManager.OperatorDetails({
+            earningsReceiver: operator,
+            delegationApprover: address(4),
+            stakerOptOutWindowBlocks: 150
+        });
 
         vm.prank(operator);
         delegationManager.modifyOperatorDetails(newDetails);
 
         // 校验
-        IDelegationManager.OperatorDetails memory readBack = delegationManager
-            .operatorDetails(operator);
+        IDelegationManager.OperatorDetails memory readBack = delegationManager.operatorDetails(operator);
         assertEq(readBack.delegationApprover, address(4));
         assertEq(readBack.stakerOptOutWindowBlocks, 150);
 
@@ -190,12 +156,11 @@ contract CpDelegationManagerTest is Test {
     }
 
     function testStakerCanDelegateToOperator() public {
-        DelegationManager.OperatorDetails memory od = IDelegationManager
-            .OperatorDetails({
-                earningsReceiver: operator,
-                delegationApprover: address(0),
-                stakerOptOutWindowBlocks: 100
-            });
+        DelegationManager.OperatorDetails memory od = IDelegationManager.OperatorDetails({
+            earningsReceiver: operator,
+            delegationApprover: address(0),
+            stakerOptOutWindowBlocks: 100
+        });
         ISignatureUtils.SignatureWithExpiry memory emptySignatureAndExpiry;
         vm.startPrank(operator);
         delegationManager.registerAsOperator(od, "node-url");
@@ -206,38 +171,19 @@ contract CpDelegationManagerTest is Test {
         theweb3ChainDepositManager.depositIntotheweb3Chain{value: 2 ether}(2 ether);
 
         vm.startPrank(user1);
-        vm.expectRevert(
-            "DelegationManager._delegate: operator is not registered in theweb3ChainLayer"
-        );
-        delegationManager.delegateTo(
-            user1,
-            emptySignatureAndExpiry,
-            bytes32(0)
-        );
+        vm.expectRevert("DelegationManager._delegate: operator is not registered in theweb3ChainLayer");
+        delegationManager.delegateTo(user1, emptySignatureAndExpiry, bytes32(0));
 
         vm.startPrank(user1);
-        delegationManager.delegateTo(
-            operator,
-            emptySignatureAndExpiry,
-            bytes32(0)
-        );
+        delegationManager.delegateTo(operator, emptySignatureAndExpiry, bytes32(0));
         assertEq(delegationManager.isDelegated(user1), true);
         assertEq(delegationManager.stakerList(2), user1);
         assertEq(delegationManager.getOperatorShares(operator), 2 ether);
-        assertEq(
-            delegationManager.stakerDelegateSharesToOperator(operator, user1),
-            2 ether
-        );
+        assertEq(delegationManager.stakerDelegateSharesToOperator(operator, user1), 2 ether);
 
         vm.startPrank(user1);
-        vm.expectRevert(
-            "DelegationManager._delegate: staker is already actively delegated"
-        );
-        delegationManager.delegateTo(
-            operator1,
-            emptySignatureAndExpiry,
-            bytes32(0)
-        );
+        vm.expectRevert("DelegationManager._delegate: staker is already actively delegated");
+        delegationManager.delegateTo(operator1, emptySignatureAndExpiry, bytes32(0));
     }
 
     function testStakerCanUndelegate() public {
@@ -265,29 +211,22 @@ contract CpDelegationManagerTest is Test {
         _registerAndDelegate();
 
         vm.prank(address(0xE1));
-        vm.expectRevert(
-            "DelegationManager.undelegate: staker must be delegated to undelegate"
-        );
+        vm.expectRevert("DelegationManager.undelegate: staker must be delegated to undelegate");
         delegationManager.undelegate(address(0xE1));
 
-        vm.expectRevert(
-            "DelegationManager.undelegate: operators cannot be undelegated"
-        );
+        vm.expectRevert("DelegationManager.undelegate: operators cannot be undelegated");
         delegationManager.undelegate(operator);
 
-        vm.expectRevert(
-            "DelegationManager.undelegate: caller cannot undelegate staker"
-        );
+        vm.expectRevert("DelegationManager.undelegate: caller cannot undelegate staker");
         delegationManager.undelegate(user1);
     }
 
     function _registerAndDelegate() internal {
-        DelegationManager.OperatorDetails memory od = IDelegationManager
-            .OperatorDetails({
-                earningsReceiver: operator,
-                delegationApprover: address(0),
-                stakerOptOutWindowBlocks: 100
-            });
+        DelegationManager.OperatorDetails memory od = IDelegationManager.OperatorDetails({
+            earningsReceiver: operator,
+            delegationApprover: address(0),
+            stakerOptOutWindowBlocks: 100
+        });
         ISignatureUtils.SignatureWithExpiry memory emptySignatureAndExpiry;
 
         vm.prank(operator);
@@ -299,16 +238,9 @@ contract CpDelegationManagerTest is Test {
         theweb3ChainDepositManager.depositIntotheweb3Chain{value: 2 ether}(2 ether);
 
         vm.prank(user1);
-        delegationManager.delegateTo(
-            operator,
-            emptySignatureAndExpiry,
-            bytes32(0)
-        );
+        delegationManager.delegateTo(operator, emptySignatureAndExpiry, bytes32(0));
 
-        assertEq(
-            delegationManager.stakerDelegateSharesToOperator(operator, user1),
-            2 ether
-        );
+        assertEq(delegationManager.stakerDelegateSharesToOperator(operator, user1), 2 ether);
     }
 
     function testIncreaseAndDecreaseShares() public {
@@ -321,10 +253,7 @@ contract CpDelegationManagerTest is Test {
         vm.prank(address(theweb3ChainDepositManager));
         delegationManager.increaseDelegatedShares(user1, 100 ether);
         assertEq(delegationManager.getOperatorShares(operator), 102 ether);
-        assertEq(
-            delegationManager.stakerDelegateSharesToOperator(operator, user1),
-            102 ether
-        );
+        assertEq(delegationManager.stakerDelegateSharesToOperator(operator, user1), 102 ether);
 
         vm.prank(user1);
         vm.expectRevert("onlyStrategyManager");
@@ -332,17 +261,13 @@ contract CpDelegationManagerTest is Test {
 
         vm.prank(address(theweb3ChainDepositManager));
         delegationManager.decreaseDelegatedShares(user1, 40 ether);
-        assertEq(
-            delegationManager.stakerDelegateSharesToOperator(operator, user1),
-            62 ether
-        );
+        assertEq(delegationManager.stakerDelegateSharesToOperator(operator, user1), 62 ether);
     }
 
     function testOperatorDetailsQuery() public {
         _registerAndDelegate();
 
-        DelegationManager.OperatorDetails memory od = delegationManager
-            .operatorDetails(operator);
+        DelegationManager.OperatorDetails memory od = delegationManager.operatorDetails(operator);
         assertEq(od.earningsReceiver, operator);
     }
 
@@ -355,45 +280,36 @@ contract CpDelegationManagerTest is Test {
         delegationManager.queueWithdrawals(params);
 
         assertEq(theweb3ChainDepositManager.getDeposits(user1), 1 ether);
-        assertEq(
-            delegationManager.stakerDelegateSharesToOperator(operator, user1),
-            1 ether
-        );
+        assertEq(delegationManager.stakerDelegateSharesToOperator(operator, user1), 1 ether);
         assertEq(delegationManager.getOperatorShares(operator), 1 ether);
         assertEq(user1.balance, 98 ether);
 
         // Advance blocks
         vm.roll(block.number + 200);
 
-        IDelegationManager.Withdrawal memory withdrawal = IDelegationManager
-            .Withdrawal({
-                staker: user1,
-                delegatedTo: operator,
-                withdrawer: user1,
-                nonce: 0,
-                startBlock: uint32(block.number - 200),
-                shares: 1 ether
-            });
-        IDelegationManager.Withdrawal memory withdrawalFake = IDelegationManager
-            .Withdrawal({
-                staker: user1,
-                delegatedTo: operator,
-                withdrawer: user1,
-                nonce: 100,
-                startBlock: uint32(block.number - 200),
-                shares: 1 ether
-            });
+        IDelegationManager.Withdrawal memory withdrawal = IDelegationManager.Withdrawal({
+            staker: user1,
+            delegatedTo: operator,
+            withdrawer: user1,
+            nonce: 0,
+            startBlock: uint32(block.number - 200),
+            shares: 1 ether
+        });
+        IDelegationManager.Withdrawal memory withdrawalFake = IDelegationManager.Withdrawal({
+            staker: user1,
+            delegatedTo: operator,
+            withdrawer: user1,
+            nonce: 100,
+            startBlock: uint32(block.number - 200),
+            shares: 1 ether
+        });
 
         vm.prank(user1);
-        vm.expectRevert(
-            "DelegationManager._completeQueuedWithdrawal: action is not in queue"
-        );
+        vm.expectRevert("DelegationManager._completeQueuedWithdrawal: action is not in queue");
         delegationManager.completeQueuedWithdrawal(withdrawalFake);
 
         vm.prank(operator);
-        vm.expectRevert(
-            "DelegationManager._completeQueuedWithdrawal: only withdrawer can complete action"
-        );
+        vm.expectRevert("DelegationManager._completeQueuedWithdrawal: only withdrawer can complete action");
         delegationManager.completeQueuedWithdrawal(withdrawal);
 
         vm.roll(0);
@@ -504,8 +420,7 @@ contract CpDelegationManagerTest is Test {
 
     function testOperatorDetailsReturnsCorrectStruct() public {
         _registerAndDelegate();
-        DelegationManager.OperatorDetails memory od = delegationManager
-            .operatorDetails(operator);
+        DelegationManager.OperatorDetails memory od = delegationManager.operatorDetails(operator);
         assertEq(od.earningsReceiver, operator);
         assertEq(od.stakerOptOutWindowBlocks, 100);
     }
@@ -545,50 +460,33 @@ contract CpDelegationManagerTest is Test {
 
     function testCalculateCurrentStakerDelegationDigestHash() public {
         _registerAndDelegate();
-        bytes32 digest = delegationManager
-            .calculateCurrentStakerDelegationDigestHash(
-                user1,
-                operator,
-                block.timestamp + 100
-            );
+        bytes32 digest =
+            delegationManager.calculateCurrentStakerDelegationDigestHash(user1, operator, block.timestamp + 100);
         assertTrue(digest != bytes32(0));
     }
 
     function testCalculateStakerDelegationDigestHash() public view {
-        bytes32 digest = delegationManager.calculateStakerDelegationDigestHash(
-            user1,
-            0,
-            operator,
-            block.timestamp + 100
-        );
+        bytes32 digest =
+            delegationManager.calculateStakerDelegationDigestHash(user1, 0, operator, block.timestamp + 100);
         assertTrue(digest != bytes32(0));
     }
 
     function testCalculateDelegationApprovalDigestHash() public view {
-        bytes32 digest = delegationManager
-            .calculateDelegationApprovalDigestHash(
-                user1,
-                operator,
-                address(0),
-                keccak256("salt"),
-                block.timestamp + 100
-            );
+        bytes32 digest = delegationManager.calculateDelegationApprovalDigestHash(
+            user1, operator, address(0), keccak256("salt"), block.timestamp + 100
+        );
         assertTrue(digest != bytes32(0));
     }
 
     function testGetStakerSharesOfOperatorReturnsCorrectMapping() public {
         _registerAndDelegate();
 
-        assertEq(
-            delegationManager.stakerDelegateSharesToOperator(operator, user1),
-            2 ether
-        );
+        assertEq(delegationManager.stakerDelegateSharesToOperator(operator, user1), 2 ether);
 
         vm.prank(address(theweb3ChainDepositManager));
         delegationManager.increaseDelegatedShares(user1, 1 ether);
 
-        (address[] memory stakers, uint256[] memory shares) = delegationManager
-            .getStakerSharesOfOperator(operator);
+        (address[] memory stakers, uint256[] memory shares) = delegationManager.getStakerSharesOfOperator(operator);
 
         assertEq(stakers[0], operator);
         assertEq(stakers[1], operator1);
@@ -596,10 +494,7 @@ contract CpDelegationManagerTest is Test {
 
         assertEq(shares[0], 0);
         assertEq(shares[1], 0);
-        assertEq(
-            delegationManager.stakerDelegateSharesToOperator(operator, user1),
-            3 ether
-        );
+        assertEq(delegationManager.stakerDelegateSharesToOperator(operator, user1), 3 ether);
         assertEq(shares[2], 3 ether);
     }
 }

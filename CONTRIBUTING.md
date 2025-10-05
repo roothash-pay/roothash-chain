@@ -9,7 +9,7 @@ You can:
 
 - Report issues in this repository. Great bug reports are detailed and give clear instructions for how a developer can reproduce the problem. Write good bug reports and developers will love you.
   - **IMPORTANT**: If you believe your report impacts the security of this repository, refer to the canonical [Security Policy](https://github.com/theweb3Chain-network/.github/blob/master/SECURITY.md) document.
-- Fix issues that are tagged as [`D-good-first-issue`](https://github.com/roothash-pay/theweb3-chain/labels/D-good-first-issue) or [`S-confirmed`](https://github.com/roothash-pay/theweb3-chain/labels/S-confirmed).
+- Fix issues that are tagged as [`D-good-first-issue`](https://github.com/roothash-pay/roothash-chain/labels/D-good-first-issue) or [`S-confirmed`](https://github.com/roothash-pay/roothash-chain/labels/S-confirmed).
 - Larger projects are listed on [this project board](https://github.com/orgs/theweb3Chain-network/projects/31/views/9). Please talk to us if you're considering working on one of these, they may not be fully specified so it will reduce risk to discuss the approach and ensure that it's still relevant.
 - Help improve the [theweb3Chain Docs] by reporting issues or adding missing sections.
 - Get involved in the protocol design process by joining discussions within the [OP Stack Specs](https://github.com/theweb3Chain-network/specs/discussions) repository.
@@ -137,29 +137,29 @@ The following are a comprehensive list of label categories.
 Labels also provide a versatile filter for finding tickets that need help or are open for assignment.
 This makes them a great tool for contributors!
 
-[area]: https://github.com/roothash-pay/theweb3-chain/labels?q=a-
-[category]: https://github.com/roothash-pay/theweb3-chain/labels?q=c-
-[meta]: https://github.com/roothash-pay/theweb3-chain/labels?q=m-
-[difficulty]: https://github.com/roothash-pay/theweb3-chain/labels?q=d-
-[status]: https://github.com/roothash-pay/theweb3-chain/labels?q=s-
+[area]: https://github.com/roothash-pay/roothash-chain/labels?q=a-
+[category]: https://github.com/roothash-pay/roothash-chain/labels?q=c-
+[meta]: https://github.com/roothash-pay/roothash-chain/labels?q=m-
+[difficulty]: https://github.com/roothash-pay/roothash-chain/labels?q=d-
+[status]: https://github.com/roothash-pay/roothash-chain/labels?q=s-
 
 ### Filtering for Work
 
-To find tickets available for external contribution, take a look at the https://github.com/roothash-pay/theweb3-chain/labels/M-community label.
+To find tickets available for external contribution, take a look at the https://github.com/roothash-pay/roothash-chain/labels/M-community label.
 
-You can filter by the https://github.com/roothash-pay/theweb3-chain/labels/D-good-first-issue
+You can filter by the https://github.com/roothash-pay/roothash-chain/labels/D-good-first-issue
 label to find issues that are intended to be easy to implement or fix.
 
 Also, all labels can be seen by visiting the [labels page][labels]
 
-[labels]: https://github.com/roothash-pay/theweb3-chain/labels
+[labels]: https://github.com/roothash-pay/roothash-chain/labels
 
 ### Modifying Labels
 
 When altering label names or deleting labels there are a few things you must be aware of.
 
-- If the https://github.com/roothash-pay/theweb3-chain/labels/S-stale label is altered, the [close-stale](.github/workflows/close-stale.yml) workflow should be updated.
-- If the https://github.com/roothash-pay/theweb3-chain/labels/M-dependabot label is altered, the [dependabot config](.github/dependabot.yml) file should be adjusted.
+- If the https://github.com/roothash-pay/roothash-chain/labels/S-stale label is altered, the [close-stale](.github/workflows/close-stale.yml) workflow should be updated.
+- If the https://github.com/roothash-pay/roothash-chain/labels/M-dependabot label is altered, the [dependabot config](.github/dependabot.yml) file should be adjusted.
 - Saved label filters for project boards will not automatically update. These should be updated if label names change.
 
 ## Workflow for Pull Requests
@@ -168,7 +168,7 @@ When altering label names or deleting labels there are a few things you must be 
 
 In general, the smaller the diff the easier it will be for us to review quickly.
 
-In order to contribute, fork the appropriate branch, for non-breaking changes to production that is `develop` and for the next release that is normally `release/X.X.X` branch, see [details about our branching model](https://github.com/roothash-pay/theweb3-chain/blob/develop/README.md#branching-model-and-releases).
+In order to contribute, fork the appropriate branch, for non-breaking changes to production that is `develop` and for the next release that is normally `release/X.X.X` branch, see [details about our branching model](https://github.com/roothash-pay/roothash-chain/blob/develop/README.md#branching-model-and-releases).
 
 Additionally, if you are writing a new feature, please ensure you add appropriate test cases.
 

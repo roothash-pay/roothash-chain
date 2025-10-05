@@ -5,7 +5,6 @@ import "@openzeppelin/contracts/interfaces/IERC1271.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
-
 library EIP1271SignatureUtils {
     bytes4 internal constant EIP1271_MAGICVALUE = 0x1626ba7e;
 
@@ -17,12 +16,14 @@ library EIP1271SignatureUtils {
             );
         } else {
             require(
-                ECDSA.recover(keccak256(
-                    abi.encodePacked("\x19Ethereum Signed Message:\n32", digestHash)
-                ), signature) == signer,
+                ECDSA.recover(keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", digestHash)), signature)
+                    == signer,
                 "EIP1271SignatureUtils.checkSignature_EIP1271: signature not from signer"
             );
         }
     }
-    function _isContract(address account) internal view returns (bool) { return account.code.length > 0; }
+
+    function _isContract(address account) internal view returns (bool) {
+        return account.code.length > 0;
+    }
 }

@@ -34,25 +34,13 @@ contract theweb3ChainDepositManagerTest is Test {
         pauserregistry = new PauserRegistry(pausers, unpauser);
 
         theweb3ChainBase logic1 = new theweb3ChainBase();
-        TransparentUpgradeableProxy proxy1 = new TransparentUpgradeableProxy(
-            address(logic1),
-            owner,
-            ""
-        );
+        TransparentUpgradeableProxy proxy1 = new TransparentUpgradeableProxy(address(logic1), owner, "");
 
         theweb3ChainDepositManager logic2 = new theweb3ChainDepositManager();
-        TransparentUpgradeableProxy proxy2 = new TransparentUpgradeableProxy(
-            address(logic2),
-            owner,
-            ""
-        );
+        TransparentUpgradeableProxy proxy2 = new TransparentUpgradeableProxy(address(logic2), owner, "");
 
         DelegationManager logic3 = new DelegationManager();
-        TransparentUpgradeableProxy proxy3 = new TransparentUpgradeableProxy(
-            address(logic3),
-            owner,
-            ""
-        );
+        TransparentUpgradeableProxy proxy3 = new TransparentUpgradeableProxy(address(logic3), owner, "");
 
         theweb3ChainBase = theweb3ChainBase(payable(address(proxy1)));
         theweb3ChainDepositManager = theweb3ChainDepositManager(payable(address(proxy2)));
@@ -64,11 +52,7 @@ contract theweb3ChainDepositManagerTest is Test {
             10 ether,
             Itheweb3ChainDepositManager(address(theweb3ChainDepositManager))
         );
-        theweb3ChainDepositManager.initialize(
-            owner,
-            IDelegationManager(address(delegationManager)),
-            theweb3ChainBase
-        );
+        theweb3ChainDepositManager.initialize(owner, IDelegationManager(address(delegationManager)), theweb3ChainBase);
         delegationManager.initialize(
             owner,
             IPauserRegistry(address(pauserregistry)),
@@ -112,15 +96,11 @@ contract theweb3ChainDepositManagerTest is Test {
         vm.expectRevert("onlyDelegationManager");
         theweb3ChainDepositManager.removeShares(user1, 1 ether);
 
-        vm.expectRevert(
-            "theweb3ChainDepositManager.removeShares: shareAmount should not be zero!"
-        );
+        vm.expectRevert("theweb3ChainDepositManager.removeShares: shareAmount should not be zero!");
         vm.prank(address(delegationManager));
         theweb3ChainDepositManager.removeShares(user1, 0);
 
-        vm.expectRevert(
-            "theweb3ChainDepositManager._removeShares: shareAmount too high"
-        );
+        vm.expectRevert("theweb3ChainDepositManager._removeShares: shareAmount too high");
         vm.prank(address(delegationManager));
         theweb3ChainDepositManager.removeShares(user1, 100 ether);
     }
@@ -147,9 +127,7 @@ contract theweb3ChainDepositManagerTest is Test {
         assertEq(stored, 5 ether);
 
         vm.prank(address(delegationManager));
-        vm.expectRevert(
-            "theweb3ChainDepositManager._addShares: shares should not be zero!"
-        );
+        vm.expectRevert("theweb3ChainDepositManager._addShares: shares should not be zero!");
         theweb3ChainDepositManager.addShares(user1, 0);
 
         vm.expectRevert("onlyDelegationManager");
@@ -175,42 +153,23 @@ contract theweb3ChainDepositManagerTest is Test {
         uint256 privKey = 0x4f3edf983ac636a65a842ce7c78d9aa706d3b113b37c9430e6fd8c8d11f8b4e6;
         address staker = vm.addr(privKey);
 
-        bytes32 DEPOSIT_TYPEHASH = keccak256(
-            "Deposit(address staker,address theweb3ChainBase,uint256 amount,uint256 nonce,uint256 expiry)"
-        );
-        bytes32 DOMAIN_TYPEHASH = keccak256(
-            "EIP712Domain(string name,uint256 chainId,address verifyingContract)"
-        );
+        bytes32 DEPOSIT_TYPEHASH =
+            keccak256("Deposit(address staker,address theweb3ChainBase,uint256 amount,uint256 nonce,uint256 expiry)");
+        bytes32 DOMAIN_TYPEHASH = keccak256("EIP712Domain(string name,uint256 chainId,address verifyingContract)");
 
-        bytes32 structHash = keccak256(
-            abi.encode(DEPOSIT_TYPEHASH, staker, 2 ether, 0, 100)
-        );
+        bytes32 structHash = keccak256(abi.encode(DEPOSIT_TYPEHASH, staker, 2 ether, 0, 100));
 
         bytes32 domainSeparator = keccak256(
-            abi.encode(
-                DOMAIN_TYPEHASH,
-                keccak256("theweb3Chain"),
-                block.chainid,
-                address(theweb3ChainDepositManager)
-            )
+            abi.encode(DOMAIN_TYPEHASH, keccak256("theweb3Chain"), block.chainid, address(theweb3ChainDepositManager))
         );
-        bytes32 digestHash = keccak256(
-            abi.encodePacked("\x19\x01", domainSeparator, structHash)
-        );
-        bytes32 digest = keccak256(
-            abi.encodePacked("\x19Ethereum Signed Message:\n32", digestHash)
-        );
+        bytes32 digestHash = keccak256(abi.encodePacked("\x19\x01", domainSeparator, structHash));
+        bytes32 digest = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", digestHash));
 
         (uint8 v, bytes32 r, bytes32 s) = vm.sign(privKey, digest);
         bytes memory signature = abi.encodePacked(r, s, v);
 
         vm.prank(user1);
-        theweb3ChainDepositManager.depositIntotheweb3ChainWithSignature{value: 2 ether}(
-            2 ether,
-            staker,
-            100,
-            signature
-        );
+        theweb3ChainDepositManager.depositIntotheweb3ChainWithSignature{value: 2 ether}(2 ether, staker, 100, signature);
 
         uint256 afterShares = theweb3ChainDepositManager.getDeposits(staker);
         assert(afterShares == 2 ether);
@@ -218,22 +177,12 @@ contract theweb3ChainDepositManagerTest is Test {
         vm.prank(user1);
         vm.expectRevert("deposit value not match amount");
         theweb3ChainDepositManager.depositIntotheweb3ChainWithSignature{value: 2 ether}(
-            10 ether,
-            staker,
-            100,
-            signature
+            10 ether, staker, 100, signature
         );
 
         vm.prank(user1);
         vm.warp(10000);
-        vm.expectRevert(
-            "theweb3ChainDepositManager.depositIntotheweb3ChainWithSignature: signature expired"
-        );
-        theweb3ChainDepositManager.depositIntotheweb3ChainWithSignature{value: 2 ether}(
-            2 ether,
-            staker,
-            100,
-            signature
-        );
+        vm.expectRevert("theweb3ChainDepositManager.depositIntotheweb3ChainWithSignature: signature expired");
+        theweb3ChainDepositManager.depositIntotheweb3ChainWithSignature{value: 2 ether}(2 ether, staker, 100, signature);
     }
 }

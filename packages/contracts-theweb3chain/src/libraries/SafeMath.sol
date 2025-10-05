@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.24;
 
-
 /**
  * @title SafeMath
  * @dev Math operations with safety checks that revert on error
@@ -13,8 +12,8 @@ library SafeMath {
     string private constant ERROR_DIV_ZERO = "MATH_DIV_ZERO";
 
     /**
-    * @dev Multiplies two numbers, reverts on overflow.
-    */
+     * @dev Multiplies two numbers, reverts on overflow.
+     */
     function mul(uint256 _a, uint256 _b) internal pure returns (uint256) {
         // Gas optimization: this is cheaper than requiring 'a' not being zero, but the
         // benefit is lost if 'b' is also tested.
@@ -30,8 +29,8 @@ library SafeMath {
     }
 
     /**
-    * @dev Integer division of two numbers truncating the quotient, reverts on division by zero.
-    */
+     * @dev Integer division of two numbers truncating the quotient, reverts on division by zero.
+     */
     function div(uint256 _a, uint256 _b) internal pure returns (uint256) {
         require(_b > 0, ERROR_DIV_ZERO); // Solidity only automatically asserts when dividing by 0
         uint256 c = _a / _b;
@@ -41,8 +40,8 @@ library SafeMath {
     }
 
     /**
-    * @dev Subtracts two numbers, reverts on overflow (i.e. if subtrahend is greater than minuend).
-    */
+     * @dev Subtracts two numbers, reverts on overflow (i.e. if subtrahend is greater than minuend).
+     */
     function sub(uint256 _a, uint256 _b) internal pure returns (uint256) {
         require(_b <= _a, ERROR_SUB_UNDERFLOW);
         uint256 c = _a - _b;
@@ -51,8 +50,8 @@ library SafeMath {
     }
 
     /**
-    * @dev Adds two numbers, reverts on overflow.
-    */
+     * @dev Adds two numbers, reverts on overflow.
+     */
     function add(uint256 _a, uint256 _b) internal pure returns (uint256) {
         uint256 c = _a + _b;
         require(c >= _a, ERROR_ADD_OVERFLOW);
@@ -61,9 +60,9 @@ library SafeMath {
     }
 
     /**
-    * @dev Divides two numbers and returns the remainder (unsigned integer modulo),
-    * reverts when dividing by zero.
-    */
+     * @dev Divides two numbers and returns the remainder (unsigned integer modulo),
+     * reverts when dividing by zero.
+     */
     function mod(uint256 a, uint256 b) internal pure returns (uint256) {
         require(b != 0, ERROR_DIV_ZERO);
         return a % b;

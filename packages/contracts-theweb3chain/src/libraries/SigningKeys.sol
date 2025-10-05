@@ -8,6 +8,7 @@ import "@/libraries/SafeMath.sol";
 import "@/libraries/SafeMath64.sol";
 /// @title Library for manage operator keys in storage
 /// @author KRogLA
+
 library SigningKeys {
     using SafeMath for uint256;
     using SafeMath64 for uint64;
@@ -20,7 +21,11 @@ library SigningKeys {
     event SigningKeyAdded(uint256 indexed nodeOperatorId, bytes pubkey);
     event SigningKeyRemoved(uint256 indexed nodeOperatorId, bytes pubkey);
 
-    function getKeyOffset(bytes32 _position, uint256 _nodeOperatorId, uint256 _keyIndex) internal pure returns (uint256) {
+    function getKeyOffset(bytes32 _position, uint256 _nodeOperatorId, uint256 _keyIndex)
+        internal
+        pure
+        returns (uint256)
+    {
         return uint256(keccak256(abi.encodePacked(_position, _nodeOperatorId, _keyIndex)));
     }
 

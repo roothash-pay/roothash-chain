@@ -14,8 +14,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/roothash-pay/theweb3-chain/tw-node/rollup"
-	"github.com/roothash-pay/theweb3-chain/tw-service/testlog"
+	"github.com/roothash-pay/roothash-chain/rhs-node/rollup"
+	"github.com/roothash-pay/roothash-chain/rhs-service/testlog"
 )
 
 func TestConfigDataMarshalUnmarshal(t *testing.T) {

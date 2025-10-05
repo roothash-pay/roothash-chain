@@ -5,7 +5,7 @@ import (
 	"math/big"
 
 	"github.com/ethereum/go-ethereum/common"
-	"github.com/roothash-pay/theweb3-chain/common/script/forking"
+	"github.com/roothash-pay/roothash-chain/common/script/forking"
 )
 
 // ForkOption modifies a ForkConfig, and can be used by Host internals,

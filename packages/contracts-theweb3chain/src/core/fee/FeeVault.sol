@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-import { SafeCall } from "src/libraries/SafeCall.sol";
-import { Predeploys } from "src/libraries/Predeploys.sol";
-import { Types } from "src/libraries/Types.sol";
+import {SafeCall} from "src/libraries/SafeCall.sol";
+import {Predeploys} from "src/libraries/Predeploys.sol";
+import {Types} from "src/libraries/Types.sol";
 
 abstract contract FeeVault {
     uint256 public immutable MIN_WITHDRAWAL_AMOUNT;
@@ -44,7 +44,7 @@ abstract contract FeeVault {
 
         emit Withdrawal(value, RECIPIENT, msg.sender);
 
-        (bool success, ) = payable(RECIPIENT).call{value: value}("");
+        (bool success,) = payable(RECIPIENT).call{value: value}("");
 
         require(success, "FeeVault: failed to send TW to fee recipient");
     }

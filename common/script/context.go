@@ -3,7 +3,7 @@ package script
 import (
 	"math/big"
 
-	"github.com/roothash-pay/theweb3-chain/common/script/addresses"
+	"github.com/roothash-pay/roothash-chain/common/script/addresses"
 
 	"github.com/ethereum/go-ethereum/common"
 )

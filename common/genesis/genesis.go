@@ -12,8 +12,8 @@ import (
 	"github.com/ethereum/go-ethereum/core"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/params"
-	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
-	"github.com/roothash-pay/theweb3-chain/tw-service/predeploys"
+	"github.com/roothash-pay/roothash-chain/rhs-service/eth"
+	"github.com/roothash-pay/roothash-chain/rhs-service/predeploys"
 )
 
 // defaultGasLimit represents the default gas limit for a genesis block.

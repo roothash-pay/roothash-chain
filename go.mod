@@ -1,4 +1,4 @@
-module github.com/roothash-pay/theweb3-chain
+module github.com/roothash-pay/roothash-chain
 
 go 1.22.0
 

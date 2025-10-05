@@ -13,9 +13,9 @@ import (
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
 
-	"github.com/roothash-pay/theweb3-chain/common/foundry"
-	"github.com/roothash-pay/theweb3-chain/tw-service/eth"
-	"github.com/roothash-pay/theweb3-chain/tw-service/predeploys"
+	"github.com/roothash-pay/roothash-chain/common/foundry"
+	"github.com/roothash-pay/roothash-chain/rhs-service/eth"
+	"github.com/roothash-pay/roothash-chain/rhs-service/predeploys"
 )
 
 type L2AllocsMode string

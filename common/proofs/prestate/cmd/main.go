@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/roothash-pay/theweb3-chain/common/proofs/prestate"
+	"github.com/roothash-pay/roothash-chain/common/proofs/prestate"
 )
 
 type chainConfig struct {
